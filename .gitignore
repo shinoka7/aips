@@ -1,0 +1,8 @@
+node_modules
+.next
+.vscode
+src/db/potential-seeders
+config/env.dev.js
+config/env.prod.js
+
+/yarn-error.log

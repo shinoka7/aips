@@ -1,0 +1,30 @@
+# https://vsupalov.com/flask-docker-compose-development-dependencies/
+# env vars from env.prod.js -->> SHOULD DEFINE IN DOCKER ENV?? <<--
+version: '3.5'
+
+services:
+  db:
+    container_name: mariadb_container
+    image: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mariadb
+      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    
+  phpmyadmin:
+    container_name: phpmyadmin_container
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:
