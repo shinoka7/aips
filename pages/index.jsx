@@ -11,11 +11,13 @@ class MainPage extends React.Component {
     }
 
     render() {
+        const { csrf } = this.props;
+
         return (
             <div>
                 <Preview />
                 <hr />
-                <RecentActivity />
+                <RecentActivity csrf={csrf} />
             </div>
         );
     }
@@ -23,6 +25,7 @@ class MainPage extends React.Component {
 }
 
 MainPage.propTypes = {
+    csrf: PropTypes.string,
 };
 
 export default MainPage;

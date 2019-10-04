@@ -94,6 +94,7 @@ class GroupsDetail extends React.Component {
 
     render() {
         const { groups, totalPages, groupNames } = this.state;
+        const { csrf } = this.props;
         const groupList = groups.map((group) => {
             return (
                 // Images, description
@@ -134,7 +135,7 @@ class GroupsDetail extends React.Component {
                     </Row>
                 }
                 
-                <GroupForm groupNames={groupNames} />
+                <GroupForm groupNames={groupNames} csrf={csrf} />
             </div>
         );
     }
@@ -142,6 +143,7 @@ class GroupsDetail extends React.Component {
 }
 
 GroupsDetail.propTypes = {
+    csrf: PropTypes.string,
 };
 
 export default GroupsDetail;

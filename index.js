@@ -5,23 +5,22 @@ const next = require('next');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const middlewares = require('./src/server/middlewares');
-
 // security
-const expressDefend = require('express-defend');
-const blacklist = require('express-blacklist');
-
-const Cabin = require('cabin');
-const cabin = new Cabin();
+const Tokens = require('csrf');
 
 class AIPSApp {
     constructor() {
         this.nextApp = undefined;
         this.expressApp = undefined;
+        this.tokens = undefined;
     }
 
     getExpressApp() {
         return this.expressApp;
+    }
+
+    getTokens() {
+        return this.tokens;
     }
 
     /**
@@ -37,9 +36,12 @@ class AIPSApp {
         // initialize express
         this.expressApp = express();
         this.initExpress(this.expressApp);
+
+        // XSRF
+        this.tokens = new Tokens();
         
         // initialize routes
-        this.initRoutes(this.nextApp, this.expressApp);
+        this.initRoutes(this);
     }
 
     /**
@@ -71,47 +73,8 @@ class AIPSApp {
         sessionStore.sync();
     }
 
-    initRoutes(nextApp, app) {
-        // middleware
-        app.use(cabin.middleware);
-
-        // XSS, path traversal, SQL injection  prevention
-        app.use(blacklist.blockRequests('blacklist.txt'));
-        app.use(expressDefend.protect({
-            maxAttempts: 5,                   // (default: 5) number of attempts until "onMaxAttemptsReached" gets triggered
-            dropSuspiciousRequest: true,      // respond 403 Forbidden when max attempts count is reached
-            consoleLogging: true,             // (default: true) enable console logging
-            logFile: 'suspicious.log',        // if specified, express-defend will log it's output here
-            onMaxAttemptsReached: (ipAddress, url) => {
-                console.log('IP address ' + ipAddress + ' is considered to be malicious, URL: ' + url);
-            }
-        }));
-        app.use(middlewares.csrfKeyGenerator());
-
-        // api routes
-        app.use('/user', require('./src/server/routes/user')(nextApp));
-        app.use('/group', require('./src/server/routes/group')(nextApp));
-        app.use('/auth', require('./src/server/routes/auth')(nextApp));
-        app.use('/post', require('./src/server/routes/post')(nextApp));
-
-        // pages/index
-        app.get('/', (req, res) => {
-            nextApp.render(req, res, '/');
-        });
-
-        app.use((err, req, res, next) => {
-            if (res.headersSent) {
-                return next(err);
-            }
-
-            res.status(500).send('500 Internal Server Error');
-        });
-
-        // default catch-all to all next.js to handle all other routes
-        app.all('*', (req, res) => {
-            const nextRequestHandler = nextApp.getRequestHandler();
-            return nextRequestHandler(req, res);
-        });
+    initRoutes(aips) {
+        require('./src/server/routes')(aips);
     }
 }
 

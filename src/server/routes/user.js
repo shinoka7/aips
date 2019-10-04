@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
+
 const { body } = require('express-validator');
 const validator = {};
 
 const { User } = require('../../db/models');
 
-const middlewares = require('../middlewares');
+module.exports = (aips) => {
+    const middlewares = require('../middlewares')(aips);
+    const { nextApp } = aips;
 
-const asyncMiddleware = middlewares.async;
-const validate = middlewares.validate;
-
-module.exports = (nextApp) => {
+    const {
+        async: asyncMiddleware,
+        validate,
+        csrfVerify: csrf,
+    } = middlewares;
 
     // gets the user's page
     // GET /user
@@ -39,7 +43,7 @@ module.exports = (nextApp) => {
 
     // updates the user's info 
     // PUT /user/${id}/update
-    router.put('/:id(\\d+)/update', validator.update, validate, asyncMiddleware(async(req, res) => {
+    router.put('/:id(\\d+)/update', csrf, validator.update, validate, asyncMiddleware(async(req, res) => {
         const { id } = req.params;
         // console.log(req.user);
         // const userId = req.user.id;

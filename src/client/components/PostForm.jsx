@@ -68,7 +68,8 @@ class PostForm extends React.Component {
         const res = await axios.post('/post', {
             groupId,
             title,
-            content
+            content,
+            _csrf: this.props.csrf,
         });
         window.location.reload();
     }
@@ -113,6 +114,7 @@ class PostForm extends React.Component {
 
 PostForm.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    csrf: PropTypes.string,
 };
 
 export default PostForm;

@@ -4,10 +4,14 @@ const router = express.Router();
 const googleService = require('../../services/google');
 
 const { Account } = require('../../db/models');
-const middlewares = require('../middlewares');
-const asyncMiddleware = middlewares.async;
 
-module.exports = (nextApp) => {
+module.exports = (aips) => {
+  const { nextApp } = aips;
+  const middlewares = require('../middlewares')(aips);
+  
+  const {
+    async: asyncMiddleware,
+  } = middlewares;
 
   router.get('/google', (req, res) => {
     const url = googleService.urlGoogle();

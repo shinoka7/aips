@@ -56,6 +56,7 @@ class RecentActivity extends React.Component {
 
     render() {
         const { posts, groups } = this.state;
+        const { csrf } = this.props;
 
         const generatedPosts = this.generatePosts(posts);
 
@@ -63,6 +64,7 @@ class RecentActivity extends React.Component {
             <div>
                 <PostForm
                     groups={groups}
+                    csrf={csrf}
                 />
                 <div className="pt-4">
                     {generatedPosts}
@@ -74,6 +76,7 @@ class RecentActivity extends React.Component {
 }
 
 RecentActivity.propTypes = {
+    csrf: PropTypes.string,
 };
 
 export default RecentActivity;

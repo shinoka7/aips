@@ -49,7 +49,8 @@ class GroupForm extends React.Component {
             await axios.post('/group/create', {
                 name: groupName,
                 groupEmail: groupEmail,
-                description: description
+                description: description,
+                _csrf: this.props.csrf,
             })
             .then((res) => {
                 window.location.reload();
@@ -111,6 +112,7 @@ class GroupForm extends React.Component {
 
 GroupForm.propTypes = {
     groupNames: PropTypes.arrayOf(PropTypes.string),
+    csrf: PropTypes.string,
 };
 
 export default GroupForm;

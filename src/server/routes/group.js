@@ -1,19 +1,21 @@
 const express = require('express');
-
 const router = express.Router();
 
 const { body } = require('express-validator');
-
-const middlewares = require('../middlewares');
-
-const asyncMiddleware = middlewares.async;
-const validate = middlewares.validate;
 
 const validator = {};
 
 const { User, Group } = require('../../db/models');
 
-module.exports = (nextApp) => {
+module.exports = (aips) => {
+    const middlewares = require('../middlewares')(aips);
+    const { nextApp } = aips;
+
+    const {
+        async: asyncMiddleware,
+        validate,
+        csrfVerify: csrf,
+    } = middlewares;
 
     /**
      * GET groups page
@@ -80,7 +82,7 @@ module.exports = (nextApp) => {
     /**
      * creates group
      */
-    router.post('/create', validator.create, validate, asyncMiddleware(async(req, res) => {
+    router.post('/create', csrf, validator.create, validate, asyncMiddleware(async(req, res) => {
         const { name, groupEmail, description } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);

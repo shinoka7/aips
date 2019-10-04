@@ -3,16 +3,20 @@ const router = express.Router();
 
 const { body } = require('express-validator');
 
-const middlewares = require('../middlewares');
-
-const asyncMiddleware = middlewares.async;
-const validate = middlewares.validate;
-
 const validator = {};
 
 const { Post, User, Group } = require('../../db/models');
 
-module.exports = (nextApp) => {
+module.exports = (aips) => {
+    const middlewares = require('../middlewares')(aips);
+    const { nextApp } = aips;
+
+    const {
+        async: asyncMiddleware,
+        validate,
+        csrfVerify: csrf,
+    } = middlewares;
+    
     /****************** */
     // TODO implement CRUD
     /****************** */
@@ -39,7 +43,7 @@ module.exports = (nextApp) => {
     ];
 
     // POST post
-    router.post('/', validator.create, validate, asyncMiddleware(async(req, res) => {
+    router.post('/', csrf, validator.create, validate, asyncMiddleware(async(req, res) => {
         const { groupId, title, content } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);
