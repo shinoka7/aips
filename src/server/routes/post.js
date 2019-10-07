@@ -13,8 +13,8 @@ module.exports = (aips) => {
 
     const {
         async: asyncMiddleware,
-        validate,
-        csrfVerify: csrf,
+        validateBody,
+        validateUser,
     } = middlewares;
     
     /****************** */
@@ -43,7 +43,7 @@ module.exports = (aips) => {
     ];
 
     // POST post
-    router.post('/', csrf, validator.create, validate, asyncMiddleware(async(req, res) => {
+    router.post('/', validateUser, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const { groupId, title, content } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);

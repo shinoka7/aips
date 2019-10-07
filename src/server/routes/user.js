@@ -12,8 +12,8 @@ module.exports = (aips) => {
 
     const {
         async: asyncMiddleware,
-        validate,
-        csrfVerify: csrf,
+        validateBody,
+        validateUser,
     } = middlewares;
 
     // gets the user's page
@@ -43,7 +43,7 @@ module.exports = (aips) => {
 
     // updates the user's info 
     // PUT /user/${id}/update
-    router.put('/:id(\\d+)/update', csrf, validator.update, validate, asyncMiddleware(async(req, res) => {
+    router.put('/:id(\\d+)/update', validateUser, validator.update, validateBody, asyncMiddleware(async(req, res) => {
         const { id } = req.params;
         // console.log(req.user);
         // const userId = req.user.id;
@@ -66,12 +66,6 @@ module.exports = (aips) => {
 
         res.json({ user });
     }));
-
-    // router.post('', validate, asyncMiddleware(async(req, res) => {
-
-    //     res.json({});
-    // }));
-
 
     return router;
 };

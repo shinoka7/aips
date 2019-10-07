@@ -112,7 +112,6 @@ class GroupForm extends React.Component {
 
 GroupForm.propTypes = {
     groupNames: PropTypes.arrayOf(PropTypes.string),
-    csrf: PropTypes.string,
 };
 
 export default GroupForm;

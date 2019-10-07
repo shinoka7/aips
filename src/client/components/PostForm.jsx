@@ -114,7 +114,6 @@ class PostForm extends React.Component {
 
 PostForm.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    csrf: PropTypes.string,
 };
 
 export default PostForm;

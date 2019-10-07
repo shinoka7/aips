@@ -76,7 +76,6 @@ class RecentActivity extends React.Component {
 }
 
 RecentActivity.propTypes = {
-    csrf: PropTypes.string,
 };
 
 export default RecentActivity;

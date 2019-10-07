@@ -22,7 +22,6 @@ module.exports = (aips) => {
             console.log('IP address ' + ipAddress + ' is considered to be malicious, URL: ' + url);
         }
     }));
-    app.use(middlewares.csrfKeyGenerator());
 
     // api routes
     app.use('/user', require('./user')(aips));
