@@ -9,12 +9,11 @@ const { Post, User, Group } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
-    const { nextApp } = aips;
+    const { nextApp, csrf } = aips;
 
     const {
         async: asyncMiddleware,
         validateBody,
-        validateUser,
     } = middlewares;
     
     /****************** */
@@ -43,7 +42,7 @@ module.exports = (aips) => {
     ];
 
     // POST post
-    router.post('/', validateUser, validator.create, validateBody, asyncMiddleware(async(req, res) => {
+    router.post('/', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const { groupId, title, content } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);

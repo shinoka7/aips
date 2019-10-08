@@ -8,12 +8,11 @@ const { User } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
-    const { nextApp } = aips;
+    const { nextApp, csrf } = aips;
 
     const {
         async: asyncMiddleware,
         validateBody,
-        validateUser,
     } = middlewares;
 
     // gets the user's page
@@ -43,7 +42,7 @@ module.exports = (aips) => {
 
     // updates the user's info 
     // PUT /user/${id}/update
-    router.put('/:id(\\d+)/update', validateUser, validator.update, validateBody, asyncMiddleware(async(req, res) => {
+    router.put('/:id(\\d+)/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
         const { id } = req.params;
         // console.log(req.user);
         // const userId = req.user.id;

@@ -2305,7 +2305,7 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-csrf@^3.1.0:
+csrf@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/csrf/-/csrf-3.1.0.tgz#ec75e9656d004d674b8ef5ba47b41fbfd6cb9c30"
   integrity sha512-uTqEnCvWRk042asU6JtapDTcJeeailFy4ydOQS28bj1hcLnYRiqi8SsD2jS412AY1I/4qdOwWZun774iqywf9w==
@@ -2323,6 +2323,16 @@ css@2.2.4:
     source-map "^0.6.1"
     source-map-resolve "^0.5.2"
     urix "^0.1.0"
+
+csurf@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/csurf/-/csurf-1.10.0.tgz#c3bafb66ff218a7b61ad09f39e85edb2ee818b7f"
+  integrity sha512-fh725p0R83wA5JukCik5hdEko/LizW/Vl7pkKDa1WJUVCosg141mqaAWCScB+nkEaRMFMGbutHMOr6oBNc/j9A==
+  dependencies:
+    cookie "0.3.1"
+    cookie-signature "1.0.6"
+    csrf "3.1.0"
+    http-errors "~1.7.2"
 
 cuid@^2.1.6:
   version "2.1.6"

@@ -9,16 +9,21 @@ const { User, Group } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
-    const { nextApp } = aips;
+    const { nextApp, csrf } = aips;
 
     const {
         async: asyncMiddleware,
         validateBody,
-        validateUser,
     } = middlewares;
 
+    router.get('/groups', csrf, asyncMiddleware(async(req, res) => {
+        nextApp.render(req, res, '/groups/show', {
+            csrfToken: req.csrfToken(),
+        });
+    }));
+
     /**
-     * GET groups page
+     * GET groups for page
      */
     router.get('/page/:num(\\d+)', asyncMiddleware(async(req, res) => {
         const num = Number(req.params.num);
@@ -82,7 +87,7 @@ module.exports = (aips) => {
     /**
      * creates group
      */
-    router.post('/create', validateUser, validator.create, validateBody, asyncMiddleware(async(req, res) => {
+    router.post('/create', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const { name, groupEmail, description } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);

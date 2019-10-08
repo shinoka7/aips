@@ -6,7 +6,7 @@ const googleService = require('../../services/google');
 const { Account } = require('../../db/models');
 
 module.exports = (aips) => {
-  const { nextApp } = aips;
+  const { nextApp, csrf } = aips;
   const middlewares = require('../middlewares')(aips);
   
   const {

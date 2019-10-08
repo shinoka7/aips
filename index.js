@@ -4,23 +4,17 @@ process.env.PORT = process.env.PORT || 3000; //default to 3000
 const next = require('next');
 const express = require('express');
 const bodyParser = require('body-parser');
-
-// security
-const Tokens = require('csrf');
+const csurf = require('csurf');
 
 class AIPSApp {
     constructor() {
         this.nextApp = undefined;
         this.expressApp = undefined;
-        this.tokens = undefined;
+        this.csrf = undefined;
     }
 
     getExpressApp() {
         return this.expressApp;
-    }
-
-    getTokens() {
-        return this.tokens;
     }
 
     /**
@@ -37,9 +31,9 @@ class AIPSApp {
         this.expressApp = express();
         this.initExpress(this.expressApp);
 
-        // XSRF
-        this.tokens = new Tokens();
-        
+        // initialize csrf
+        this.csrf = csurf();
+
         // initialize routes
         this.initRoutes(this);
     }

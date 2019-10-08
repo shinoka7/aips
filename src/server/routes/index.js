@@ -6,7 +6,7 @@ const cabin = new Cabin();
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
-    const { nextApp, expressApp: app } = aips;
+    const { nextApp, expressApp: app, csrf } = aips;
     
     // middleware
     app.use(cabin.middleware);
@@ -30,8 +30,10 @@ module.exports = (aips) => {
     app.use('/post', require('./post')(aips));
 
     // pages/index
-    app.get('/', (req, res) => {
-        nextApp.render(req, res, '/');
+    app.get('/', csrf, (req, res) => {
+        nextApp.render(req, res, '/', {
+            csrfToken: req.csrfToken(),
+        });
     });
 
     app.use((err, req, res, next) => {

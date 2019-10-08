@@ -5,15 +5,15 @@ const { User } = require('../db/models');
 module.exports = (aips) => {
     const middlewares = {};
 
-    middlewares.validateUser = (async(req, res, next) => {
-        const userId = req.session.user ? req.session.user.id : 0;
-        const user = await User.findByPk(userId);
-        if (!user) {
-            console.log('Invalid User');
-            return res.sendStatus(403);
-        }
-        next();
-    });
+    // middlewares.validateUser = (async(req, res, next) => {
+    //     const userId = req.session.user ? req.session.user.id : 0;
+    //     const user = await User.findByPk(userId);
+    //     if (!user) {
+    //         console.log('Invalid User');
+    //         return res.sendStatus(403);
+    //     }
+    //     next();
+    // });
 
     /*********************************************************/
     /** WILL APPLY USER AUTH EVERY POST/PUT/DELETE METHOD ****/

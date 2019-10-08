@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form } from 'reactstrap';
 
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
@@ -50,7 +50,6 @@ class GroupForm extends React.Component {
                 name: groupName,
                 groupEmail: groupEmail,
                 description: description,
-                _csrf: this.props.csrf,
             })
             .then((res) => {
                 window.location.reload();
@@ -91,18 +90,21 @@ class GroupForm extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>
                     <ModalBody>
-                        <AvForm>
-                            <AvField name="groupname" label="Group Name" type="text" onChange={this.setGroupName} required />
-                        </AvForm>
-                        <AvForm onInvalidSubmit={this.handleEmailInvalidSubmit}>
-                            <AvField name="groupemail" label="Group Email" type="email" placeholder="example420@example.com" onChange={this.setGroupEmail} required />
-                        </AvForm>
-                        <Label for="description">Description</Label>
-                        <Input type="textarea" id="description" placeholder="This is very important" onChange={this.setDescription} rows={3} />
-                        <ModalFooter>
-                            <Button onClick={this.createHandler} disabled={!this.validate()}>Create</Button>
-                            <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
-                        </ModalFooter>
+                        <Form onSubmit={this.createHandler}>
+                            <AvForm>
+                                <AvField name="groupname" label="Group Name" type="text" onChange={this.setGroupName} required />
+                            </AvForm>
+                            <AvForm onInvalidSubmit={this.handleEmailInvalidSubmit}>
+                                <AvField name="groupemail" label="Group Email" type="email" placeholder="example420@example.com" onChange={this.setGroupEmail} required />
+                            </AvForm>
+                            <Label for="description">Description</Label>
+                            <Input type="textarea" id="description" placeholder="This is very important" onChange={this.setDescription} rows={3} />
+                            <Input type="hidden" name="_csrf" value={this.props.csrfToken} />
+                            <ModalFooter>
+                                <Button type="submit" disabled={!this.validate()}>Create</Button>
+                                <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
+                            </ModalFooter>
+                        </Form>
                     </ModalBody>
                 </Modal>
             </div>
@@ -112,6 +114,7 @@ class GroupForm extends React.Component {
 
 GroupForm.propTypes = {
     groupNames: PropTypes.arrayOf(PropTypes.string),
+    csrfToken: PropTypes.string.isRequired,
 };
 
 export default GroupForm;
