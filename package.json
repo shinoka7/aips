@@ -36,6 +36,7 @@
     "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-calendar": "^2.19.2",
     "react-dom": "^16.8.6",
     "reactstrap": "^8.0.1",
     "sequelize": "^5.18.4",
