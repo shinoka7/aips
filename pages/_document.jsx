@@ -27,6 +27,8 @@ export default class MyDocument extends Document {
             {/* Polyfill */}
             <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
 
+            {/* React Big Calendar */}
+            <link href="https://cdn.jsdelivr.net/npm/react-big-calendar@0.19.0/lib/css/react-big-calendar.css" rel="stylesheet"/>
           </Head>
           <style jsx global>{`
             body { 

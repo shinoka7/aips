@@ -1,24 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-// import Calendar from 'react-calendar';
+import { Button, Modal, ModalBody } from 'reactstrap';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+
+const localizer = momentLocalizer(moment);
 
 class CalendarPanel extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            date: new Date(),
-            showCalendar: false,
+            modal: false,
+            unmountOnClose: false,
+            events: [
+                {
+                    start: new Date(),
+                    end: new Date(moment().add(1, "days")),
+                    title: "First Event",
+                },
+            ],
         };
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
-        this.onChange = this.onChange.bind(this);
     }
 
     toggleCalendar() {
-        this.setState({ showCalendar: !this.state.showCalendar });
+        this.setState({ modal: !this.state.modal });
     }
     
     onChange(date) {
@@ -26,13 +35,28 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
+        const { modal, events } = this.state;
+
         return (
-            <div>
-                <Button onClick={this.toggleCalendar} size="lg" className="btn btn-outline btn-info">
+            <div className="d-flex flex-row-reverse pr-4">
+                <Button onClick={this.toggleCalendar} className="btn-floating btn-lg btn-info">
                     <i className="fas fa-calendar-alt"></i>
                 </Button>
 
-                {/* <Calendar onChange={this.onChange} value={this.state.date} /> */}
+                <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
+                    <ModalBody>
+                        <div className="pb-5">
+                            <Calendar 
+                                localizer={localizer}
+                                defaultDate={new Date()}
+                                defaultView="month"
+                                events={events}
+                                style={{ height: "80vh" }}
+                                views={['month', 'day', 'agenda']}
+                            />
+                        </div>
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
