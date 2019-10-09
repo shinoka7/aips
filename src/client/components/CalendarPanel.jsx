@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Calendar from 'react-calendar';
+// import Calendar from 'react-calendar';
 
-class Calendar extends React.Component {
+class CalendarPanel extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            date: newDate(),
+            date: new Date(),
             showCalendar: false,
         };
 
@@ -32,14 +32,14 @@ class Calendar extends React.Component {
                     <i className="fas fa-calendar-alt"></i>
                 </Button>
 
-                <Calendar onChange={this.onChange} value={this.state.date} />
+                {/* <Calendar onChange={this.onChange} value={this.state.date} /> */}
             </div>
         );
     }
 }
 
-Calendar.propTypes = {
+CalendarPanel.propTypes = {
 
 }
 
-export default Calendar;
+export default CalendarPanel;

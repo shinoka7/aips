@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import RecentActivity  from '../src/client/components/RecentActivity.jsx';
 import Preview from '../src/client/components/Preview.jsx';
-import Calendar from '../src/client/components/Calendar.jsx';
+import CalendarPanel from '../src/client/components/CalendarPanel.jsx';
 
 class MainPage extends React.Component {
 
@@ -16,7 +16,7 @@ class MainPage extends React.Component {
         return (
             <div>
                 <Preview />
-                <Calendar />
+                <CalendarPanel />
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} />
             </div>

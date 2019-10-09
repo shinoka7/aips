@@ -69,6 +69,7 @@ class PostForm extends React.Component {
             groupId,
             title,
             content,
+            _csrf: this.props.csrfToken,
         });
         window.location.reload();
     }
@@ -84,29 +85,26 @@ class PostForm extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Post</ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={this.createHandler}>
-                            <AvForm>
-                                <AvField
-                                    type="select"
-                                    name="group"
-                                    label="Group"
-                                    helpMessage="Choose the group you will post as"
-                                    onChange={this.setGroupId}
-                                    value={'default'}
-                                >
-                                    <option value="default" disabled>--Select the Group--</option>
-                                    {groupOptions}
-                                </AvField>
-                                <AvField name="title" label="Title" onChange={this.setTitle} required />
-                            </AvForm>
-                            <Label for="content">Content</Label>
-                            <Input type="textarea" id="content" placeholder="What's going on?" onChange={this.setContent} rows={5} required />
-                            <Input type="hidden" name="_csrf" value={this.props.csrfToken} />
-                            <ModalFooter>
-                                <Button type="submit" disabled={!this.validate()}>Post</Button>
-                                <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
-                            </ModalFooter>
-                        </Form>
+                        <AvForm>
+                            <AvField
+                                type="select"
+                                name="group"
+                                label="Group"
+                                helpMessage="Choose the group you will post as"
+                                onChange={this.setGroupId}
+                                value={'default'}
+                            >
+                                <option value="default" disabled>--Select the Group--</option>
+                                {groupOptions}
+                            </AvField>
+                            <AvField name="title" label="Title" onChange={this.setTitle} required />
+                        </AvForm>
+                        <Label for="content">Content</Label>
+                        <Input type="textarea" id="content" placeholder="What's going on?" onChange={this.setContent} rows={5} required />
+                        <ModalFooter>
+                            <Button onClick={this.createHandler} disabled={!this.validate()}>Post</Button>
+                            <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
+                        </ModalFooter>
                     </ModalBody>
                 </Modal>
             </div>
