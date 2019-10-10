@@ -16,6 +16,9 @@ export default class extends React.Component {
                     <form action="/auth/google" method="GET">
                         <Button className="btn btn-primary"><i className="fab fa-google"></i> Login with Google</Button>
                     </form>
+                    <form actions="/auth/cas" method="GET">
+                        <Button className="btn btn-primary"><i className="rpi-icon"> Login with CAS</i></Button>
+                    </form>
                 </div>
             </div>
         );
