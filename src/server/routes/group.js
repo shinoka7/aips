@@ -16,7 +16,7 @@ module.exports = (aips) => {
         validateBody,
     } = middlewares;
 
-    router.get('/groups', asyncMiddleware(async(req, res) => {
+    router.get('/groups', csrf, asyncMiddleware(async(req, res) => {
         nextApp.render(req, res, '/groups/show', {
             csrfToken: req.csrfToken(),
         });

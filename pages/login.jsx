@@ -16,7 +16,8 @@ export default class extends React.Component {
                     <form action="/auth/google" method="GET">
                         <Button className="btn btn-primary"><i className="fab fa-google"></i> Login with Google</Button>
                     </form>
-                    <form actions="/auth/cas" method="GET">
+                    <form action="/auth/cas" method="GET">
+                        {/* <input type="hidden" name="redirectTo" value="/auth/cas/callback" /> */}
                         <Button className="btn btn-primary"><i className="rpi-icon"> Login with CAS</i></Button>
                     </form>
                 </div>

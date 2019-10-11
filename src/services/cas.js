@@ -1,4 +1,4 @@
-const Cas = require('koa2-cas');
+const Cas = require('express-cas-authentication');
 
 class CasService {
 

@@ -2878,6 +2878,13 @@ express-blacklist@^1.0.3:
   dependencies:
     chalk "~1.1.3"
 
+express-cas-authentication@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/express-cas-authentication/-/express-cas-authentication-0.1.0.tgz#01f73cabc2e1737b5a593c0b69e8a6661c8aa70a"
+  integrity sha512-7m74LlLXg6fF/Q+weujE6IhXpsxmHBUWxS4SeqUbXvqGm57dzgAIxk/8Qfrf5lDEkWkEG4oKFg+Kh9Eke3x1hg==
+  dependencies:
+    xml2js "^0.4.8"
+
 express-defend@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/express-defend/-/express-defend-1.0.9.tgz#d77549c9e0c26f1edb2b047ba2e800ec4bce7ec0"
@@ -4550,13 +4557,6 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
-
-koa2-cas@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/koa2-cas/-/koa2-cas-1.0.5.tgz#e755f3a0ba9f04e30f79505ee8917d9537631992"
-  integrity sha512-vyt+dmTvwKZlo0M+RS1df3yAmLy8LOEQFugkwZvCb6JJoPGBb/ecWHl+haixJf/K5oi+dZrXyqmsoFVeJBBXMw==
-  dependencies:
-    xml2js "^0.4.19"
 
 last-commit-log@^2.1.0:
   version "2.1.0"
@@ -8062,7 +8062,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-xml2js@^0.4.19:
+xml2js@^0.4.8:
   version "0.4.22"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.22.tgz#4fa2d846ec803237de86f30aa9b5f70b6600de02"
   integrity sha512-MWTbxAQqclRSTnehWWe5nMKzI3VmJ8ltiJEco8akcC6j3miOhjjfzKum5sId+CWhfxdOs/1xauYr8/ZDBtQiRw==
