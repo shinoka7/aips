@@ -30,12 +30,13 @@ module.exports = (aips) => {
     });
   }));
 
-  router.get('/cas', (req, res) => {
-    cas.bounce(req, res);
-  });
+  router.get('/cas', csrf, cas.bounce, asyncMiddleware(async(req, res) => {
+    res.redirect('/auth/callback/cas');
+  }));
 
-  router.get('/cas/callback', asyncMiddleware(async(req, res) => {
-    const user = req.session.cas_user.lowercase();
+  router.get('/callback/cas', csrf, asyncMiddleware(async(req, res) => {
+    // console.log(req.session);
+    const user = req.session.cas_user.toLowerCase();
     const email = user + '@rpi.edu';
     // TODO currently will use RCS ID for user ==> can we access RIN?
     const account = await Account.createOrLink('cas', user, email);

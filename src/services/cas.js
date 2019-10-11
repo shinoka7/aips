@@ -1,4 +1,4 @@
-const Cas = require('express-cas-authentication');
+const Cas = require('cas-authentication');
 
 class CasService {
 
@@ -15,6 +15,7 @@ class CasService {
             service_url: this.casConfig.service_url,
             cas_version: '3.0',
             renew: false,
+            session_info: true,
         });
     }
 }
