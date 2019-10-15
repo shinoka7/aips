@@ -45,14 +45,14 @@ class CalendarPanel extends React.Component {
 
                 <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
                     <ModalBody>
-                        <div className="pb-5">
+                        <div className="pb-5 mb-2">
                             <Calendar 
                                 localizer={localizer}
                                 defaultDate={new Date()}
                                 defaultView="month"
                                 events={events}
                                 style={{ height: "80vh" }}
-                                views={['month', 'day', 'agenda']}
+                                views={[ 'month', 'week' ]}
                             />
                         </div>
                     </ModalBody>

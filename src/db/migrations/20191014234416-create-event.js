@@ -1,19 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Post', {
+    return queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "User",
-          key: "id"
-        }
       },
       groupId: {
         type: Sequelize.INTEGER,
@@ -22,10 +15,16 @@ module.exports = {
           key: "id"
         }
       },
-      content: {
-        type: Sequelize.STRING,
+      startAt: {
+        type: Sequelize.DATE,
       },
-      title: {
+      endAt: {
+        type: Sequelize.DATE,
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      description: {
         type: Sequelize.STRING,
       },
       createdAt: {
@@ -41,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Post');
+    return queryInterface.dropTable('Events');
   }
 };
