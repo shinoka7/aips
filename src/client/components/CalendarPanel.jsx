@@ -14,13 +14,7 @@ class CalendarPanel extends React.Component {
         this.state = {
             modal: false,
             unmountOnClose: false,
-            events: [
-                {
-                    start: new Date(),
-                    end: new Date(moment().add(1, "days")),
-                    title: "First Event",
-                },
-            ],
+            events: [],
         };
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
