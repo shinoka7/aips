@@ -4,6 +4,9 @@ const blacklist = require('express-blacklist');
 const Cabin = require('cabin');
 const cabin = new Cabin();
 
+const { Event } = require('../../db/models');
+const { Op } = require('sequelize');
+
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
     const { nextApp, expressApp: app, csrf } = aips;
@@ -30,9 +33,18 @@ module.exports = (aips) => {
     app.use('/post', require('./post')(aips));
 
     // pages/index
-    app.get('/', csrf, (req, res) => {
+    app.get('/', csrf, async(req, res) => {
+        const events = await Event.findAll({
+            where: {
+                endAt: {
+                    [Op.gte]: new Date(),
+                }
+            }
+        });
+
         nextApp.render(req, res, '/', {
             csrfToken: req.csrfToken(),
+            events: events,
         });
     });
 

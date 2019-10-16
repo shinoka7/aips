@@ -16,7 +16,7 @@ class MainPage extends React.Component {
         return (
             <div>
                 <Preview />
-                <CalendarPanel />
+                <CalendarPanel events={this.props.events} />
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} />
             </div>
@@ -27,6 +27,7 @@ class MainPage extends React.Component {
 
 MainPage.propTypes = {
     csrfToken: PropTypes.string.isRequired,
+    events: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default MainPage;

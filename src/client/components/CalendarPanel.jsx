@@ -26,6 +26,20 @@ class CalendarPanel extends React.Component {
         this.toggleCalendar = this.toggleCalendar.bind(this);
     }
 
+    static getDerivedStateFromProps(props, state) {
+        const events = props.events.map((event) => {
+            return (
+                {
+                    start: new Date(event.startAt),
+                    end: new Date(event.endAt),
+                    title: event.name,
+                }
+            );
+        });
+        
+        return { events: events };
+    }
+
     toggleCalendar() {
         this.setState({ modal: !this.state.modal });
     }
@@ -63,7 +77,7 @@ class CalendarPanel extends React.Component {
 }
 
 CalendarPanel.propTypes = {
-
+    events: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 export default CalendarPanel;
