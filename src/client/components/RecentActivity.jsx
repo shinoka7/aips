@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Col, CardHeader, CardTitle, CardText, Card, CardBody } from 'reactstrap';
 
-
 import PostForm from '../components/PostForm';
 
 import axios from 'axios';
@@ -14,7 +13,6 @@ class RecentActivity extends React.Component {
 
         this.state = {
             posts: [],
-            groups: [],
         };
         
         this.generatePosts = this.generatePosts.bind(this);
@@ -24,10 +22,6 @@ class RecentActivity extends React.Component {
         await axios.get('/post')
             .then((result) => {
                 this.setState({ posts: result.data.posts });
-            });
-        await axios.get('/group')
-            .then((result) => {
-                this.setState({ groups: result.data.groups });
             });
     }
 
@@ -55,7 +49,8 @@ class RecentActivity extends React.Component {
 
 
     render() {
-        const { posts, groups } = this.state;
+        const { posts } = this.state;
+        const { groups } = this.props;
 
         const generatedPosts = this.generatePosts(posts);
 
@@ -75,6 +70,7 @@ class RecentActivity extends React.Component {
 }
 
 RecentActivity.propTypes = {
+    groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 

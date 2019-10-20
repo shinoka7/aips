@@ -5,20 +5,37 @@ import RecentActivity  from '../src/client/components/RecentActivity.jsx';
 import Preview from '../src/client/components/Preview.jsx';
 import CalendarPanel from '../src/client/components/CalendarPanel.jsx';
 
+import axios from 'axios';
+
 class MainPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            groups: [],
+        };
+    }
 
     static async getInitialProps(context) {
         return context.query || {}; // retrieve props from router
     }
 
+    async componentDidMount() {
+        await axios.get('/group')
+            .then((result) => {
+                this.setState({ groups: result.data.groups });
+            });
+    }
+
     render() {
+        const { groups } = this.state;
 
         return (
             <div>
                 <Preview />
-                <CalendarPanel events={this.props.events} />
+                <CalendarPanel events={this.props.events} groups={groups} />
                 <hr />
-                <RecentActivity csrfToken={this.props.csrfToken} />
+                <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
             </div>
         );
     }

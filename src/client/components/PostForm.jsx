@@ -76,7 +76,6 @@ class PostForm extends React.Component {
 
     render() {
         const groups = this.props.groups || [];
-
         const groupOptions = this.generateGroupOptions(groups);
 
         return (

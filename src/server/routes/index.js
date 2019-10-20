@@ -31,6 +31,7 @@ module.exports = (aips) => {
     app.use('/group', require('./group')(aips));
     app.use('/auth', require('./auth')(aips));
     app.use('/post', require('./post')(aips));
+    app.use('/event', require('./event')(aips));
 
     // pages/index
     app.get('/', csrf, async(req, res) => {
