@@ -33,7 +33,7 @@ class MainPage extends React.Component {
         return (
             <div>
                 <Preview />
-                <CalendarPanel events={this.props.events} groups={groups} />
+                <CalendarPanel events={this.props.events} groups={groups} csrfToken={this.props.csrfToken}/>
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
             </div>

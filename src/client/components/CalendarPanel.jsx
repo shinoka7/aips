@@ -34,6 +34,7 @@ class CalendarPanel extends React.Component {
         this.setName = this.setName.bind(this);
         this.setStartDate = this.setStartDate.bind(this);
         this.setEndDate = this.setEndDate.bind(this);
+        this.setDescription = this.setDescription.bind(this);
         this.createHandler = this.createHandler.bind(this);
         this.validate = this.validate.bind(this);
     }
@@ -116,11 +117,27 @@ class CalendarPanel extends React.Component {
             }
         }));
     }
+
+    setDescription(e) {
+        const description = e.target.value.trim();
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                description: description,
+            }
+        }));
+    }
     
     async createHandler() {
-        const { newEvent } = this.state;
-
-        const res = await axios.post('/event', newEvent);
+        const { groupId, start, end, name, description } = this.state.newEvent;
+        const res = await axios.post('/event', {
+            groupId,
+            start: new Date(start),
+            end: new Date(end),
+            name,
+            description,
+            _csrf: this.props.csrfToken
+        });
         window.location.reload();
     }
 
@@ -174,16 +191,23 @@ class CalendarPanel extends React.Component {
                                     <AvField
                                         name="startDateTime"
                                         label="Start Date"
-                                        value={(this.state.newEvent.start)}
+                                        value={this.state.newEvent.start}
                                         type="text"
                                         onChange={this.setStartDate}
                                     />
                                     <AvField
                                         name="endDateTime"
                                         label="End Date"
-                                        value={(this.state.newEvent.end)}
+                                        value={this.state.newEvent.end}
                                         type="text"
                                         onChange={this.setEndDate}
+                                    />
+                                    <AvField
+                                        name="description"
+                                        label="Description"
+                                        value={this.state.newEvent.description}
+                                        type="textarea"
+                                        onChange={this.setDescription}
                                     />
                                 </AvForm>
                             </ModalBody>
@@ -202,6 +226,7 @@ class CalendarPanel extends React.Component {
 CalendarPanel.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
+    csrfToken: PropTypes.string.isRequired,
 }
 
 export default CalendarPanel;

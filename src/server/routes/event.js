@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { body } = require('express-validator');
+const { Event, User, Group } = require('../../db/models');
 
 const validator = {};
 
@@ -28,7 +29,7 @@ module.exports = (aips) => {
             groupId, start, end, name, description
         } = req.body;
         const userId = req.session.user.id;
-        const user = await user.findByPk(userId);
+        const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
