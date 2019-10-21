@@ -16,7 +16,7 @@ class UserProfile extends React.Component {
     }
 
     generateUserInfo() {
-        const { user } = this.props;
+        const { user, csrfToken } = this.props;
         
         return (
             <Card>
@@ -27,7 +27,7 @@ class UserProfile extends React.Component {
                     Last name : {user.lastName}<br />
                 </CardText>
                 <CardText className="text-right">
-                    <UserForm user={user} />
+                    <UserForm user={user} csrfToken={csrfToken}/>
                 </CardText>
                 </CardBody>
 
@@ -50,6 +50,7 @@ class UserProfile extends React.Component {
 
 UserProfile.propTypes = {
     user: PropTypes.object.isRequired,
+    csrfToken: PropTypes.string.isRequired,
 };
 
 export default UserProfile;

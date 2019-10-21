@@ -17,7 +17,7 @@ module.exports = (aips) => {
 
     // gets the user's page
     // GET /user
-    router.get('/', asyncMiddleware(async(req, res) => {
+    router.get('/', csrf, asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
 
         const user = await User.findByPk(id);
@@ -31,6 +31,7 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/user/show', {
             user: user,
             groups: groups,
+            csrfToken: req.csrfToken(),
         });
     }));
 

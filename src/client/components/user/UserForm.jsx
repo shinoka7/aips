@@ -52,12 +52,13 @@ class UserForm extends React.Component {
      * handles username change confirmation
      */
     async confirmHandler() {
-        const { user } = this.props;
+        const { user, csrfToken } = this.props;
         const { username, firstName, lastName } = this.state;
         const params = {
             username: username,
             firstName: firstName,
             lastName: lastName,
+            _csrf: csrfToken,
         };
 
         const res = await Swal.fire({
@@ -89,7 +90,7 @@ class UserForm extends React.Component {
     }
 
     render() {
-        const user = this.props.user;
+        const { user, csrfToken } = this.props;
 
         return (
             <div className="pl-3">
@@ -115,6 +116,7 @@ class UserForm extends React.Component {
 
 UserForm.propTypes = {
     user: PropTypes.object.isRequired,
+    csrfToken: PropTypes.string.isRequired,
 };
 
 export default UserForm;

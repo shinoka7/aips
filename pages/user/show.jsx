@@ -24,12 +24,12 @@ class UserDetail extends React.Component {
     }
 
     render() {
-        const { user, groups } = this.props;
+        const { user, groups, csrfToken } = this.props;
         const { showUserProfile } = this.state;
 
         return (
             <div>
-                <UserProfile user={user} />
+                <UserProfile user={user} csrfToken={csrfToken} />
                 {/* <Button onClick={this.toggleUserProfile}> */}
                     {/* <i fa fab-arrowup></i>Show Profile */}
                     {/* Show Profile */}
@@ -44,6 +44,7 @@ class UserDetail extends React.Component {
 UserDetail.propTypes = {
     user: PropTypes.object.isRequired,
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    csrfToken: PropTypes.string.isRequired,
 };
 
 export default UserDetail;
