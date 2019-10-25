@@ -5,7 +5,7 @@ AIPS is a Web App to create a general, intuitive and interactive way of communic
 # Start up
 
 1. Install and run Docker on local environment
-1. Add a env var file to the /config
+1. Add a env var file to the /config (**ask admin**)
 1. Start docker containers ```docker-compose -f docker-compose.dev.yml up -d```
 1. Install Yarn
 1. Install and lock dependencies ```yarn```
@@ -19,4 +19,6 @@ AIPS is a Web App to create a general, intuitive and interactive way of communic
 - [ ] GUI for chat feature
 - [ ] Clean up Group page, Profile page
 - [ ] Group Admin page
-- [ ] Calendar Feature
+- [x] Calendar Feature
+- [ ] Tests
+- [ ] Accessibility
