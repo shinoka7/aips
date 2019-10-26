@@ -212,8 +212,8 @@ class CalendarPanel extends React.Component {
                                 </AvForm>
                             </ModalBody>
                             <ModalFooter>
-                                <Button onClick={this.createHandler} disabled={!this.validate()}>Post</Button>
-                                <Button onClick={this.toggleEventForm} className="float-right btn btn-warning">Cancel</Button>
+                                <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Post</Button>
+                                <Button onClick={this.toggleEventForm} color="secondary">Cancel</Button>
                             </ModalFooter>
                         </Modal>
                     </ModalBody>

@@ -104,8 +104,8 @@ class UserForm extends React.Component {
                             <AvField name="lastname" label="Last Name" onChange={this.setLastName} required />
                         </AvForm>
                         <ModalFooter>
-                            <Button onClick={this.confirmHandler} disabled={!this.validate()}>Confirm</Button>
-                            <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
+                            <Button onClick={this.confirmHandler} color="primary" disabled={!this.validate()}>Confirm</Button>
+                            <Button onClick={this.toggle} color="secondary">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>
                 </Modal>

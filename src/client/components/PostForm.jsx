@@ -101,8 +101,8 @@ class PostForm extends React.Component {
                         <Label for="content">Content</Label>
                         <Input type="textarea" id="content" placeholder="What's going on?" onChange={this.setContent} rows={5} required />
                         <ModalFooter>
-                            <Button onClick={this.createHandler} disabled={!this.validate()}>Post</Button>
-                            <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
+                            <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Post</Button>
+                            <Button onClick={this.toggle} color="secondary">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>
                 </Modal>

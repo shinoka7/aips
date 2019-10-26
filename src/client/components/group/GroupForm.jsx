@@ -100,8 +100,8 @@ class GroupForm extends React.Component {
                         <Label for="description">Description</Label>
                         <Input type="textarea" id="description" placeholder="This is very important" onChange={this.setDescription} rows={3} />
                         <ModalFooter>
-                            <Button onClick={this.createHandler} disabled={!this.validate()}>Create</Button>
-                            <Button onClick={this.toggle} className="float-right btn btn-warning">Cancel</Button>
+                            <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Create</Button>
+                            <Button onClick={this.toggle} color="secondary">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>
                 </Modal>
