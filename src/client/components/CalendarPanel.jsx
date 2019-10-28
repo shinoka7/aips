@@ -15,7 +15,8 @@ class CalendarPanel extends React.Component {
 
         this.state = {
             modal: false,
-            nestedModal: false,
+            formModal: false,
+            detailModal: false,
             unmountOnClose: false,
             events: [],
             newEvent: {
@@ -25,10 +26,12 @@ class CalendarPanel extends React.Component {
                 name: '',
                 description: '',
             },
+            selectedEvent: {},
         };
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.toggleEventForm = this.toggleEventForm.bind(this);
+        this.toggleEventDetails = this.toggleEventDetails.bind(this);
         this.generateGroupOptions = this.generateGroupOptions.bind(this);
         this.setGroupId = this.setGroupId.bind(this);
         this.setName = this.setName.bind(this);
@@ -65,7 +68,14 @@ class CalendarPanel extends React.Component {
                 end: e.end,
             }
         }));
-        this.setState({ nestedModal: !this.state.nestedModal });
+        this.setState({ formModal: !this.state.formModal });
+    }
+
+    async toggleEventDetails(e) {
+        const selectedEvent = await this.props.events.filter((event) => (
+            event.name === e.title
+        ));
+        await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
     }
 
     generateGroupOptions(groups) {
@@ -170,9 +180,10 @@ class CalendarPanel extends React.Component {
                                 views={[ 'month', 'week' ]}
                                 selectable={true}
                                 onSelectSlot={this.toggleEventForm}
+                                onSelectEvent={this.toggleEventDetails}
                             />
                         </div>
-                        <Modal isOpen={this.state.nestedModal} toggle={this.toggleEventForm} unmountOnClose={this.state.unmountOnClose}>
+                        <Modal isOpen={this.state.formModal} toggle={this.toggleEventForm} unmountOnClose={this.state.unmountOnClose}>
                             <ModalHeader toggle={this.toggleEventForm}>Create Event</ModalHeader>
                             <ModalBody>
                                 <AvForm>
@@ -191,21 +202,21 @@ class CalendarPanel extends React.Component {
                                     <AvField
                                         name="startDateTime"
                                         label="Start Date"
-                                        value={this.state.newEvent.start}
+                                        placeholder={this.state.newEvent.start}
                                         type="text"
                                         onChange={this.setStartDate}
                                     />
                                     <AvField
                                         name="endDateTime"
                                         label="End Date"
-                                        value={this.state.newEvent.end}
+                                        placeholder={this.state.newEvent.end}
                                         type="text"
                                         onChange={this.setEndDate}
                                     />
                                     <AvField
                                         name="description"
                                         label="Description"
-                                        value={this.state.newEvent.description}
+                                        placeholder=''
                                         type="textarea"
                                         onChange={this.setDescription}
                                     />
@@ -216,6 +227,14 @@ class CalendarPanel extends React.Component {
                                 <Button onClick={this.toggleEventForm} color="secondary">Cancel</Button>
                             </ModalFooter>
                         </Modal>
+                        { this.state.selectedEvent &&
+                            <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
+                                <ModalHeader>{this.state.selectedEvent.name}</ModalHeader>
+                                <ModalBody>
+                                    Event Details..
+                                </ModalBody>
+                            </Modal>
+                        }
                     </ModalBody>
                 </Modal>
             </div>
