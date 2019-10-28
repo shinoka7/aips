@@ -128,7 +128,7 @@ class GroupsDetail extends React.Component {
                 <Row className="row justify-content-around">
                     {groupList}
                 </Row>
-                <Row className="fixed-bottom pt-3 mb-5 pb-5 d-flex justify-content-center">
+                <Row className="fixed-bottom pt-3 pb-5 mb-4 d-flex justify-content-center">
                     {pagination}
                 </Row>
                 

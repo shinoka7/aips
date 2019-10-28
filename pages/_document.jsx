@@ -1,4 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document';
+import Styles from '../resources/styles/index.scss';
 
 export default class MyDocument extends Document {
   
@@ -15,6 +16,8 @@ export default class MyDocument extends Document {
 
             {/* <!-- Iconset: Font Awesome 5.0.13 via CDN --> */}
             <link href="//use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
+
+            <style dangerouslySetInnerHTML={{ __html: Styles }} />
 
             {/* Bootstrap */}
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossOrigin="anonymous" />
@@ -35,7 +38,7 @@ export default class MyDocument extends Document {
               background-color: #C0C0C0;
             }
           `}</style>
-          <body className="pb-5">
+          <body className="pt-5">
             <Main />
             <NextScript />
           </body>

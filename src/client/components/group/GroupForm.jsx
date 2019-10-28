@@ -86,7 +86,7 @@ class GroupForm extends React.Component {
 
     render() {
         return (
-            <div className="fixed-bottom mb-5 pb-4">
+            <div className="fixed-bottom pb-5">
                 <Button onClick={this.toggle} size="sm" className="btn btn-success" block>Create</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>

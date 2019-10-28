@@ -19,7 +19,7 @@ class GroupList extends React.Component {
         });
         
         return (
-            <div className="pl-4 pr-4 fixed-bottom pb-5 mb-4">
+            <div className="pl-4 pr-4 fixed-bottom pb-5">
                 <Table striped dark bordered>
                     <thead>
                         <tr>
