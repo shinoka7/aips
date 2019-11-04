@@ -16,6 +16,7 @@ export default class MyDocument extends Document {
 
             {/* <!-- Iconset: Font Awesome 5.0.13 via CDN --> */}
             <link href="//use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 
             <style dangerouslySetInnerHTML={{ __html: Styles }} />
 

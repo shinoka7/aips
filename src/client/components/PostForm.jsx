@@ -20,7 +20,6 @@ class PostForm extends React.Component {
             content: '',
         }
 
-        this.toggle = this.toggle.bind(this);
         this.generateGroupOptions = this.generateGroupOptions.bind(this);
         this.validate = this.validate.bind(this);
         this.setTitle = this.setTitle.bind(this);
@@ -29,10 +28,14 @@ class PostForm extends React.Component {
         this.createHandler = this.createHandler.bind(this);
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.modal !== this.props.modal){
+            this.setState({ modal: this.props.modal });
+        }
+    }
+
     toggle() {
-        this.setState(prevState => ({
-            modal: !prevState.modal
-        }));
+        this.props.togglePostForm();
     }
 
     generateGroupOptions(groups) {
@@ -75,14 +78,14 @@ class PostForm extends React.Component {
     }
 
     render() {
+        const { togglePostForm } = this.props;
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
 
         return (
-            <div className="pl-3">
-                <Button onClick={this.toggle} className="btn btn-outline-primary"><i className="fas fa-edit"></i>New Post</Button>
-                <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
-                    <ModalHeader toggle={this.toggle}>Create Post</ModalHeader>
+            <div>
+                <Modal isOpen={this.state.modal} toggle={togglePostForm} unmountOnClose={this.state.unmountOnClose}>
+                    <ModalHeader toggle={togglePostForm}>Create Post</ModalHeader>
                     <ModalBody>
                         <AvForm>
                             <AvField
@@ -102,7 +105,7 @@ class PostForm extends React.Component {
                         <Input type="textarea" id="content" placeholder="What's going on?" onChange={this.setContent} rows={5} required />
                         <ModalFooter>
                             <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Post</Button>
-                            <Button onClick={this.toggle} color="secondary">Cancel</Button>
+                            <Button onClick={togglePostForm} color="secondary">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>
                 </Modal>
@@ -114,6 +117,8 @@ class PostForm extends React.Component {
 PostForm.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
+    modal: PropTypes.bool,
+    togglePostForm: PropTypes.func,
 };
 
 export default PostForm;

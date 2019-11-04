@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Form, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -14,7 +14,6 @@ class CalendarPanel extends React.Component {
         super(props);
 
         this.state = {
-            modal: false,
             formModal: false,
             detailModal: false,
             unmountOnClose: false,
@@ -29,7 +28,6 @@ class CalendarPanel extends React.Component {
             selectedEvent: {},
         };
 
-        this.toggleCalendar = this.toggleCalendar.bind(this);
         this.toggleEventForm = this.toggleEventForm.bind(this);
         this.toggleEventDetails = this.toggleEventDetails.bind(this);
         this.generateGroupOptions = this.generateGroupOptions.bind(this);
@@ -54,10 +52,6 @@ class CalendarPanel extends React.Component {
         });
         
         return { events: events };
-    }
-
-    toggleCalendar() {
-        this.setState({ modal: !this.state.modal });
     }
 
     toggleEventForm(e) {
@@ -157,18 +151,15 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
-        const { modal, events } = this.state;
+        const { events } = this.state;
+        const { modal, toggleCalendar } = this.props;
 
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
 
         return (
-            <div className="d-flex flex-row-reverse pr-4">
-                <Button onClick={this.toggleCalendar} className="btn-floating btn-lg btn-info">
-                    <i className="fas fa-calendar-alt"></i>
-                </Button>
-
-                <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
+            <div>
+                <Modal size="lg" isOpen={modal} toggle={toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
                     <ModalBody>
                         <div className="pb-5 mb-2">
                             <Calendar 
@@ -246,6 +237,8 @@ CalendarPanel.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
+    toggleCalendar: PropTypes.func,
+    modal: PropTypes.bool,
 }
 
 export default CalendarPanel;

@@ -35,10 +35,12 @@ module.exports = (aips) => {
 
     // pages/index
     app.get('/', csrf, async(req, res) => {
+        const date = new Date();
+        date.setMonth(date.getMonth() - 3);
         const events = await Event.findAll({
             where: {
                 endAt: {
-                    [Op.gte]: new Date(),
+                    [Op.gte]: date,
                 }
             }
         });

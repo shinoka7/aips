@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import RecentActivity  from '../src/client/components/RecentActivity.jsx';
 import Preview from '../src/client/components/Preview.jsx';
-import CalendarPanel from '../src/client/components/CalendarPanel.jsx';
+import Menu from '../src/client/components/Menu.jsx';
 
 import axios from 'axios';
 
@@ -33,7 +33,7 @@ class MainPage extends React.Component {
         return (
             <div>
                 <Preview />
-                <CalendarPanel events={this.props.events} groups={groups} csrfToken={this.props.csrfToken}/>
+                <Menu events={this.props.events} groups={groups} csrfToken={this.props.csrfToken} />
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
             </div>
