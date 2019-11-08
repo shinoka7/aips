@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Badge, Jumbotron, Spinner } from 'reactstrap';
+import { Button, Badge, Jumbotron, Spinner, Nav, NavItem, NavLink } from 'reactstrap';
+import classnames from 'classnames';
 
 class GroupDetail extends React.Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class GroupDetail extends React.Component {
 
         this.state = {
             isVerified: false,
+            activeTab: '1',
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
@@ -24,7 +26,7 @@ class GroupDetail extends React.Component {
 
     render() {
         const { group } = this.props;
-        const { isVerified } = this.state;
+        const { isVerified, activeTab } = this.state;
 
         return (
             <div>
@@ -36,8 +38,18 @@ class GroupDetail extends React.Component {
                     { !isVerified &&
                             <Badge /**onClick={this.toggleVerifyPanel}*/ color="warning" pill>Pending</Badge>
                     }
-                    <Spinner style={{ width: '3rem', height: '3rem' }} />{' '}
+                    <Spinner style={{ width: '3rem', height: '3rem' }} />
+
                 </Jumbotron>
+                <Nav tabs>
+                    <NavItem>
+                        <NavLink
+                            className={classnames({ active: activeTab === '1'})}
+                        >
+                            
+                        </NavLink>
+                    </NavItem>
+                </Nav>
             </div>
         )
     }
