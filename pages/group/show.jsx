@@ -50,6 +50,7 @@ class GroupDetail extends React.Component {
                         </NavLink>
                     </NavItem>
                 </Nav>
+                <iframe width="100%" height="500" src="https://hackmd.io/44JJ33bhQR-BQykw2oEuow#" frameborder="0"></iframe>
             </div>
         )
     }
