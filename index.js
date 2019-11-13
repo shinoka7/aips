@@ -52,7 +52,7 @@ class AIPSApp {
         const sequelize = require('./src/services/sequelize');
 
         const sessionStore = new SequelizeStore({ db: sequelize });
-        
+
         app.use(
             expressSession({
                 secret: 'secret-key',

@@ -26,5 +26,17 @@ services:
     ports:
       - "8080:80"
 
+  hackmd:
+    container_name: hackmd_container
+    image: hackmdio/hackmd
+    environment:
+      - CMD_DB_URL=sqlite://dummyhost/hackmd/sqlite/codimd.db
+      - CMD_CSP_ENABLE=false
+    ports:
+      - 3010:3000
+    volumes:
+      - sqlite_db:/files/sqlite
+
 volumes:
   db_data:
+  sqlite_db:

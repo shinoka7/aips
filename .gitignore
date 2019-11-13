@@ -4,5 +4,6 @@ node_modules
 src/db/potential-seeders
 config/env.dev.js
 config/env.prod.js
+logs
 
 /yarn-error.log
