@@ -1,13 +1,12 @@
 import Document, { Head, Main, NextScript } from 'next/document';
-import Styles from '../resources/styles/index.scss';
 
 export default class MyDocument extends Document {
-  
+
     static async getInitialProps(ctx) {
       const initialProps = await Document.getInitialProps(ctx);
       return { ...initialProps };
     }
-  
+
     render() {
       return (
         <html>
@@ -17,8 +16,6 @@ export default class MyDocument extends Document {
             {/* <!-- Iconset: Font Awesome 5.0.13 via CDN --> */}
             <link href="//use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-
-            <style dangerouslySetInnerHTML={{ __html: Styles }} />
 
             {/* Bootstrap */}
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossOrigin="anonymous" />
@@ -33,9 +30,13 @@ export default class MyDocument extends Document {
 
             {/* React Big Calendar */}
             <link href="https://cdn.jsdelivr.net/npm/react-big-calendar@0.19.0/lib/css/react-big-calendar.css" rel="stylesheet"/>
+
+            {/* Sass files */}
+            <link rel="stylesheet" href="../resources/styles/css/aips.css"/>
+
           </Head>
           <style jsx global>{`
-            body { 
+            body {
               background-color: #C0C0C0;
             }
           `}</style>

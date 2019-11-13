@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "docker:prod": "env-cmd -f config/env.prod.js docker-compose -f docker-compose.yml up -d --env production",
-    "dev": "env-cmd -f config/env.dev.js node-dev index.js",
+    "dev": "npm run sass:compile && env-cmd -f config/env.dev.js node-dev index.js",
     "db:migrate": "env-cmd -f config/env.dev.js sequelize db:migrate --env development",
     "db:migrate:undo": "env-cmd -f config/env.dev.js sequelize db:migrate:undo --env development",
     "db:migrate:undo:all": "env-cmd -f config/env.dev.js sequelize db:migrate:undo:all --env development",
@@ -13,7 +13,8 @@
     "db:seed:undo": "env-cmd -f config/env.dev.js sequelize db:seed:undo --env development",
     "db:seed:undo:all": "env-cmd -f config/env.dev.js sequelize db:seed:undo:all --env development",
     "build": "env-cmd -f config/env.prod.js next build",
-    "start": "env-cmd -f config/env.prod.js node index.js"
+    "start": "env-cmd -f config/env.prod.js node index.js",
+    "sass:compile": "node-sass resources/styles/scss/style.scss resources/styles/css/aips.css"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
@@ -43,13 +44,15 @@
     "react": "^16.8.6",
     "react-big-calendar": "^0.22.1",
     "react-dom": "^16.8.6",
+    "react-id-swiper": "^2.4.0",
     "reactstrap": "^8.0.1",
     "sequelize": "^5.18.4",
     "sequelize-cli": "^5.5.0",
     "sequelize-file": "^0.3.0",
     "sequelize-paginate": "^1.1.6",
     "styled-jsx": "^3.2.2",
-    "sweetalert2": "^8.14.0"
+    "sweetalert2": "^8.14.0",
+    "swiper": "^5.2.0"
   },
   "devDependencies": {
     "node-dev": "^4.0.0"
