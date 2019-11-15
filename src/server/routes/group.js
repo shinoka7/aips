@@ -94,6 +94,9 @@ module.exports = (aips) => {
         const { name, groupEmail, description } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).send({ error: 'user not found' });
+        }
 
         const group = await Group.create({ name, adminUserId: userId, groupEmail, description });
         await group.addUser(user);
