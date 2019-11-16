@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const logger = require('../../services/logger');
 const { body } = require('express-validator');
 const validator = {};
 
-const { User } = require('../../db/models');
+const { User, Notification, Group } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -26,11 +27,18 @@ module.exports = (aips) => {
             return res.redirect("/login");
         }
 
-        const groups = await user.getGroups();
+        const notifications = await Notification.findAll({
+            where: {
+                userId: user.id,
+            },
+            include: [{
+                model: Group,
+            }],
+        });
 
         nextApp.render(req, res, '/user/show', {
             user: user,
-            groups: groups,
+            notifications: notifications,
             csrfToken: req.csrfToken(),
         });
     }));
@@ -43,15 +51,10 @@ module.exports = (aips) => {
 
     // updates the user's info 
     // PUT /user/${id}/update
-    router.put('/:id(\\d+)/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
-        const { id } = req.params;
-        // console.log(req.user);
-        // const userId = req.user.id;
-        // TODO add user to req
-
+    router.put('/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
+        const id = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(id);
-
-        // userId !== Number(id) || 
+      
         if (!user) {
             return res.status(404).send({ error: 'Something went wrong...' });
         }
@@ -65,6 +68,30 @@ module.exports = (aips) => {
         }
 
         res.json({ user });
+    }));
+
+    router.put('/update/notifications', csrf, asyncMiddleware(async(req, res) => {
+        const id = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(id);
+      
+        if (!user) {
+            return res.status(404).send({ error: 'Something went wrong...' });
+        }
+
+        logger.info(req.body.notifyPosts);
+        logger.info(req.body.notifyEvents);
+        logger.info(req.body.notificationId);
+
+        const notification = await Notification.findByPk(req.body.notificationId);
+        if (req.body.notifyPosts !== null) {
+            await notification.update({ notifyPosts: req.body.notifyPosts });
+        }
+
+        if (req.body.notifyEvents !== null) {
+            await notification.update({ notifyEvents: req.body.notifyEvents });
+        }
+        
+        res.json({ notification });
     }));
 
     return router;

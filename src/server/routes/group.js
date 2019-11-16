@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 
 const validator = {};
 
-const { User, Group } = require('../../db/models');
+const { User, Group, Notification } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -68,7 +68,7 @@ module.exports = (aips) => {
     /**
      * GET group page by id /group/${id}
      */
-    router.get('/:id(\\d+)', asyncMiddleware(async(req, res) => {
+    router.get('/:id(\\d+)', csrf, asyncMiddleware(async(req, res) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const id = req.params.id;
         
@@ -100,6 +100,8 @@ module.exports = (aips) => {
 
         const group = await Group.create({ name, adminUserId: userId, groupEmail, description });
         await group.addUser(user);
+
+        await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });
         
         res.json({ group });
     }));

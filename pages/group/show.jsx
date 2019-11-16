@@ -20,12 +20,12 @@ class GroupDetail extends React.Component {
         return context.query || {};
     }
 
-    toggleVerifyPanel() {
+    // toggleVerifyPanel() {
         
-    }
+    // }
 
     render() {
-        const { group } = this.props;
+        const { group, user } = this.props;
         const { isVerified, activeTab } = this.state;
 
         return (
@@ -50,7 +50,9 @@ class GroupDetail extends React.Component {
                         </NavLink>
                     </NavItem>
                 </Nav>
-                <iframe width="100%" height="500" src="http://localhost:3010/" frameborder="0"></iframe>
+                {/* INNER FRAME KILLS SESSION? https://www.webdeveloper.com/d/187843-iframe-is-killing-my-session-data */}
+                {/* https://stackoverflow.com/questions/917500/how-can-i-persist-a-session-in-an-iframe */}
+                {/* <iframe width="100%" height="500" src="http://localhost:3010/" frameborder="0"></iframe> */}
             </div>
         )
     }

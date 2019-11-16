@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const { body } = require('express-validator');
-const { Event, User, Group } = require('../../db/models');
+const { Event, User, Group, Notification } = require('../../db/models');
+
+const mailerService = require('../../services/mailer');
 
 const validator = {};
 
@@ -41,6 +43,21 @@ module.exports = (aips) => {
 
         const event = await Event.create({ groupId, startAt: start, endAt: end, name, description });
         await event.setGroup(group);
+
+        const notifications = await Notification.findAll({
+            where: {
+                groupId: group.id,
+                notifyEvents: true,
+            },
+            include: [{
+                model: User,
+            }],
+        });
+
+        notifications.forEach((notification) => {
+            subject = `${group.name} created an event!`;
+            mailerService.sendOne('event', notification.User, subject, event.name, event.description);
+        });
 
         res.json({ event });
     }));
