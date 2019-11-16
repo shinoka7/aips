@@ -24,7 +24,7 @@ class UserDetail extends React.Component {
     }
 
     render() {
-        const { user, groups, csrfToken } = this.props;
+        const { user, notifications, csrfToken } = this.props;
         const { showUserProfile } = this.state;
 
         return (
@@ -35,7 +35,7 @@ class UserDetail extends React.Component {
                     {/* Show Profile */}
                     {/* TODO make cool arrow button && transition Dropdown? */}
                 {/* </Button> */}
-                <GroupList groups={groups} />
+                <GroupList notifications={notifications} csrfToken={csrfToken} />
             </div>
         );
     }
@@ -43,7 +43,7 @@ class UserDetail extends React.Component {
 
 UserDetail.propTypes = {
     user: PropTypes.object.isRequired,
-    groups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 

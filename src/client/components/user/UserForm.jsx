@@ -69,7 +69,7 @@ class UserForm extends React.Component {
             confirmButtonText: 'Confirm',
             preConfirm: async() => {
                 try {
-                    return await axios.put(`/user/${user.id}/update`, params);
+                    return await axios.put(`/user/update`, params);
                 }
                 catch(err) {
                     console.log(err);

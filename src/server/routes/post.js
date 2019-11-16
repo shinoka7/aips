@@ -5,7 +5,8 @@ const { body } = require('express-validator');
 
 const validator = {};
 
-const { Post, User, Group } = require('../../db/models');
+const { Post, User, Group, Notification } = require('../../db/models');
+const mailerService = require('../../services/mailer');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -57,6 +58,21 @@ module.exports = (aips) => {
 
         const post = await Post.create({ userId, groupId, title, content });
         await post.setGroup(group);
+
+        const notifications = await Notification.findAll({
+            where: {
+                groupId: group.id,
+                notifyPosts: true,
+            },
+            include: [{
+                model: User,
+            }],
+        });
+
+        notifications.forEach((notification) => {
+            subject = `${group.name} made a post!`;
+            mailerService.sendOne('post', notification.User, subject, post.title, post.content);
+        });
 
         res.json({ post });
     }));
