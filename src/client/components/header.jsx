@@ -29,7 +29,7 @@ class Header extends React.Component {
 
         return (
             <div className="container" style={{opacity}}>
-                <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
                     <a className="navbar-brand" href="/">AIPS</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
