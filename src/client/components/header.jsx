@@ -42,13 +42,15 @@ class Header extends React.Component {
                         <li className="nav-item">
                             <a className="nav-link" href="/group/groups">Groups</a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/user">Profile</a>
-                        </li>
                         { user.id &&
-                            <li className="nav-item">
-                                <a className="nav-link" href="/auth/logout">Logout</a>
-                            </li>
+                            <React.Fragment>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/user">Profile</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/auth/logout">Logout</a>
+                                </li>
+                            </React.Fragment>
                         }
                         { !user.id &&
                             <li className="nav-item">
