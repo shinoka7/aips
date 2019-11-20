@@ -75,9 +75,20 @@ module.exports = (aips) => {
         const user = await User.findByPk(userId);
         const group = await Group.findByPk(id);
 
+        let isUserInGroup = false;
+        await group.getUsers().then((users) => {
+            users.forEach((user) => {
+                if (user.id === userId) {
+                    isUserInGroup = true;
+                }
+            });
+        });
+
         nextApp.render(req, res, '/group/show', {
             user: user || {},
             group: group || {},
+            isUserInGroup: isUserInGroup,
+            csrfToken: req.csrfToken(),
         });
     }));
 
@@ -103,6 +114,29 @@ module.exports = (aips) => {
 
         await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });
         
+        res.json({ group });
+    }));
+
+
+    validator.addUser = [
+        body('user').exists(),
+        body('group').exists(),
+    ];
+
+    /**
+     * add user to group
+     */
+    router.post('/addUser', csrf, validator.addUser, validateBody, asyncMiddleware(async(req, res) => {
+        let { user, group } = req.body;
+        user = await User.findByPk(user.id);
+        group = await Group.findByPk(group.id);
+        if (!user || !group) {
+            return res.status(404).send({ error: 'user or group not found' });
+        }
+
+        await group.addUser(user);
+        await Notification.create({ userId: user.id, groupId: group.id, notifyPosts: false, notifyEvents: false });
+
         res.json({ group });
     }));
 

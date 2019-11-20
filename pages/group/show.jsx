@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Badge, Jumbotron, Spinner, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
+import axios from 'axios';
 
 class GroupDetail extends React.Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class GroupDetail extends React.Component {
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
+        this.joinGroupHandler = this.joinGroupHandler.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -24,8 +26,17 @@ class GroupDetail extends React.Component {
         
     // }
 
+    async joinGroupHandler() {
+        const { user, group, csrfToken } = this.props;
+        const res = await axios.post('/group/addUser', {
+            user,
+            group,
+            _csrf: csrfToken,
+        });
+    }
+
     render() {
-        const { group, user } = this.props;
+        const { group, user, isUserInGroup } = this.props;
         const { isVerified, activeTab } = this.state;
 
         return (
@@ -38,7 +49,10 @@ class GroupDetail extends React.Component {
                     { !isVerified &&
                             <Badge /**onClick={this.toggleVerifyPanel}*/ color="warning" pill>Pending</Badge>
                     }
-                    <Spinner style={{ width: '3rem', height: '3rem' }} />
+                    <hr />
+                    <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
+                        <i className="fas fa-user-plus"> Join</i>
+                    </Button>
 
                 </Jumbotron>
                 <Nav tabs>
@@ -61,6 +75,8 @@ class GroupDetail extends React.Component {
 GroupDetail.propTypes = {
     user: PropTypes.object.isRequired,
     group: PropTypes.object.isRequired,
+    isUserInGroup: PropTypes.bool.isRequired,
+    csrfToken: PropTypes.string.isRequired,
 };
 
 export default GroupDetail;
