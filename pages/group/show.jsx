@@ -33,6 +33,8 @@ class GroupDetail extends React.Component {
             group,
             _csrf: csrfToken,
         });
+
+        window.location.reload();
     }
 
     render() {
