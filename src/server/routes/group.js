@@ -5,6 +5,7 @@ const { body } = require('express-validator');
 
 const validator = {};
 
+const logger = require('../../services/logger');
 const { User, Group, Notification } = require('../../db/models');
 
 module.exports = (aips) => {
@@ -138,6 +139,36 @@ module.exports = (aips) => {
         await Notification.create({ userId: user.id, groupId: group.id, notifyPosts: false, notifyEvents: false });
 
         res.json({ group });
+    }));
+
+    validator.deleteUser = [
+        body('user').exists(),
+        body('group').exists(),
+    ];
+
+    /** 
+     * delete user from group
+     */
+    router.post('/deleteUser', csrf, validator.deleteUser, validateBody, asyncMiddleware(async(req, res) => {
+        let { user, group } = req.body;
+        user = await User.findByPk(user.id);
+        group = await Group.findByPk(group.id);
+        if (!user || !group) {
+            return res.status(404).send({ error: 'user or group not found' });
+        }
+        
+        // https://sequelize.org/master/class/lib/associations/belongs-to-many.js~BelongsToMany.html
+
+        await group.removeUser(user);
+        await Notification.destroy({
+            where: {
+                userId: user.id,
+                groupId: group.id,
+            }
+        });
+
+        logger.info('here');
+        res.json({ user });
     }));
 
     return router;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Badge, Jumbotron, Spinner, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 class GroupDetail extends React.Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class GroupDetail extends React.Component {
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
         this.joinGroupHandler = this.joinGroupHandler.bind(this);
+        this.leaveGroupHandler = this.leaveGroupHandler.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -37,6 +39,36 @@ class GroupDetail extends React.Component {
         window.location.reload();
     }
 
+    async leaveGroupHandler() {
+        const { user, group, csrfToken } = this.props;
+        const params = {
+            user,
+            group,
+            _csrf: csrfToken,
+        };
+
+        const res = await Swal.fire({
+            title: 'Leave the Group',
+            type: 'warning',
+            text: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonText: 'Leave',
+            confirmButtonColor: '#d33',
+            preConfirm: async() => {
+                try {
+                    return await axios.post('/group/deleteUser', params);
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+        });
+
+        if (!res.dismiss) {
+            window.location.reload()
+        }
+    }
+
     render() {
         const { group, user, isUserInGroup } = this.props;
         const { isVerified, activeTab } = this.state;
@@ -54,6 +86,9 @@ class GroupDetail extends React.Component {
                     <hr />
                     <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
                         <i className="fas fa-user-plus"> Join</i>
+                    </Button>
+                    <Button onClick={this.leaveGroupHandler} color="danger" disabled={!isUserInGroup}>
+                        <i className="fas fa-sign-out-alt"> Leave</i>
                     </Button>
 
                 </Jumbotron>
