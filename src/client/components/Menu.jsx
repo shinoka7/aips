@@ -15,6 +15,7 @@ class Menu extends React.Component {
         this.state = {
             isOpen: false,
             postIsOpen: false,
+            calendarIsOpen: false,
         };
 
         this.toggleMenu = this.toggleMenu.bind(this);

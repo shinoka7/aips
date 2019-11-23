@@ -6,6 +6,8 @@ import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
+
 class GroupDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -13,11 +15,13 @@ class GroupDetail extends React.Component {
         this.state = {
             isVerified: false,
             activeTab: '1',
+            calendarIsOpen: false,
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
         this.joinGroupHandler = this.joinGroupHandler.bind(this);
         this.leaveGroupHandler = this.leaveGroupHandler.bind(this);
+        this.toggleCalendar = this.toggleCalendar.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -69,9 +73,13 @@ class GroupDetail extends React.Component {
         }
     }
 
+    toggleCalendar() {
+        this.setState({ calendarIsOpen: !this.state.calendarIsOpen });
+    }
+
     render() {
-        const { group, user, isUserInGroup } = this.props;
-        const { isVerified, activeTab } = this.state;
+        const { group, user, isUserInGroup, events, csrfToken } = this.props;
+        const { isVerified, activeTab, calendarIsOpen } = this.state;
 
         return (
             <div>
@@ -87,9 +95,16 @@ class GroupDetail extends React.Component {
                     <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
                         <i className="fas fa-user-plus"> Join</i>
                     </Button>
+                    {'\t'}
                     <Button onClick={this.leaveGroupHandler} color="danger" disabled={!isUserInGroup}>
                         <i className="fas fa-sign-out-alt"> Leave</i>
                     </Button>
+                    {'\t'}
+                    <Button onClick={this.toggleCalendar} className="btn btn-info">
+                        <i className="fas fa-calendar-alt"> Events</i>
+                    </Button>
+                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={[group]} csrfToken={csrfToken} modal={calendarIsOpen} />
+
 
                 </Jumbotron>
                 <Nav tabs>
@@ -114,6 +129,7 @@ GroupDetail.propTypes = {
     group: PropTypes.object.isRequired,
     isUserInGroup: PropTypes.bool.isRequired,
     csrfToken: PropTypes.string.isRequired,
+    events: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default GroupDetail;

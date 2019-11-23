@@ -6,7 +6,8 @@ const { body } = require('express-validator');
 const validator = {};
 
 const logger = require('../../services/logger');
-const { User, Group, Notification } = require('../../db/models');
+const { User, Group, Notification, Event } = require('../../db/models');
+const { Op } = require('sequelize');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -72,9 +73,26 @@ module.exports = (aips) => {
     router.get('/:id(\\d+)', csrf, asyncMiddleware(async(req, res) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const id = req.params.id;
+
+        logger.info('hello');
         
         const user = await User.findByPk(userId);
         const group = await Group.findByPk(id);
+
+        logger.info('hello');
+
+        const date = new Date();
+        date.setMonth(date.getMonth() - 3);
+        const events = await Event.findAll({
+            where: {
+                endAt: {
+                    [Op.gte]: date,
+                },
+                groupId: group.id,
+            }
+        });
+
+        logger.info('hello');
 
         let isUserInGroup = false;
         await group.getUsers().then((users) => {
@@ -90,6 +108,7 @@ module.exports = (aips) => {
             group: group || {},
             isUserInGroup: isUserInGroup,
             csrfToken: req.csrfToken(),
+            events: events || [],
         });
     }));
 
