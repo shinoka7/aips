@@ -55,14 +55,8 @@ class RecentActivity extends React.Component {
         const generatedPosts = this.generatePosts(posts);
 
         return (
-            <div>
-                <PostForm
-                    groups={groups}
-                    csrfToken={this.props.csrfToken}
-                />
-                <div className="pt-4">
-                    {generatedPosts}
-                </div>
+            <div className="pt-4">
+                {generatedPosts}
             </div>
         );
     }

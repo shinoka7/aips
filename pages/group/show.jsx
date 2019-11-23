@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
+import PostForm from '../../src/client/components/PostForm.jsx';
 
 class GroupDetail extends React.Component {
     constructor(props) {
@@ -16,12 +17,14 @@ class GroupDetail extends React.Component {
             isVerified: false,
             activeTab: '1',
             calendarIsOpen: false,
+            postIsOpen: false,
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
         this.joinGroupHandler = this.joinGroupHandler.bind(this);
         this.leaveGroupHandler = this.leaveGroupHandler.bind(this);
         this.toggleCalendar = this.toggleCalendar.bind(this);
+        this.togglePostForm = this.togglePostForm.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -81,9 +84,13 @@ class GroupDetail extends React.Component {
         this.setState({ calendarIsOpen: !this.state.calendarIsOpen });
     }
 
+    togglePostForm() {
+        this.setState({ postIsOpen: !this.state.postIsOpen });
+    }
+
     render() {
         const { group, user, isUserInGroup, events, csrfToken } = this.props;
-        const { isVerified, activeTab, calendarIsOpen } = this.state;
+        const { isVerified, activeTab, calendarIsOpen, postIsOpen } = this.state;
 
         return (
             <div>
@@ -108,8 +115,11 @@ class GroupDetail extends React.Component {
                         <i className="fas fa-calendar-alt"> Events</i>
                     </Button>
                     <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={[group]} csrfToken={csrfToken} modal={calendarIsOpen} />
-
-
+                    {'\t'}
+                    <Button onClick={this.togglePostForm} className="btn btn-secondary">
+                        <i className="fas fa-edit"> Post</i>
+                    </Button>
+                    <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
                 </Jumbotron>
                 <Nav tabs>
                     <NavItem>

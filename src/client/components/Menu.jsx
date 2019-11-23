@@ -46,7 +46,7 @@ class Menu extends React.Component {
                 </Button>
                 <Collapse isOpen={isOpen}>
                     <ButtonGroup vertical className="pr-2">
-                        <Button onClick={this.togglePostForm} className="btn btn-lg btn-success btn-c">
+                        <Button onClick={this.togglePostForm} className="btn btn-lg btn-success">
                             <i className="fas fa-edit"></i>
                         </Button>
                         <PostForm togglePostForm={this.togglePostForm} groups={groups} csrfToken={this.props.csrfToken} modal={postIsOpen} />

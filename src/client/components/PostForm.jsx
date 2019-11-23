@@ -117,8 +117,8 @@ class PostForm extends React.Component {
 PostForm.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
-    modal: PropTypes.bool,
-    togglePostForm: PropTypes.func,
+    modal: PropTypes.bool.isRequired,
+    togglePostForm: PropTypes.func.isRequired,
 };
 
 export default PostForm;
