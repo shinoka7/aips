@@ -34,13 +34,17 @@ class GroupDetail extends React.Component {
 
     async joinGroupHandler() {
         const { user, group, csrfToken } = this.props;
-        const res = await axios.post('/group/addUser', {
+        await axios.post('/group/addUser', {
             user,
             group,
             _csrf: csrfToken,
+        })
+        .then((res) => {
+            window.location.reload();
+        })
+        .catch((err) => {
+            window.location = '/login';
         });
-
-        window.location.reload();
     }
 
     async leaveGroupHandler() {
