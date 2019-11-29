@@ -124,18 +124,17 @@ class GroupsDetail extends React.Component {
         const pagination = this.generatePagination(paginationItems);
 
         return(
-            <div>
-                <Row className="row justify-content-around">
-                    {groupList}
-                </Row>
-                <Row className="fixed-bottom pt-3 pb-5 mb-4 d-flex justify-content-center">
-                    {pagination}
-                </Row>
-                
+            <div className="pt-3 text-right">
                 <GroupForm
                     groupNames={groupNames}
                     csrfToken={this.props.csrfToken}
                 />
+                <Row className="row justify-content-around">
+                    {groupList}
+                </Row>
+                <Row className="fixed-bottom pt-3 pb-4 d-flex justify-content-center">
+                    {pagination}
+                </Row>
             </div>
         );
     }

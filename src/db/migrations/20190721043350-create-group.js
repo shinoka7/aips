@@ -23,6 +23,31 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: '',
       },
+      website: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
+      statement: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
+      meetingDay: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
+      meetingTime: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
+      meetingPlace: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),

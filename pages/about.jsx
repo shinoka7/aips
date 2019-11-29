@@ -12,7 +12,7 @@ class About extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="pt-3">
                 <p>AIPS is meant to create clubs and manage activities, while keeping with other members</p>
             </div>
         );

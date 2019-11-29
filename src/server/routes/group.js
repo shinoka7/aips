@@ -74,12 +74,8 @@ module.exports = (aips) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const id = req.params.id;
 
-        logger.info('hello');
-        
         const user = await User.findByPk(userId);
         const group = await Group.findByPk(id);
-
-        logger.info('hello');
 
         const date = new Date();
         date.setMonth(date.getMonth() - 3);
@@ -91,8 +87,6 @@ module.exports = (aips) => {
                 groupId: group.id,
             }
         });
-
-        logger.info('hello');
 
         let isUserInGroup = false;
         await group.getUsers().then((users) => {
@@ -137,6 +131,37 @@ module.exports = (aips) => {
         res.json({ group });
     }));
 
+    validator.update = [
+        body('groupId').exists(),
+        body('groupEmail').isEmail(),
+        body('description').exists(),
+        body('website').exists(),
+        body('statement').exists(),
+        body('meetingDay').exists(),
+        body('meetingTime').exists(),
+        body('meetingPlace').exists(),
+    ];
+
+    /** 
+     * PUT /group/update UPDATES GROUP
+    */
+    router.put('/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
+        const { groupId } = req.body;
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
+        let group = await Group.findByPk(groupId);
+        if (!group || !user) {
+            return res.status(404).send({ error: 'user or group not found' });
+        }
+
+        const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace } = req.body;
+        logger.info(groupEmail);
+        group = await group.update({
+            groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace,
+        });
+
+        res.json({ group });
+    }));
 
     validator.addUser = [
         body('user').exists(),
@@ -186,7 +211,6 @@ module.exports = (aips) => {
             }
         });
 
-        logger.info('here');
         res.json({ user });
     }));
 

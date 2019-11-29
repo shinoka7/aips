@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Badge, Jumbotron, Spinner, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, ButtonGroup, Badge, Jumbotron, Container, Nav, NavItem, NavLink,
+    Media, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
 import PostForm from '../../src/client/components/PostForm.jsx';
+import AdminPanel from '../../src/client/components/group/AdminPanel.jsx';
+import DetailPanel from '../../src/client/components/group/DetailPanel.jsx';
 
 class GroupDetail extends React.Component {
     constructor(props) {
@@ -25,6 +28,7 @@ class GroupDetail extends React.Component {
         this.leaveGroupHandler = this.leaveGroupHandler.bind(this);
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.togglePostForm = this.togglePostForm.bind(this);
+        this.toggleTab = this.toggleTab.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -88,48 +92,92 @@ class GroupDetail extends React.Component {
         this.setState({ postIsOpen: !this.state.postIsOpen });
     }
 
+    toggleTab(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({ activeTab: tab });
+        }
+    }
+
     render() {
         const { group, user, isUserInGroup, events, csrfToken } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen } = this.state;
 
         return (
             <div>
-                <Jumbotron>
-                    <h2 className="display-3">{group.name}</h2>
-                    { isVerified &&
-                        <Badge /**onClick={this.toggleVerifyPanel}*/ color="success" pill>Verified</Badge>
-                    }
-                    { !isVerified &&
-                            <Badge /**onClick={this.toggleVerifyPanel}*/ color="warning" pill>Pending</Badge>
-                    }
-                    <hr />
-                    <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
-                        <i className="fas fa-user-plus"> Join</i>
-                    </Button>
-                    {'\t'}
-                    <Button onClick={this.leaveGroupHandler} color="danger" disabled={!isUserInGroup}>
-                        <i className="fas fa-sign-out-alt"> Leave</i>
-                    </Button>
-                    {'\t'}
-                    <Button onClick={this.toggleCalendar} className="btn btn-info">
-                        <i className="fas fa-calendar-alt"> Events</i>
-                    </Button>
-                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={[group]} csrfToken={csrfToken} modal={calendarIsOpen} />
-                    {'\t'}
-                    <Button onClick={this.togglePostForm} className="btn btn-secondary">
-                        <i className="fas fa-edit"> Post</i>
-                    </Button>
-                    <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
+                <Jumbotron fluid>
+                    <Container  fluid>
+                        <Media>
+                            <Media left href="#">
+                                <Media object src="/resources/img/default/default_group.png" alt="Group placeholder image" className="border rounded border-dark"></Media>
+                            </Media>
+                            <Media body className="text-center">
+                                <Media heading>
+                                    <p className="display-4">{group.name}</p>
+                                </Media>
+                                <Badge color="info" pill>Category</Badge>
+                                { isVerified &&
+                                    <Badge /**onClick={this.toggleVerifyPanel}*/ color="success" pill>Verified</Badge>
+                                }
+                                { !isVerified &&
+                                    <Badge /**onClick={this.toggleVerifyPanel}*/ color="warning" pill>Pending</Badge>
+                                }
+                                <br /><br />
+                                {group.description}
+                            </Media>
+                        </Media>
+                        <hr />
+                        <ButtonGroup>
+                            <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
+                                <i className="fas fa-user-plus"> Join</i>
+                            </Button>
+                            <Button onClick={this.leaveGroupHandler} color="danger" disabled={!isUserInGroup}>
+                                <i className="fas fa-sign-out-alt"> Leave</i>
+                            </Button>
+                        </ButtonGroup>
+                        {'\t'}
+                        <ButtonGroup className="text-right">
+                            <Button onClick={this.toggleCalendar} className="btn btn-info">
+                                <i className="fas fa-calendar-alt"> Events</i>
+                            </Button>
+                        </ButtonGroup>
+                        {'\t'}
+                        <ButtonGroup>
+                            <Button onClick={this.togglePostForm} className="btn btn-secondary" disabled={!isUserInGroup}>
+                                <i className="fas fa-edit"> Post</i>
+                            </Button>
+                        </ButtonGroup>
+                        <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
+                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} modal={calendarIsOpen} />
+                        <br />
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({ active: activeTab === '1'})}
+                                    onClick={() => { this.toggleTab('1'); }}
+                            >
+                                    Details
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    disabled={!isUserInGroup}
+                                    className={classnames({ active: activeTab === '2'})}
+                                    onClick={() => { this.toggleTab('2'); }}
+                                >
+                                    Admin
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <TabContent activeTab={activeTab}>
+                            <TabPane tabId="1">
+                                <DetailPanel group={group} />
+                            </TabPane>
+                            <TabPane tabId="2">
+                                <AdminPanel group={group} csrfToken={csrfToken} />
+                            </TabPane>
+                        </TabContent>
+                    </Container>
                 </Jumbotron>
-                <Nav tabs>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({ active: activeTab === '1'})}
-                        >
-                            
-                        </NavLink>
-                    </NavItem>
-                </Nav>
                 {/* INNER FRAME KILLS SESSION? https://www.webdeveloper.com/d/187843-iframe-is-killing-my-session-data */}
                 {/* https://stackoverflow.com/questions/917500/how-can-i-persist-a-session-in-an-iframe */}
                 {/* <iframe width="100%" height="500" src="http://localhost:3010/" frameborder="0"></iframe> */}

@@ -41,21 +41,21 @@ class Menu extends React.Component {
 
         return (
             <div className="d-flex flex-row-reverse pr-4 fixed-bottom pb-5">
-                <Button color="primary" className="btn btn-lg btn-outline-primary" onClick={this.toggleMenu}>
+                <Button color="primary" className="btn btn-lg btn-outline-danger" onClick={this.toggleMenu}>
                     <i className="fas fa-plus" />
                 </Button>
                 <Collapse isOpen={isOpen}>
                     <ButtonGroup vertical className="pr-2">
-                        <Button onClick={this.togglePostForm} className="btn btn-lg btn-success">
+                        <Button onClick={this.togglePostForm} className="btn btn-lg" color="danger" outline>
                             <i className="fas fa-edit"></i>
                         </Button>
-                        <PostForm togglePostForm={this.togglePostForm} groups={groups} csrfToken={this.props.csrfToken} modal={postIsOpen} />
-                        <Button onClick={this.toggleCalendar} className="btn btn-lg btn-info">
+                        <Button onClick={this.toggleCalendar} className="btn btn-lg" color="danger" outline>
                             <i className="fas fa-calendar-alt" />
                         </Button>
-                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} modal={calendarIsOpen} />
                     </ButtonGroup>
                 </Collapse>
+                <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} modal={calendarIsOpen} />
+                <PostForm togglePostForm={this.togglePostForm} groups={groups} csrfToken={this.props.csrfToken} modal={postIsOpen} />
             </div>
         );
     }

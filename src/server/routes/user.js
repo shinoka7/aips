@@ -78,10 +78,6 @@ module.exports = (aips) => {
             return res.status(404).send({ error: 'Something went wrong...' });
         }
 
-        logger.info(req.body.notifyPosts);
-        logger.info(req.body.notifyEvents);
-        logger.info(req.body.notificationId);
-
         const notification = await Notification.findByPk(req.body.notificationId);
         if (req.body.notifyPosts !== null) {
             await notification.update({ notifyPosts: req.body.notifyPosts });

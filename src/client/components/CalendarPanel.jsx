@@ -237,8 +237,8 @@ CalendarPanel.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
-    toggleCalendar: PropTypes.func,
-    modal: PropTypes.bool,
+    toggleCalendar: PropTypes.func.isRequired,
+    modal: PropTypes.bool.isRequired,
 }
 
 export default CalendarPanel;
