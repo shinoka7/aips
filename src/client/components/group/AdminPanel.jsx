@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Card, CardBody, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, ButtonGroup, Card, CardBody, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -11,6 +11,7 @@ class AdminPanel extends React.Component {
 
         this.state = {
             showSettingsForm: false,
+            showDisbandForm: false,
             groupEmail: props.group.groupEmail,
             description: props.group.description,
             website: props.group.website,
@@ -23,6 +24,7 @@ class AdminPanel extends React.Component {
         // this.addUser = this.addUser.bind(this);
         this.toggleSettingsForm = this.toggleSettingsForm.bind(this);
         this.updateHandler = this.updateHandler.bind(this);
+        this.disbandHandler = this.disbandHandler.bind(this);
     }
 
     // addUser() {
@@ -76,6 +78,38 @@ class AdminPanel extends React.Component {
         });
     }
 
+    async disbandHandler() {
+        const { group } = this.props;
+
+        const res = await Swal.fire({
+            title: "Disband Group",
+            html: "Security Question:<br/>What is the group email?",
+            input: "text",
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Disband',
+            showLoaderOnConfirm: true,
+            preConfirm: async(email) => {
+                try {
+                    if (email === group.groupEmail) {
+                        return await axios.delete('/group', { data: { groupId: group.id } });
+                    }
+                    else {
+                        await Swal.fire({
+                            title: 'Failed',
+                            text: 'Group Email is incorrect',
+                            type: 'error'
+                        });
+                    }
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            },
+        });
+    }
 
     render() {
         const { group } = this.props;
@@ -98,7 +132,11 @@ class AdminPanel extends React.Component {
                             <b>Settings</b>
                             <hr />
                             { !showSettingsForm &&
-                                <Button onClick={this.toggleSettingsForm} color="warning">Update Info</Button>
+                                <ButtonGroup>
+                                    <Button onClick={this.toggleSettingsForm} color="warning">Update Info</Button>
+                                    {/* WIP */}
+                                    <Button onClick={this.disbandHandler} color="danger" disabled>Disband Group</Button>
+                                </ButtonGroup>
                             }
                             { showSettingsForm &&
                                 <Form>

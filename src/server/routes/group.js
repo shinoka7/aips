@@ -155,12 +155,38 @@ module.exports = (aips) => {
         }
 
         const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace } = req.body;
-        logger.info(groupEmail);
         group = await group.update({
             groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace,
         });
 
         res.json({ group });
+    }));
+
+    /** 
+     * DELETE /group DELETES GROUP
+    */
+    router.delete('/', asyncMiddleware(async(req, res) => {
+        const { groupId } = req.body.data;
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
+        let group = await Group.findByPk(groupId);
+        if (!group || !user) {
+            return res.status(404).send({ error: 'user or group not found' });
+        }
+
+        await user.removeGroup(group);
+
+        const notifications = await Notification.findAll({
+            where: {
+                groupId: group.id,
+            }
+        });
+        notifications.forEach(async(notification) => {
+            await notification.destroy();
+        });
+
+        group = await group.destroy();
+         res.json({ group });
     }));
 
     validator.addUser = [
