@@ -332,9 +332,9 @@ class CalendarPanel extends React.Component {
                                     <b>
                                     <h5>{selectedEvent.description}</h5>
                                     <br />
-                                    Start: {selectedEvent.startDate} ~ {selectedEvent.startTime}
+                                    Starts: {selectedEvent.startDate} ~ {selectedEvent.startTime}
                                     <br />
-                                    End: {selectedEvent.endDate} ~ {selectedEvent.endTime}
+                                    Ends: {selectedEvent.endDate} ~ {selectedEvent.endTime}
                                     </b>
                                     <br />
                                     <div className="text-right">
