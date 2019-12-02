@@ -14,6 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Event.belongsTo(models.Group);
   };
-  
+
   return Event;
 };

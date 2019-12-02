@@ -32,7 +32,7 @@ class MainPage extends React.Component {
 
         return (
             <div>
-                <Preview />
+                <Preview events={this.props.events} />
                 <Menu events={this.props.events} groups={groups} images={this.props.images} csrfToken={this.props.csrfToken} />
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
