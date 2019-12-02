@@ -53,20 +53,15 @@ module.exports = (aips) => {
     // PUT /user/${id}/update
     router.put('/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
-        const user = await User.findByPk(id);
+        let user = await User.findByPk(id);
       
         if (!user) {
             return res.status(404).send({ error: 'Something went wrong...' });
         }
 
-        try {
-            await user.update(req.body);
-        }
-        catch (err) {
-            console.log(err);
-            return res.status(500).send({ error: "User info update failed" });
-        }
-
+        
+        user = await user.update(req.body);
+        
         res.json({ user });
     }));
 

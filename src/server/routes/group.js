@@ -99,7 +99,6 @@ module.exports = (aips) => {
                 return console.log('Unable to scan directory:' + err);
             }
             files.forEach((file) => {
-                console.log(file);
                 images.push(file);
             })
         });

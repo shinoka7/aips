@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
+import { Button, Card, CardBody, CardText, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
 
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
@@ -17,9 +17,9 @@ class UserForm extends React.Component {
             modal: false,
             unmountOnClose: false,
             errors: [],
-            firstName: '',
-            lastName: '',
-            username: '',
+            firstName: props.user.firstName,
+            lastName: props.user.lastName,
+            username: props.user.username,
         }
 
         this.toggle = this.toggle.bind(this);
@@ -52,7 +52,7 @@ class UserForm extends React.Component {
      * handles username change confirmation
      */
     async confirmHandler() {
-        const { user, csrfToken } = this.props;
+        const { csrfToken } = this.props;
         const { username, firstName, lastName } = this.state;
         const params = {
             username: username,
@@ -78,7 +78,7 @@ class UserForm extends React.Component {
         });
 
         if (!res.dismiss) {
-            window.location.reload();
+            this.setState({ user: res.value.user });
         }
 
         this.toggle();
@@ -93,23 +93,32 @@ class UserForm extends React.Component {
         const { user, csrfToken } = this.props;
 
         return (
-            <div className="pl-3">
-                <Button onClick={this.toggle} className="btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
-                <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
-                    <ModalHeader toggle={this.toggle}>Edit Profile</ModalHeader>
-                    <ModalBody>
-                        <AvForm>
-                            <AvField name="username" label="Username" onChange={this.setUsername} required />
-                            <AvField name="firstname" label="First Name" onChange={this.setFirstName} required />
-                            <AvField name="lastname" label="Last Name" onChange={this.setLastName} required />
-                        </AvForm>
-                        <ModalFooter>
-                            <Button onClick={this.confirmHandler} color="primary" disabled={!this.validate()}>Confirm</Button>
-                            <Button onClick={this.toggle} color="secondary">Cancel</Button>
-                        </ModalFooter>
-                    </ModalBody>
-                </Modal>
-            </div>
+            <Card>
+                <CardBody>
+                <CardText>
+                    Username : {user.username}<br />
+                    First name : {user.firstName}<br />
+                    Last name : {user.lastName}<br />
+                </CardText>
+                <CardText className="text-right">
+                    <Button onClick={this.toggle} className="btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
+                    <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
+                        <ModalHeader toggle={this.toggle}>Edit Profile</ModalHeader>
+                        <ModalBody>
+                            <AvForm>
+                                <AvField name="username" label="Username" onChange={this.setUsername} required />
+                                <AvField name="firstname" label="First Name" onChange={this.setFirstName} required />
+                                <AvField name="lastname" label="Last Name" onChange={this.setLastName} required />
+                            </AvForm>
+                            <ModalFooter>
+                                <Button onClick={this.confirmHandler} color="primary" disabled={!this.validate()}>Confirm</Button>
+                                <Button onClick={this.toggle} color="secondary">Cancel</Button>
+                            </ModalFooter>
+                        </ModalBody>
+                    </Modal>
+                </CardText>
+                </CardBody>
+            </Card>
         );
     }
 }
