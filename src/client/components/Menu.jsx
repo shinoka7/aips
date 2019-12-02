@@ -37,10 +37,10 @@ class Menu extends React.Component {
 
     render() {
         const { isOpen, postIsOpen, calendarIsOpen } = this.state;
-        const { events, groups, csrfToken } = this.props;
+        const { events, groups, csrfToken, images } = this.props;
 
         return (
-            <div className="d-flex flex-row-reverse pr-4 fixed-bottom pb-5">
+            <div className="d-flex flex-row-reverse pr-2 fixed-bottom pb-5">
                 <Button color="primary" className="btn btn-lg btn-outline-danger" onClick={this.toggleMenu}>
                     <i className="fas fa-plus" />
                 </Button>
@@ -54,7 +54,7 @@ class Menu extends React.Component {
                         </Button>
                     </ButtonGroup>
                 </Collapse>
-                <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} modal={calendarIsOpen} />
+                <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} modal={calendarIsOpen} images={images} />
                 <PostForm togglePostForm={this.togglePostForm} groups={groups} csrfToken={this.props.csrfToken} modal={postIsOpen} />
             </div>
         );
@@ -65,6 +65,7 @@ Menu.propTypes = {
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Menu;

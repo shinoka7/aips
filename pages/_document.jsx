@@ -1,4 +1,4 @@
-    import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Head, Main, NextScript } from 'next/document';
 
 export default class MyDocument extends Document {
 
@@ -11,8 +11,6 @@ export default class MyDocument extends Document {
       return (
         <html>
           <Head>
-            <style>{`body { margin: 0 } /* custom!*/`}</style>
-
             {/* <!-- Iconset: Font Awesome 5.0.13 via CDN --> */}
             <link href="//use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
@@ -35,11 +33,6 @@ export default class MyDocument extends Document {
             <link rel="stylesheet" href="../resources/styles/css/aips.css"/>
 
           </Head>
-          <style jsx global>{`
-            body {
-              background-color: #C0C0C0;
-            }
-          `}</style>
           <body className="pt-5">
             <Main />
             <NextScript />

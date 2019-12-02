@@ -33,6 +33,9 @@ module.exports = {
       description: {
         type: Sequelize.STRING,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),

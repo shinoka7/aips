@@ -30,7 +30,7 @@ module.exports = (aips) => {
     // POST event
     router.post('/', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const {
-            groupId, startDate, startTime, endDate, endTime, name, description
+            groupId, startDate, startTime, endDate, endTime, name, description, image
         } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);
@@ -43,7 +43,7 @@ module.exports = (aips) => {
             return res.status(404).send({ error: 'Group not found' });
         }
 
-        const event = await Event.create({ groupId, startDate: startDate, startTime: startTime, endDate: endDate, endTime: endTime, name, description });
+        const event = await Event.create({ groupId, startDate: startDate, startTime: startTime, endDate: endDate, endTime: endTime, name, description, image });
         await event.setGroup(group);
 
         const notifications = await Notification.findAll({

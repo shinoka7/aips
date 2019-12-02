@@ -99,7 +99,7 @@ class GroupDetail extends React.Component {
     }
 
     render() {
-        const { group, user, isUserInGroup, events, csrfToken } = this.props;
+        const { group, user, isUserInGroup, events, csrfToken, images } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen } = this.state;
 
         return (
@@ -147,7 +147,7 @@ class GroupDetail extends React.Component {
                             </Button>
                         </ButtonGroup>
                         <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
-                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} modal={calendarIsOpen} />
+                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} modal={calendarIsOpen} images={images} />
                         <br />
                         <Nav tabs>
                             <NavItem>
@@ -192,6 +192,7 @@ GroupDetail.propTypes = {
     isUserInGroup: PropTypes.bool.isRequired,
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default GroupDetail;

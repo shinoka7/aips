@@ -4,6 +4,9 @@ body {
   min-height: 100vh;
   font-family: 'Fira Sans', sans-serif; }
 
+.site {
+  margin: 0 auto; }
+
 .blog-slider {
   width: 95%;
   position: relative;
@@ -198,3 +201,6 @@ body {
           .blog-slider__pagination .swiper-pagination-bullet-active {
             height: 11px;
             width: 30px; } }
+
+.image_preview {
+  width: 100%; }

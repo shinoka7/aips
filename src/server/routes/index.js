@@ -6,6 +6,9 @@ const cabin = new Cabin();
 
 const { Event } = require('../../db/models');
 const { Op } = require('sequelize');
+const fs = require('fs');
+
+const logger = require('../../services/logger');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -46,9 +49,21 @@ module.exports = (aips) => {
             // }
         });
 
+        const images = [];
+        fs.readdir('./resources/img/buildings', (err, files) => {
+            if (err) {
+                return logger.info('Unable to scan directory:' + err);
+            }
+            files.forEach((file) => {
+                logger.info(file);
+                images.push(file);
+            })
+        });
+
         nextApp.render(req, res, '/', {
             csrfToken: req.csrfToken(),
             events: events,
+            images: images,
         });
     });
 

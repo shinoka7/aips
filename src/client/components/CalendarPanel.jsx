@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Row, Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -26,15 +26,16 @@ class CalendarPanel extends React.Component {
                 endTime: '',
                 name: '',
                 description: '',
+                imageName: '',
             },
             selectedEvent: {},
         };
 
-        this.convertMonthStringtoNumber = this.convertMonthStringtoNumber.bind(this);
         this.convertISOToCalendarFormat = this.convertISOToCalendarFormat.bind(this);
         this.toggleEventForm = this.toggleEventForm.bind(this);
         this.toggleEventDetails = this.toggleEventDetails.bind(this);
         this.generateGroupOptions = this.generateGroupOptions.bind(this);
+        this.generateImages = this.generateImages.bind(this);
         this.setGroupId = this.setGroupId.bind(this);
         this.setName = this.setName.bind(this);
         this.setStartDate = this.setStartDate.bind(this);
@@ -42,6 +43,7 @@ class CalendarPanel extends React.Component {
         this.setEndDate = this.setEndDate.bind(this);
         this.setEndTime = this.setEndTime.bind(this);
         this.setDescription = this.setDescription.bind(this);
+        this.setImage = this.setImage.bind(this);
         this.createHandler = this.createHandler.bind(this);
         this.validate = this.validate.bind(this);
     }
@@ -64,36 +66,6 @@ class CalendarPanel extends React.Component {
         return { events: events };
     }
 
-    // returns e.g 'Dec' ==> 12 
-    convertMonthStringtoNumber(string) {
-        switch(string){
-            case 'Jan':
-                return '01';
-            case 'Feb':
-                return '02';
-            case 'Mar':
-                return '03';
-            case 'Apr':
-                return '04';
-            case 'May':
-                return '05';
-            case 'Jun':
-                return '06';
-            case 'Jul':
-                return '07';
-            case 'Aug':
-                return '08';
-            case 'Sep':
-                return '09';
-            case 'Oct':
-                return '10';
-            case 'Nov':
-                return '11';
-            case 'Dec':
-                return '12';
-        }
-    }
-
     // returns ISO format to mm/dd/yyyy format
     convertISOToCalendarFormat(ISOdate) {
         const isoArray = ISOdate.toString().split(' ');
@@ -101,7 +73,7 @@ class CalendarPanel extends React.Component {
         const monthStr = isoArray[1];
         const year = isoArray[3];
 
-        const month = this.convertMonthStringtoNumber(monthStr);
+        const month = convertMonthStringtoNumber(monthStr);
 
         day = day.length === 2 ? day : '0' + day;
 
@@ -141,6 +113,14 @@ class CalendarPanel extends React.Component {
         });
         
         return groupOptions;
+    }
+
+    generateImages(images) {
+        return images.map((image) => {
+            return (
+                <option key={image} value={image}>{image}</option>
+            );
+        });
     }
     
     setGroupId(e) {
@@ -212,9 +192,19 @@ class CalendarPanel extends React.Component {
             }
         }));
     }
+
+    setImage(e) {
+        const imageName = e.target.value;
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                imageName: imageName,
+            }
+        }));
+    }
     
     async createHandler() {
-        const { groupId, startDate, startTime, endDate, endTime, name, description } = this.state.newEvent;
+        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName } = this.state.newEvent;
         const res = await axios.post('/event', {
             groupId,
             startDate: startDate,
@@ -223,6 +213,7 @@ class CalendarPanel extends React.Component {
             endTime: endTime,
             name,
             description,
+            image: imageName,
             _csrf: this.props.csrfToken
         });
         window.location.reload();
@@ -235,10 +226,11 @@ class CalendarPanel extends React.Component {
 
     render() {
         const { events, newEvent } = this.state;
-        const { modal, toggleCalendar } = this.props;
+        const { modal, toggleCalendar, images } = this.props;
 
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
+        const generatedImages = this.generateImages(images);
 
         return (
             <div>
@@ -306,6 +298,20 @@ class CalendarPanel extends React.Component {
                                         <Label for="description">Description :</Label>
                                         <Input type="textarea" name="description" id="description" placeholder="Event Details" onChange={this.setDescription} />
                                     </FormGroup>
+                                    <FormGroup>
+                                        <Label for="image">Event Image :</Label>
+                                        <Input type="select" name="image" id="image" value={newEvent.imageName === '' ? 'default' : newEvent.imageName} onChange={this.setImage} >
+                                            <option value="default" disabled>--Select an Image--</option>
+                                            {generatedImages}
+                                        </Input>
+                                    </FormGroup>
+                                    { newEvent.imageName !== '' &&
+                                        <Card>
+                                            <CardBody>
+                                                <img src={`/resources/img/buildings/${newEvent.imageName}`} className="image_preview" alt="Event Image"></img>
+                                            </CardBody>
+                                        </Card>
+                                    }
                                 </Form>
                             </ModalBody>
                             <ModalFooter>
@@ -344,12 +350,43 @@ function convertStringsToInsertFormat(date, time) {
         );
 }
 
+// returns e.g 'Dec' ==> 12 
+function convertMonthStringtoNumber(string) {
+    switch(string){
+        case 'Jan':
+            return '01';
+        case 'Feb':
+            return '02';
+        case 'Mar':
+            return '03';
+        case 'Apr':
+            return '04';
+        case 'May':
+            return '05';
+        case 'Jun':
+            return '06';
+        case 'Jul':
+            return '07';
+        case 'Aug':
+            return '08';
+        case 'Sep':
+            return '09';
+        case 'Oct':
+            return '10';
+        case 'Nov':
+            return '11';
+        case 'Dec':
+            return '12';
+    }
+}
+
 CalendarPanel.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
     toggleCalendar: PropTypes.func.isRequired,
     modal: PropTypes.bool.isRequired,
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
 export default CalendarPanel;

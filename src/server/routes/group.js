@@ -8,6 +8,7 @@ const validator = {};
 const logger = require('../../services/logger');
 const { User, Group, Notification, Event } = require('../../db/models');
 const { Op } = require('sequelize');
+const fs = require('fs');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -89,6 +90,17 @@ module.exports = (aips) => {
             }
         });
 
+        const images = [];
+        fs.readdir('./resources/img/buildings', (err, files) => {
+            if (err) {
+                return console.log('Unable to scan directory:' + err);
+            }
+            files.forEach((file) => {
+                console.log(file);
+                images.push(file);
+            })
+        });
+
         let isUserInGroup = false;
         await group.getUsers().then((users) => {
             users.forEach((user) => {
@@ -104,6 +116,7 @@ module.exports = (aips) => {
             isUserInGroup: isUserInGroup,
             csrfToken: req.csrfToken(),
             events: events || [],
+            images: images,
         });
     }));
 

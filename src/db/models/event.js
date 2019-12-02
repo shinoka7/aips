@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     endTime: DataTypes.STRING,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
+    image: DataTypes.STRING,
   }, { freezeTableName: true });
   Event.associate = (models) => {
     // associations can be defined here

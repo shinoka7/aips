@@ -33,7 +33,7 @@ class MainPage extends React.Component {
         return (
             <div>
                 <Preview />
-                <Menu events={this.props.events} groups={groups} csrfToken={this.props.csrfToken} />
+                <Menu events={this.props.events} groups={groups} images={this.props.images} csrfToken={this.props.csrfToken} />
                 <hr />
                 <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
             </div>
@@ -45,6 +45,7 @@ class MainPage extends React.Component {
 MainPage.propTypes = {
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default MainPage;
