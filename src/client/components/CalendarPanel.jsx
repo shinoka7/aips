@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -279,20 +279,28 @@ class CalendarPanel extends React.Component {
                                         <Input type="text" name="name" id="name" onChange={this.setName} />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label for="startDate">Start Date :</Label>
-                                        <Input type="date" name="startDate" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                        <Row>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Label for="startDate">Start Date :</Label>
+                                                <Input type="date" name="startDate" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                            </Col>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Label for="startTime">Start Time :</Label>
+                                                <Input type="time" name="startTime" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
+                                            </Col>
+                                        </Row>
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label for="startTime">Start Time :</Label>
-                                        <Input type="time" name="startTime" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Label for="endDate">End Date :</Label>
-                                        <Input type="date" name="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Label for="endTime">End Time :</Label>
-                                        <Input type="time" name="endTime" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
+                                        <Row>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Label for="endDate">End Date :</Label>
+                                                <Input type="date" name="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                            </Col>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Label for="endTime">End Time :</Label>
+                                                <Input type="time" name="endTime" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
+                                            </Col>
+                                        </Row>
                                     </FormGroup>
                                     <FormGroup>
                                         <Label for="description">Description :</Label>
