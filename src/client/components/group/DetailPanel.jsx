@@ -17,7 +17,7 @@ class DetailPanel extends React.Component {
                             <b>Email</b><br />
                             <pre>{group.groupEmail}</pre>
                             <b>Website</b><br />
-                            <pre>{group.website}</pre>
+                            <pre><a href={group.website}>{group.website}</a></pre>
                             <b>Statement of Purpose/Mission</b><br />
                             <pre>{group.statement}</pre>
                             <b>Usual Meeting Day</b><br />

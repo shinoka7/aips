@@ -10,6 +10,7 @@ class GroupList extends React.Component {
         super(props);
 
         this.state = {
+            visible: false,
             showSuccessAlert: false,
             showFailureAlert: false,
         };
@@ -46,8 +47,11 @@ class GroupList extends React.Component {
         }
     }
 
+
+
     render() {
         const { notifications } = this.props;
+        const { visible } = this.state;
 
         const groupList = notifications.map((notification) => {
 
@@ -77,7 +81,7 @@ class GroupList extends React.Component {
         });
         
         return (
-            <div className="pl-4 pr-4 fixed-bottom pb-5">
+            <div>
                 { this.state.showSuccessAlert &&
                     <Alert color="success">
                     User settings updated!
@@ -88,10 +92,10 @@ class GroupList extends React.Component {
                     User settings update failed :(
                     </Alert>
                 }
-                <Table striped dark bordered>
+                <Table striped dark>
                     <thead>
                         <tr>
-                            <th>Group (id)</th>
+                            <th>Groups</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Post Notifications</th>
