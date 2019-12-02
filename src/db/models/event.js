@@ -2,8 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
     groupId: DataTypes.INTEGER,
-    startAt: DataTypes.DATE,
-    endAt: DataTypes.DATE,
+    startDate: DataTypes.STRING,
+    startTime: DataTypes.STRING,
+    endDate: DataTypes.STRING,
+    endTime: DataTypes.STRING,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
   }, { freezeTableName: true });

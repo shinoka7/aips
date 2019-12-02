@@ -77,13 +77,14 @@ module.exports = (aips) => {
         const user = await User.findByPk(userId);
         const group = await Group.findByPk(id);
 
-        const date = new Date();
-        date.setMonth(date.getMonth() - 3);
+        // CONSIDERING WHETHER TO USE DATE TYPE FOR DB
+        // const date = new Date();
+        // date.setMonth(date.getMonth() - 2);
         const events = await Event.findAll({
             where: {
-                endAt: {
-                    [Op.gte]: date,
-                },
+                // endDate: {
+                    // [Op.gte]: date,
+                // },
                 groupId: group.id,
             }
         });

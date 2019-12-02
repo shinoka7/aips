@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -20,21 +20,27 @@ class CalendarPanel extends React.Component {
             events: [],
             newEvent: {
                 groupId: undefined,
-                start: new Date(),
-                end: new Date(),
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
                 name: '',
                 description: '',
             },
             selectedEvent: {},
         };
 
+        this.convertMonthStringtoNumber = this.convertMonthStringtoNumber.bind(this);
+        this.convertISOToCalendarFormat = this.convertISOToCalendarFormat.bind(this);
         this.toggleEventForm = this.toggleEventForm.bind(this);
         this.toggleEventDetails = this.toggleEventDetails.bind(this);
         this.generateGroupOptions = this.generateGroupOptions.bind(this);
         this.setGroupId = this.setGroupId.bind(this);
         this.setName = this.setName.bind(this);
         this.setStartDate = this.setStartDate.bind(this);
+        this.setStartTime = this.setStartTime.bind(this);
         this.setEndDate = this.setEndDate.bind(this);
+        this.setEndTime = this.setEndTime.bind(this);
         this.setDescription = this.setDescription.bind(this);
         this.createHandler = this.createHandler.bind(this);
         this.validate = this.validate.bind(this);
@@ -42,10 +48,14 @@ class CalendarPanel extends React.Component {
 
     static getDerivedStateFromProps(props, state) {
         const events = props.events.map((event) => {
+
+            const start = convertStringsToInsertFormat(event.startDate, event.startTime);
+            const end = convertStringsToInsertFormat(event.endDate, event.endTime);
+
             return (
                 {
-                    start: new Date(event.startAt),
-                    end: new Date(event.endAt),
+                    start: start,
+                    end: end,
                     title: event.name,
                 }
             );
@@ -54,14 +64,65 @@ class CalendarPanel extends React.Component {
         return { events: events };
     }
 
+    // returns e.g 'Dec' ==> 12 
+    convertMonthStringtoNumber(string) {
+        switch(string){
+            case 'Jan':
+                return '01';
+            case 'Feb':
+                return '02';
+            case 'Mar':
+                return '03';
+            case 'Apr':
+                return '04';
+            case 'May':
+                return '05';
+            case 'Jun':
+                return '06';
+            case 'Jul':
+                return '07';
+            case 'Aug':
+                return '08';
+            case 'Sep':
+                return '09';
+            case 'Oct':
+                return '10';
+            case 'Nov':
+                return '11';
+            case 'Dec':
+                return '12';
+        }
+    }
+
+    // returns ISO format to mm/dd/yyyy format
+    convertISOToCalendarFormat(ISOdate) {
+        const isoArray = ISOdate.toString().split(' ');
+        let day = isoArray[2];
+        const monthStr = isoArray[1];
+        const year = isoArray[3];
+
+        const month = this.convertMonthStringtoNumber(monthStr);
+
+        day = day.length === 2 ? day : '0' + day;
+
+        return year + '-' + month + '-' + day;
+    }
+
     toggleEventForm(e) {
-        this.setState((prevState) => ({
-            newEvent: {
-                ...prevState.newEvent,
-                start: e.start,
-                end: e.end,
-            }
-        }));
+        if (e.start && e.end) {
+            const startDate = this.convertISOToCalendarFormat(e.start);
+            const endDate = this.convertISOToCalendarFormat(e.end);
+            this.setState((prevState) => ({
+                newEvent: {
+                    ...prevState.newEvent,
+                    startDate: startDate,
+                    startTime: '08:00',
+                    endDate: endDate,
+                    endTime: '23:59',
+                }
+            }));
+        }
+
         this.setState({ formModal: !this.state.formModal });
     }
 
@@ -107,9 +168,19 @@ class CalendarPanel extends React.Component {
         this.setState((prevState) => ({
             newEvent: {
                 ...prevState.newEvent,
-                start: date,
+                startDate: date,
             }
         }));
+    }
+
+    setStartTime(e) {
+        const startTime = e.target.value;
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                startTime: startTime,
+            }
+        }))
     }
 
     setEndDate(e) {
@@ -117,9 +188,19 @@ class CalendarPanel extends React.Component {
         this.setState((prevState) => ({
             newEvent: {
                 ...prevState.newEvent,
-                end: date,
+                endDate: date,
             }
         }));
+    }
+
+    setEndTime(e) {
+        const endTime = e.target.value;
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                endTime: endTime,
+            }
+        }))
     }
 
     setDescription(e) {
@@ -133,11 +214,13 @@ class CalendarPanel extends React.Component {
     }
     
     async createHandler() {
-        const { groupId, start, end, name, description } = this.state.newEvent;
+        const { groupId, startDate, startTime, endDate, endTime, name, description } = this.state.newEvent;
         const res = await axios.post('/event', {
             groupId,
-            start: new Date(start),
-            end: new Date(end),
+            startDate: startDate,
+            startTime: startTime,
+            endDate: endDate,
+            endTime: endTime,
             name,
             description,
             _csrf: this.props.csrfToken
@@ -146,12 +229,12 @@ class CalendarPanel extends React.Component {
     }
 
     validate() {
-        const { start, end, name, groupId } = this.state.newEvent;
-        return start && end && name !== '' && groupId;
+        const { startDate, startTime, endDate, endTime, name, groupId } = this.state.newEvent;
+        return startDate && startTime && endDate && endTime && name !== '' && groupId;
     }
 
     render() {
-        const { events } = this.state;
+        const { events, newEvent } = this.state;
         const { modal, toggleCalendar } = this.props;
 
         const groups = this.props.groups || [];
@@ -189,29 +272,33 @@ class CalendarPanel extends React.Component {
                                         <option value="default" disabled>--Select the Group--</option>
                                         {groupOptions}
                                     </AvField>
-                                    <AvField name="name" label="Event Name" onChange={this.setName} required />
-                                    <AvField
-                                        name="startDateTime"
-                                        label="Start Date"
-                                        placeholder={this.state.newEvent.start}
-                                        type="text"
-                                        onChange={this.setStartDate}
-                                    />
-                                    <AvField
-                                        name="endDateTime"
-                                        label="End Date"
-                                        placeholder={this.state.newEvent.end}
-                                        type="text"
-                                        onChange={this.setEndDate}
-                                    />
-                                    <AvField
-                                        name="description"
-                                        label="Description"
-                                        placeholder=''
-                                        type="textarea"
-                                        onChange={this.setDescription}
-                                    />
                                 </AvForm>
+                                <Form>
+                                    <FormGroup>
+                                        <Label for="name">Event Name :</Label>
+                                        <Input type="text" name="name" id="name" onChange={this.setName} />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="startDate">Start Date :</Label>
+                                        <Input type="date" name="startDate" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="startTime">Start Time :</Label>
+                                        <Input type="time" name="startTime" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="endDate">End Date :</Label>
+                                        <Input type="date" name="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="endTime">End Time :</Label>
+                                        <Input type="time" name="endTime" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="description">Description :</Label>
+                                        <Input type="textarea" name="description" id="description" placeholder="Event Details" onChange={this.setDescription} />
+                                    </FormGroup>
+                                </Form>
                             </ModalBody>
                             <ModalFooter>
                                 <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Post</Button>
@@ -231,6 +318,22 @@ class CalendarPanel extends React.Component {
             </div>
         );
     }
+}
+
+// returns new Date Type
+function convertStringsToInsertFormat(date, time) {
+    // yyyy/MM/dd to [yyyy, MM, dd]
+    const dateArray = date.split('-');
+    // hh:mm to [hh, mm]
+    const timeArray = time.split(':');
+
+    return new Date(
+        Number(dateArray[0]),
+        Number(dateArray[1] - 1),
+        Number(dateArray[2]),
+        Number(timeArray[0]),
+        Number(timeArray[1])
+        );
 }
 
 CalendarPanel.propTypes = {

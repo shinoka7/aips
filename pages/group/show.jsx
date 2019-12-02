@@ -154,7 +154,7 @@ class GroupDetail extends React.Component {
                                 <NavLink
                                     className={classnames({ active: activeTab === '1'})}
                                     onClick={() => { this.toggleTab('1'); }}
-                            >
+                                >
                                     Details
                                 </NavLink>
                             </NavItem>

@@ -15,17 +15,17 @@ class DetailPanel extends React.Component {
                     <Row>
                         <Col xs="6" sm="6" md="6">
                             <b>Email</b><br />
-                            {group.groupEmail}<br />
+                            <pre>{group.groupEmail}</pre>
                             <b>Website</b><br />
-                            {group.website}<br />
+                            <pre>{group.website}</pre>
                             <b>Statement of Purpose/Mission</b><br />
-                            {group.statement}<br />
+                            <pre>{group.statement}</pre>
                             <b>Usual Meeting Day</b><br />
-                            {group.meetingDay}<br />
+                            <pre>{group.meetingDay}</pre>
                             <b>Usual Meeting Time</b><br />
-                            {group.meetingTime}<br />
+                            <pre>{group.meetingTime}</pre>
                             <b>Usual Meeting Place</b><br />
-                            {group.meetingPlace}<br />
+                            <pre>{group.meetingPlace}</pre>
                         </Col>
                         <Col xs="6" sm="6" md="6">
                             <b>Current Positions</b>

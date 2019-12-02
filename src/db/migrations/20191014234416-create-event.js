@@ -15,11 +15,17 @@ module.exports = {
           key: "id"
         }
       },
-      startAt: {
-        type: Sequelize.DATE,
+      startDate: {
+        type: Sequelize.STRING,
       },
-      endAt: {
-        type: Sequelize.DATE,
+      startTime: {
+        type: Sequelize.STRING,
+      },
+      endDate: {
+        type: Sequelize.STRING,
+      },
+      endTime: {
+        type: Sequelize.STRING,
       },
       name: {
         type: Sequelize.STRING

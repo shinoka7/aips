@@ -35,14 +35,15 @@ module.exports = (aips) => {
 
     // pages/index
     app.get('/', csrf, async(req, res) => {
-        const date = new Date();
-        date.setMonth(date.getMonth() - 3);
+        // CONSIDERING WHETHER TO USE DATE TYPE FOR DB
+        // const date = new Date();
+        // date.setMonth(date.getMonth() - 3);
         const events = await Event.findAll({
-            where: {
-                endAt: {
-                    [Op.gte]: date,
-                }
-            }
+            // where: {
+                // endAt: {
+                    // [Op.gte]: date,
+                // }
+            // }
         });
 
         nextApp.render(req, res, '/', {
