@@ -4,7 +4,7 @@ const blacklist = require('express-blacklist');
 const Cabin = require('cabin');
 const cabin = new Cabin();
 
-const { Event } = require('../../db/models');
+const { Event, Group } = require('../../db/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -47,6 +47,9 @@ module.exports = (aips) => {
                     // [Op.gte]: date,
                 // }
             // }
+            include: [{
+                model: Group,
+            }],
         });
 
         const images = [];
@@ -55,7 +58,6 @@ module.exports = (aips) => {
                 return logger.info('Unable to scan directory:' + err);
             }
             files.forEach((file) => {
-                logger.info(file);
                 images.push(file);
             })
         });

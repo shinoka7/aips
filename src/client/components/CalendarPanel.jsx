@@ -225,7 +225,7 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
-        const { events, newEvent } = this.state;
+        const { events, newEvent, selectedEvent } = this.state;
         const { modal, toggleCalendar, images } = this.props;
 
         const groups = this.props.groups || [];
@@ -319,11 +319,27 @@ class CalendarPanel extends React.Component {
                                 <Button onClick={this.toggleEventForm} color="secondary">Cancel</Button>
                             </ModalFooter>
                         </Modal>
-                        { this.state.selectedEvent &&
+                        { selectedEvent && selectedEvent.Group &&
                             <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                                <ModalHeader>{this.state.selectedEvent.name}</ModalHeader>
+                                <ModalHeader>{selectedEvent.name}</ModalHeader>
                                 <ModalBody>
-                                    Event Details..
+                                    { selectedEvent.image !== '' &&
+                                        <div>
+                                            <img src={`/resources/img/buildings/${selectedEvent.image}`} className="image_preview" alt="Event Image"></img>
+                                            <hr />
+                                        </div>
+                                    }
+                                    <b>
+                                    <h5>{selectedEvent.description}</h5>
+                                    <br />
+                                    Start: {selectedEvent.startDate} ~ {selectedEvent.startTime}
+                                    <br />
+                                    End: {selectedEvent.endDate} ~ {selectedEvent.endTime}
+                                    </b>
+                                    <br />
+                                    <div className="text-right">
+                                        Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                                    </div>
                                 </ModalBody>
                             </Modal>
                         }

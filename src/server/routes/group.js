@@ -87,7 +87,10 @@ module.exports = (aips) => {
                     // [Op.gte]: date,
                 // },
                 groupId: group.id,
-            }
+            },
+            include: [{
+                model: Group,
+            }],
         });
 
         const images = [];
