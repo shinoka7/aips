@@ -209,7 +209,8 @@ body {
 .about {
   margin-top: 50px;
   padding: 20px;
-  background-color: white; }
+  background-color: white;
+  border-radius: .25rem; }
   .about h3 {
     color: black; }
   .about p {
