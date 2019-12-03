@@ -205,3 +205,12 @@ body {
 
 .image_preview {
   width: 100%; }
+
+.about {
+  margin-top: 50px;
+  padding: 20px;
+  background-color: white; }
+  .about h3 {
+    color: black; }
+  .about p {
+    color: gray; }
