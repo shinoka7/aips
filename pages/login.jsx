@@ -19,7 +19,7 @@ export default class extends React.Component {
                     <br/>
                     <form action="/auth/cas" method="GET">
                         {/* <input type="hidden" name="redirectTo" value="/auth/cas/callback" /> */}
-                        <Button className="btn btn-primary"><i className="rpi-icon"> Login with CAS</i></Button>
+                        <Button className="btn btn-primary" disabled><i className="rpi-icon"> Login with CAS</i></Button>
                     </form>
                 </div>
             </div>
