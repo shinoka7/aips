@@ -1,64 +1,66 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
+// NO NEED FOR ANYMORE
 
-import axios from 'axios';
+// import React from 'react';
+// import PropTypes from 'prop-types';
+// import { Button } from 'reactstrap';
 
-class GroupTable extends React.Component {
-    constructor(props) {
-        super(props);
+// import axios from 'axios';
 
-        this.state = {
-            userGroups: [],
-        }
-    }
+// class GroupTable extends React.Component {
+//     constructor(props) {
+//         super(props);
 
-    componentWillMount() {
-        init();
-    }
+//         this.state = {
+//             userGroups: [],
+//         }
+//     }
 
-    async init() {
-        const userGroups = await axios.get(`/group/${this.props.user.id}`);
-        if (!userGroups) {
-            this.setState({ userGroups });
-        }
-    }
+//     componentWillMount() {
+//         init();
+//     }
 
-    generateUserGroups() {
-        return userGroups.map(group => {
-            <div>
-                <Button className="btn btn-primary" data-toggle="dropdown">
+//     async init() {
+//         const userGroups = await axios.get(`/group/${this.props.user.id}`);
+//         if (!userGroups) {
+//             this.setState({ userGroups });
+//         }
+//     }
+
+//     generateUserGroups() {
+//         return userGroups.map(group => {
+//             <div>
+//                 <Button className="btn btn-primary" data-toggle="dropdown">
                     
-                </Button>
-            </div>
-        });
-    }
+//                 </Button>
+//             </div>
+//         });
+//     }
 
-    render() {
-        const user = this.props.user;
-        const username = user.username;
-        const groups = generateUserGroups();
+//     render() {
+//         const user = this.props.user;
+//         const username = user.username;
+//         const groups = generateUserGroups();
 
-        return(
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Users</th>
-                        <th width="160px">Created</th>
-                        <th width="70px"></th>
-                    </tr>
-                </thead>
-                <tbody>
+//         return(
+//             <table>
+//                 <thead>
+//                     <tr>
+//                         <th>Name</th>
+//                         <th>Users</th>
+//                         <th width="160px">Created</th>
+//                         <th width="70px"></th>
+//                     </tr>
+//                 </thead>
+//                 <tbody>
 
-                </tbody>
-            </table>
-        );
-    }
-}
+//                 </tbody>
+//             </table>
+//         );
+//     }
+// }
 
-GroupTable.Proptypes = {
-    user: PropTypes.object,
-}
+// GroupTable.Proptypes = {
+//     user: PropTypes.object,
+// }
 
-export default GroupTable;
+// export default GroupTable;
