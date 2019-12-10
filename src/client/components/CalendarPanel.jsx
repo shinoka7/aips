@@ -243,7 +243,7 @@ class CalendarPanel extends React.Component {
                                 defaultView="month"
                                 events={events}
                                 style={{ height: "80vh" }}
-                                views={[ 'month', 'week' ]}
+                                views={[ 'month', 'day' ]}
                                 selectable={true}
                                 onSelectSlot={this.toggleEventForm}
                                 onSelectEvent={this.toggleEventDetails}
