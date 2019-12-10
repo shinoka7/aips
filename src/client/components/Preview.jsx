@@ -67,9 +67,11 @@ class Preview extends React.Component {
                             <div className="blog-slider__text">
                                 {event.description}
                             </div>
-                            <a href="#" className="blog-slider__button">
-                                {event.Group.name}
-                            </a>
+                            <div className="blog-slider__button">
+                                <a href={`/group/${event.Group.id}`}>
+                                    {event.Group.name}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
