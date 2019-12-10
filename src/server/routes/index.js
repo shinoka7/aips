@@ -38,19 +38,35 @@ module.exports = (aips) => {
 
     // pages/index
     app.get('/', csrf, async(req, res) => {
-        // CONSIDERING WHETHER TO USE DATE TYPE FOR DB
-        // const date = new Date();
-        // date.setMonth(date.getMonth() - 3);
+        // will only contain events that are old 3 months ago and on
+        const date = new Date();
+        date.setMonth(date.getMonth() - 3);
         const events = await Event.findAll({
-            // where: {
-                // endAt: {
-                    // [Op.gte]: date,
-                // }
-            // }
+            where: {
+                startDate: {
+                    [Op.gte]: date,
+                }
+            },
             include: [{
                 model: Group,
             }],
         });
+
+        // will only contain events day 0 to 7 (From current day)
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const shownEvents = await Event.findAll({
+            where: {
+                startDate: {
+                    [Op.gte]: today,
+                    [Op.lte]: nextWeek,
+                }
+            },
+            include: [{
+                model: Group,
+            }],
+        })
 
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
@@ -65,6 +81,7 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/', {
             csrfToken: req.csrfToken(),
             events: events,
+            shownEvents: shownEvents,
             images: images,
         });
     });

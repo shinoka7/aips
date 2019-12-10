@@ -40,7 +40,7 @@ class Preview extends React.Component {
                 imagePath: "",
                 startDate: "01-01-1969",
                 startTime: "0:00",
-                name: "Hmm... Nothing is going on right now",
+                name: "Hmm... Nothing going on this week",
                 description: "Add your event here",
                 Group: {
                     name: "Display Calendar"
@@ -81,7 +81,7 @@ class Preview extends React.Component {
 }
 
 Preview.propTypes = {
-
+    events: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Preview;

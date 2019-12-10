@@ -29,13 +29,14 @@ class MainPage extends React.Component {
 
     render() {
         const { groups } = this.state;
+        const { events, images, csrfToken, shownEvents } = this.props;
 
         return (
             <div>
-                <Preview events={this.props.events} />
-                <Menu events={this.props.events} groups={groups} images={this.props.images} csrfToken={this.props.csrfToken} />
+                <Preview events={shownEvents} />
+                <Menu events={events} groups={groups} images={images} csrfToken={csrfToken} />
                 <hr />
-                <RecentActivity csrfToken={this.props.csrfToken} groups={groups} />
+                <RecentActivity csrfToken={csrfToken} groups={groups} />
             </div>
         );
     }
@@ -45,6 +46,7 @@ class MainPage extends React.Component {
 MainPage.propTypes = {
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
+    shownEvents: PropTypes.arrayOf(PropTypes.object).isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
