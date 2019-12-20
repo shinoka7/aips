@@ -6,7 +6,7 @@ const { body } = require('express-validator');
 const validator = {};
 
 const logger = require('../../services/logger');
-const { User, Group, Notification, Event } = require('../../db/models');
+const { User, Group, Notification, Event, Category } = require('../../db/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -23,7 +23,10 @@ module.exports = (aips) => {
      * GET groups page
      */
     router.get('/groups', csrf, asyncMiddleware(async(req, res) => {
+        const categories = await Category.findAll();
+
         nextApp.render(req, res, '/groups/show', {
+            categories: categories || [],
             csrfToken: req.csrfToken(),
         });
     }));
@@ -44,6 +47,31 @@ module.exports = (aips) => {
         await Group.findAndCountAll({
             offset,
             limit,
+        }).then((result) => {
+            groups = result.rows;
+            groupCount = result.count;
+        });
+
+        res.json({ groups, totalPages: Math.ceil(groupCount/limit) });
+    }));
+
+    router.get('/page/:categoryId(\\d+)/:num(\\d+)', asyncMiddleware(async(req, res) => {
+        const num = Number(req.params.num);
+        const categoryId = Number(req.params.num);
+        if (num <= 0) {
+            return res.status(404).send({ error: 'page not found' });
+        }
+
+        let groups = [];
+        let groupCount = 1;
+        const limit = 8;
+        const offset = (num - 1) * limit;
+        await Group.findAndCountAll({
+            offset,
+            limit,
+            where: {
+                categoryId
+            },
         }).then((result) => {
             groups = result.rows;
             groupCount = result.count;
@@ -93,6 +121,8 @@ module.exports = (aips) => {
             }],
         });
 
+        const category = await Category.findByPk(group.categoryId);
+
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
             if (err) {
@@ -115,6 +145,7 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/group/show', {
             user: user || {},
             group: group || {},
+            category: category || {},
             isUserInGroup: isUserInGroup,
             csrfToken: req.csrfToken(),
             events: events || [],
@@ -125,21 +156,22 @@ module.exports = (aips) => {
     validator.create = [
         body('name').not().isEmpty().trim(),
         body('groupEmail').isEmail(),
-        body('description').trim()
+        body('description').trim(),
+        body('categoryId').exists(),
     ];
 
     /**
      * creates group
      */
     router.post('/create', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
-        const { name, groupEmail, description } = req.body;
+        const { name, groupEmail, description, categoryId } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).send({ error: 'user not found' });
         }
 
-        const group = await Group.create({ name, adminUserId: userId, groupEmail, description });
+        const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId });
         await group.addUser(user);
 
         await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });

@@ -99,7 +99,7 @@ class GroupDetail extends React.Component {
     }
 
     render() {
-        const { group, user, isUserInGroup, events, csrfToken, images } = this.props;
+        const { group, user, category, isUserInGroup, events, csrfToken, images } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen } = this.state;
 
         return (
@@ -114,7 +114,7 @@ class GroupDetail extends React.Component {
                                 <Media heading>
                                     <p className="display-4">{group.name}</p>
                                 </Media>
-                                <Badge color="info" pill>Category</Badge>
+                                <Badge color="info" pill>{category.name}</Badge>
                                 { isVerified &&
                                     <Badge /**onClick={this.toggleVerifyPanel}*/ color="success" pill>Verified</Badge>
                                 }
@@ -189,6 +189,7 @@ class GroupDetail extends React.Component {
 GroupDetail.propTypes = {
     user: PropTypes.object.isRequired,
     group: PropTypes.object.isRequired,
+    category: PropTypes.object.isRequired,
     isUserInGroup: PropTypes.bool.isRequired,
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,

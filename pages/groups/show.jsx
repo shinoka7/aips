@@ -6,6 +6,7 @@ import { Card, CardHeader, CardBody,
     Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
+import FilterPanel from '../../src/client/components/group/FilterPanel.jsx';
 
 import axios from 'axios';
 
@@ -23,6 +24,7 @@ class GroupsDetail extends React.Component {
         this.generatePagination = this.generatePagination.bind(this);
         this.changePage = this.changePage.bind(this);
         this.init = this.init.bind(this);
+        this.filter = this.filter.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -32,6 +34,21 @@ class GroupsDetail extends React.Component {
     async init() {
         const { currentPage } = this.state;
         await axios.get(`/group/page/${currentPage}`).then((res) => {
+            this.setState({
+                groups: res.data.groups,
+                totalPages: res.data.totalPages
+            });
+        });
+        const groupNames = [];
+        await this.state.groups.forEach((group) => {
+            groupNames.push(group.name);
+        });
+        this.setState({ groupNames: groupNames });
+    }
+
+    async filter(category) {
+        const { currentPage } = this.state;
+        await axios.get(`/group/page/${category.id}/${currentPage}`).then((res) => {
             this.setState({
                 groups: res.data.groups,
                 totalPages: res.data.totalPages
@@ -125,8 +142,10 @@ class GroupsDetail extends React.Component {
 
         return(
             <div className="pt-3 text-right">
+                {/* <FilterPanel categories={this.props.categories} filter={this.filter} /> */}
                 <GroupForm
                     groupNames={groupNames}
+                    categories={this.props.categories}
                     csrfToken={this.props.csrfToken}
                 />
                 <Row className="row justify-content-around">
@@ -142,6 +161,7 @@ class GroupsDetail extends React.Component {
 }
 
 GroupsDetail.propTypes = {
+    categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 

@@ -48,6 +48,9 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: '',
       },
+      categoryId: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),

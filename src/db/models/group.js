@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     meetingDay: DataTypes.STRING,
     meetingTime: DataTypes.STRING,
     meetingPlace: DataTypes.STRING,
+    categoryId: DataTypes.INTEGER,
   }, { freezeTableName: true });
   Group.associate = function(models) {
     // associations can be defined here
