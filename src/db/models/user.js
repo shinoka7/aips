@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: { type: DataTypes.STRING, unique: true },
+    groupsCreated: { type: DataTypes.INTEGER, validate: { max: 3, min: 0 } },
   }, { freezeTableName: true });
   User.associate = function(models) {
     // associations can be defined here

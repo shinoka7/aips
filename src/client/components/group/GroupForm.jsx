@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
@@ -43,7 +43,7 @@ class GroupForm extends React.Component {
     }
 
     validate() {
-        return this.valid.name && this.valid.email;
+        return this.valid.name && this.valid.email &&  this.props.user.groupsCreated < 3;
     }
 
     async createHandler() {
@@ -60,6 +60,7 @@ class GroupForm extends React.Component {
                 window.location.reload();
             })
             .catch((err) => {
+                console.log(err);
                 window.location = '/login';
             });
         }
@@ -102,7 +103,7 @@ class GroupForm extends React.Component {
 
     render() {
         const { categoryId } = this.state;
-        const { categories } = this.props;
+        const { categories, user } = this.props;
 
         const generatedCategories = this.generateCategories(categories);
     
@@ -112,6 +113,11 @@ class GroupForm extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>
                     <ModalBody>
+                        { user.groupsCreated >= 3 &&
+                            <Alert color="danger">
+                                You have reached the maximum group creation count (3)
+                            </Alert>
+                        }
                         <AvForm>
                             <AvField name="groupname" label="Group Name" type="text" onChange={this.setGroupName} required />
                         </AvForm>
@@ -139,6 +145,7 @@ class GroupForm extends React.Component {
 }
 
 GroupForm.propTypes = {
+    user: PropTypes.object.isRequired,
     groupNames: PropTypes.arrayOf(PropTypes.string).isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,

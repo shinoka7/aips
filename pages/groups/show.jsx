@@ -15,6 +15,7 @@ class GroupsDetail extends React.Component {
         super(props);
 
         this.state = {
+            user: {},
             groups: [],
             groupNames: [],
             currentPage: 1,
@@ -35,6 +36,7 @@ class GroupsDetail extends React.Component {
         const { currentPage } = this.state;
         await axios.get(`/group/page/${currentPage}`).then((res) => {
             this.setState({
+                user: res.data.user,
                 groups: res.data.groups,
                 totalPages: res.data.totalPages
             });
@@ -110,7 +112,7 @@ class GroupsDetail extends React.Component {
     }
 
     render() {
-        const { groups, totalPages, groupNames } = this.state;
+        const { groups, totalPages, groupNames, user } = this.state;
         const groupList = groups.map((group) => {
             return (
                 // Images, description
@@ -144,6 +146,7 @@ class GroupsDetail extends React.Component {
             <div className="pt-3 text-right">
                 {/* <FilterPanel categories={this.props.categories} filter={this.filter} /> */}
                 <GroupForm
+                    user={user}
                     groupNames={groupNames}
                     categories={this.props.categories}
                     csrfToken={this.props.csrfToken}

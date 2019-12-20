@@ -35,6 +35,8 @@ module.exports = (aips) => {
      * GET groups for page
      */
     router.get('/page/:num(\\d+)', asyncMiddleware(async(req, res) => {
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
         const num = Number(req.params.num);
         if (num <= 0) {
             return res.status(404).send({ error: 'page not found' });
@@ -52,7 +54,7 @@ module.exports = (aips) => {
             groupCount = result.count;
         });
 
-        res.json({ groups, totalPages: Math.ceil(groupCount/limit) });
+        res.json({ groups, totalPages: Math.ceil(groupCount/limit), user: user || {} });
     }));
 
     router.get('/page/:categoryId(\\d+)/:num(\\d+)', asyncMiddleware(async(req, res) => {
@@ -166,12 +168,13 @@ module.exports = (aips) => {
     router.post('/create', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const { name, groupEmail, description, categoryId } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
-        const user = await User.findByPk(userId);
+        let user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).send({ error: 'user not found' });
         }
 
         const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId });
+        user = await user.update({ groupsCreated: user.groupsCreated + 1 });
         await group.addUser(user);
 
         await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });

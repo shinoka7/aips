@@ -21,6 +21,14 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true
       },
+      groupsCreated: {
+        type: Sequelize.INTEGER,
+        validate: {
+          max: 3,
+          min: 0,
+        },
+        defaultValue: 0,
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),
