@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Card, CardHeader, CardBody,
-    CardText, Col, Row,
+    CardText, Col, Row, Nav,
     Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
@@ -20,21 +20,22 @@ class GroupsDetail extends React.Component {
             groupNames: [],
             currentPage: 1,
             totalPages: 1,
+            categoryId: 0,
         };
 
         this.generatePagination = this.generatePagination.bind(this);
         this.changePage = this.changePage.bind(this);
         this.init = this.init.bind(this);
-        this.filter = this.filter.bind(this);
     }
 
     static async getInitialProps(context) {
         return context.query || {};
     }
 
-    async init() {
+    async init(categoryId) {
         const { currentPage } = this.state;
-        await axios.get(`/group/page/${currentPage}`).then((res) => {
+        this.setState({ categoryId: categoryId });
+        await axios.get(`/group/page/${categoryId}/${currentPage}`).then((res) => {
             this.setState({
                 user: res.data.user,
                 groups: res.data.groups,
@@ -48,23 +49,8 @@ class GroupsDetail extends React.Component {
         this.setState({ groupNames: groupNames });
     }
 
-    async filter(category) {
-        const { currentPage } = this.state;
-        await axios.get(`/group/page/${category.id}/${currentPage}`).then((res) => {
-            this.setState({
-                groups: res.data.groups,
-                totalPages: res.data.totalPages
-            });
-        });
-        const groupNames = [];
-        await this.state.groups.forEach((group) => {
-            groupNames.push(group.name);
-        });
-        this.setState({ groupNames: groupNames });
-    }
-
     async componentDidMount() {
-        await this.init();
+        await this.init(0);
     }
 
     generatePagination(paginationItems) {
@@ -108,7 +94,7 @@ class GroupsDetail extends React.Component {
         e.preventDefault();
 
         await this.setState({ currentPage: page });
-        await this.init();
+        await this.init(this.state.categoryId);
     }
 
     render() {
@@ -144,13 +130,15 @@ class GroupsDetail extends React.Component {
 
         return(
             <div className="pt-3 text-right">
-                {/* <FilterPanel categories={this.props.categories} filter={this.filter} /> */}
-                <GroupForm
-                    user={user}
-                    groupNames={groupNames}
-                    categories={this.props.categories}
-                    csrfToken={this.props.csrfToken}
-                />
+                <Nav pills className="text-center">
+                    <FilterPanel categories={this.props.categories} filter={this.init}/>
+                    <GroupForm
+                        user={user}
+                        groupNames={groupNames}
+                        categories={this.props.categories}
+                        csrfToken={this.props.csrfToken}
+                    />
+                </Nav>
                 <Row className="row justify-content-around">
                     {groupList}
                 </Row>

@@ -34,10 +34,11 @@ module.exports = (aips) => {
     /**
      * GET groups for page
      */
-    router.get('/page/:num(\\d+)', asyncMiddleware(async(req, res) => {
+    router.get('/page/:categoryId(\\d+)/:num(\\d+)', asyncMiddleware(async(req, res) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);
         const num = Number(req.params.num);
+        const categoryId = Number(req.params.categoryId);
         if (num <= 0) {
             return res.status(404).send({ error: 'page not found' });
         }
@@ -46,40 +47,29 @@ module.exports = (aips) => {
         let groupCount = 1;
         const limit = 8;
         const offset = (num - 1) * limit;
-        await Group.findAndCountAll({
-            offset,
-            limit,
-        }).then((result) => {
-            groups = result.rows;
-            groupCount = result.count;
-        });
+        if (categoryId === 0) {
+            await Group.findAndCountAll({
+                offset,
+                limit,
+            }).then((result) => {
+                groups = result.rows;
+                groupCount = result.count;
+            });
+        }
+        else {
+            await Group.findAndCountAll({
+                offset,
+                limit,
+                where: {
+                    categoryId
+                },
+            }).then((result) => {
+                groups = result.rows;
+                groupCount = result.count;
+            });
+        }
 
         res.json({ groups, totalPages: Math.ceil(groupCount/limit), user: user || {} });
-    }));
-
-    router.get('/page/:categoryId(\\d+)/:num(\\d+)', asyncMiddleware(async(req, res) => {
-        const num = Number(req.params.num);
-        const categoryId = Number(req.params.num);
-        if (num <= 0) {
-            return res.status(404).send({ error: 'page not found' });
-        }
-
-        let groups = [];
-        let groupCount = 1;
-        const limit = 8;
-        const offset = (num - 1) * limit;
-        await Group.findAndCountAll({
-            offset,
-            limit,
-            where: {
-                categoryId
-            },
-        }).then((result) => {
-            groups = result.rows;
-            groupCount = result.count;
-        });
-
-        res.json({ groups, totalPages: Math.ceil(groupCount/limit) });
     }));
 
     /**

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class FilterPanel extends React.Component {
     constructor(props) {
@@ -9,40 +9,52 @@ class FilterPanel extends React.Component {
 
         this.state = {
             isOpen: false,
+            category: "Category",
         };
 
+        this.setCategory = this.setCategory.bind(this);
         this.generateCategories = this.generateCategories.bind(this);
     };
+
+    setCategory(id) {
+        this.props.filter(id);
+    }
 
     generateCategories(categories) {
         return categories.map((category) => {
             return (
-                <DropdownItem onClick={this.props.filter(category.id)}>{category.name}</DropdownItem>
+                <DropdownItem
+                    key={category.id}
+                    onClick={() => {this.setCategory(category.id); this.setState({ category: category.name});}}
+                    value={category.id}
+                >
+                    {category.name}
+                </DropdownItem>
             );
         });
     }
 
     render() {
-        const { isOpen } = this.state;
+        const { isOpen, category } = this.state;
         const { categories } = this.props;
 
         const generatedItems = this.generateCategories(categories);
 
         return (
-            <ButtonDropdown isOpen={isOpen} toggle={() => this.setState({ isOpen: !isOpen })}>
-            <DropdownToggle caret color="primary">
-                Category
-            </DropdownToggle>
-            <DropdownMenu>
-                {generatedItems}
-            </DropdownMenu>
-            </ButtonDropdown>
+                <Dropdown nav inNavbar isOpen={isOpen} toggle={() => this.setState({ isOpen: !isOpen })}>
+                    <DropdownToggle caret color="primary">
+                        {category}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {generatedItems}
+                    </DropdownMenu>
+                </Dropdown>
         );
     }
 
 };
 
-FilterPanel.PropTypes = {
+FilterPanel.propTypes = {
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     filter: PropTypes.func.isRequired,
 };

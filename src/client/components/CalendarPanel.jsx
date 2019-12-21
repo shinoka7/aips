@@ -160,7 +160,7 @@ class CalendarPanel extends React.Component {
                 ...prevState.newEvent,
                 startTime: startTime,
             }
-        }))
+        }));
     }
 
     setEndDate(e) {

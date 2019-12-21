@@ -108,8 +108,8 @@ class GroupForm extends React.Component {
         const generatedCategories = this.generateCategories(categories);
     
         return (
-            <div >
-                <Button onClick={this.toggle} size="lg" className="btn btn-danger"><i className="fas fa-plus-circle"></i> Create</Button>
+            <div className="text-right" >
+                <Button onClick={this.toggle} className="btn btn-danger"><i className="fas fa-plus-circle"></i> Create</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>
                     <ModalBody>
