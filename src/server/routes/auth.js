@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const googleService = require('../../services/google');
-const casService = require('../../services/cas');
+const cas = require('../../services/cas');
 
 const { Account } = require('../../db/models');
 
 module.exports = (aips) => {
   const { nextApp, csrf } = aips;
   const middlewares = require('../middlewares')(aips);
-  const cas = casService.createConnection();
   
   const {
     async: asyncMiddleware,
@@ -30,20 +29,20 @@ module.exports = (aips) => {
     });
   }));
 
-  router.get('/cas', csrf, cas.bounce, asyncMiddleware(async(req, res) => {
-    res.redirect('/auth/callback/cas');
-  }));
-
-  router.get('/callback/cas', csrf, asyncMiddleware(async(req, res) => {
-    // console.log(req.session);
-    const user = req.session.cas_user.toLowerCase();
-    const email = user + '@rpi.edu';
-    // TODO currently will use RCS ID for user ==> can we access RIN?
-    const account = await Account.createOrLink('cas', user, email);
-    req.session.user = account.User;
-    req.session.save((err) => {
-      res.redirect('/user');
-    });
+  router.get('/cas', cas.bounce, asyncMiddleware(async(req, res) => {
+    try {
+      const user = req.session[cas.session_name].toLowerCase();
+      const email = user + '@rpi.edu';
+      // TODO currently will use RCS ID for user ==> can we access RIN?
+      const account = await Account.createOrLink('cas', user, email);
+      req.session.user = account.User;
+      req.session.save((err) => {
+        res.redirect('/user');
+      });
+    }
+    catch (err) {
+      console.log(err);
+    }
   }));
 
   router.get('/logout', (req, res) => {

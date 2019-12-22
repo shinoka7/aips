@@ -1,24 +1,12 @@
-const Cas = require('cas-authentication');
+const CASAuthentication = require('express-cas-authentication');
 
-class CasService {
+const service = new CASAuthentication({
+    cas_url: process.env.CAS_URL,
+    service_url: process.env.CAS_SERVICE_URL,
+    renew: false,
+    session_name: 'cas_user',
+    session_info: 'cas_userinfo',
+    cas_version: '3.0',
+});
 
-    constructor() {
-        this.casConfig = {
-            cas_url: process.env.CAS_URL,
-            service_url: process.env.CAS_SERVICE_URL,
-        };
-    }
-
-    createConnection() {
-        return new Cas({
-            cas_url: this.casConfig.cas_url,
-            service_url: this.casConfig.service_url,
-            cas_version: '3.0',
-            renew: false,
-            session_info: true,
-        });
-    }
-}
-
-const service = new CasService();
 module.exports = service;

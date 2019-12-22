@@ -58,7 +58,7 @@ class AIPSApp {
                 secret: 'secret-key',
                 store: sessionStore,
                 resave: false,
-                saveUninitialized: false,
+                saveUninitialized: true,
                 proxy: true, // "X-Forwarded-Proto" header will be used
             })
         );
