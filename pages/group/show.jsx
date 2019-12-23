@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, ButtonGroup, Badge, Jumbotron, Container, Nav, NavItem, NavLink,
+import { Alert, Button, ButtonGroup, Badge, Jumbotron, Container, Nav, NavItem, NavLink,
     Media, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
@@ -21,6 +21,7 @@ class GroupDetail extends React.Component {
             activeTab: '1',
             calendarIsOpen: false,
             postIsOpen: false,
+            showSuccessAlert: false,
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
@@ -42,12 +43,12 @@ class GroupDetail extends React.Component {
     async joinGroupHandler() {
         const { user, group, csrfToken } = this.props;
         await axios.post('/group/addUser', {
-            user,
-            group,
+            userId: user.id,
+            groupId: group.id,
             _csrf: csrfToken,
         })
         .then((res) => {
-            window.location.reload();
+            this.setState({ showSuccessAlert: true });
         })
         .catch((err) => {
             window.location = '/login';
@@ -57,8 +58,8 @@ class GroupDetail extends React.Component {
     async leaveGroupHandler() {
         const { user, group, csrfToken } = this.props;
         const params = {
-            user,
-            group,
+            userId: user.id,
+            groupId: group.id,
             _csrf: csrfToken,
         };
 
@@ -99,13 +100,16 @@ class GroupDetail extends React.Component {
     }
 
     render() {
-        const { group, user, category, isUserInGroup, events, csrfToken, images } = this.props;
-        const { isVerified, activeTab, calendarIsOpen, postIsOpen } = this.state;
+        const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers } = this.props;
+        const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert } = this.state;
 
         return (
             <div>
                 <Jumbotron fluid>
                     <Container  fluid>
+                        { showSuccessAlert &&
+                            <Alert color="success">You have successfully sent out a request to join this group!</Alert>
+                        }
                         <Media>
                             <Media left href="#">
                                 <Media object src="/resources/img/default/default_group.png" alt="Group placeholder image" className="border rounded border-dark"></Media>
@@ -173,7 +177,7 @@ class GroupDetail extends React.Component {
                                 <DetailPanel group={group} />
                             </TabPane>
                             <TabPane tabId="2">
-                                <AdminPanel group={group} csrfToken={csrfToken} />
+                                <AdminPanel group={group} pendingUsers={pendingUsers} csrfToken={csrfToken} />
                             </TabPane>
                         </TabContent>
                     </Container>
@@ -194,6 +198,7 @@ GroupDetail.propTypes = {
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    pendingUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default GroupDetail;

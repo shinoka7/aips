@@ -57,7 +57,7 @@ module.exports = (aips) => {
         });
 
         notifications.forEach((notification) => {
-            subject = `${group.name} created an event!`;
+            const subject = `${group.name} created an event!`;
             mailerService.sendOne('event', notification.User, subject, event.name, event.description);
         });
 

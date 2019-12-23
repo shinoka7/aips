@@ -215,3 +215,7 @@ body {
     color: black; }
   .about p {
     color: gray; }
+
+.icon {
+  max-width: 6%;
+  height: auto; }

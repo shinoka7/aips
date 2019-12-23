@@ -114,9 +114,7 @@ class GroupForm extends React.Component {
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>
                     <ModalBody>
                         { user.groupsCreated >= 3 &&
-                            <Alert color="danger">
-                                You have reached the maximum group creation count (3)
-                            </Alert>
+                            <Alert color="danger">You have reached the maximum group creation count (3)</Alert>
                         }
                         <AvForm>
                             <AvField name="groupname" label="Group Name" type="text" onChange={this.setGroupName} required />

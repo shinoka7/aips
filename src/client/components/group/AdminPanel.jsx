@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Container, Badge, Card, CardBody, Row, Col, Form, FormGroup, Label, Input,
-NavItem, NavLink, Nav, TabContent, TabPane } from 'reactstrap';
+NavItem, NavLink, Nav, TabContent, TabPane, Table } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -23,6 +23,7 @@ class AdminPanel extends React.Component {
             meetingDay: props.group.meetingDay,
             meetingTime: props.group.meetingTime,
             meetingPlace: props.group.meetingPlace,
+            pendingUsers: props.pendingUsers,
         };
 
         // this.addUser = this.addUser.bind(this);
@@ -31,11 +32,10 @@ class AdminPanel extends React.Component {
         this.disbandHandler = this.disbandHandler.bind(this);
         this.togglePendingPanel = this.togglePendingPanel.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
+        this.acceptHandler = this.acceptHandler.bind(this);
+        this.rejectHandler = this.rejectHandler.bind(this);
+        this.generatePending = this.generatePending.bind(this);
     }
-
-    // addUser() {
-
-    // }
 
     toggleSettingsForm() {
         this.setState({ showSettingsForm: !this.state.showSettingsForm });
@@ -126,10 +126,60 @@ class AdminPanel extends React.Component {
             this.setState({ activeTab: tab });
         }
     }
+    
+    async acceptHandler(userId, groupId) {
+        await axios.post('/group/acceptUser', {
+            userId, groupId,
+            _csrf: this.props.csrfToken,
+        })
+        .then((res) => {
+            const { user } = res.data;
+            const pendingUsers = this.state.pendingUsers.filter((pender) => {
+                return Number(user.id) !== Number(pender.User.id);
+            });
+            this.setState({ pendingUsers: pendingUsers });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
+    async rejectHandler(userId, groupId) {
+        await axios.post('/group/rejectUser', {
+            userId, groupId,
+            _csrf: this.props.csrfToken,
+        })
+        .then((res) => {
+            const { user } = res.data;
+            const pendingUsers = this.state.pendingUsers.filter((pender) => {
+                return Number(user.id) !== Number(pender.User.id);
+            });
+            this.setState({ pendingUsers: pendingUsers });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
+    generatePending() {
+        const { group } = this.props;
+        const { pendingUsers: users } = this.state;
+        return users.map((user) => {
+            return (
+                <tr key={user.User.id}>
+                    <td>{user.User.username}</td>
+                    <td><Button color="success" size="sm" onClick={() => {this.acceptHandler(user.User.id, group.id)}}><i className="fas fa-check"></i></Button></td>
+                    <td><Button size="sm" onClick={() => {this.rejectHandler(user.User.id, group.id)}}><i className="fas fa-times"></i></Button></td>
+                </tr>
+            );
+        });
+    }
 
     render() {
         const { group } = this.props;
-        const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
+        const { pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
+
+        const generatedPending = this.generatePending(pendingUsers);
 
         return (
             <Card>
@@ -152,7 +202,7 @@ class AdminPanel extends React.Component {
                                         className={classnames({ active: activeTab === '1' })}
                                         onClick={() => { this.toggleTab('1') }}
                                     >
-                                        <b>Pending</b> <Badge color="secondary">0</Badge>
+                                        <b>Pending</b> <Badge color="secondary">{pendingUsers.length}</Badge>
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -176,7 +226,18 @@ class AdminPanel extends React.Component {
                                 <TabPane tabId="1">
                                     <Card>
                                         <CardBody>
-                                            [ WIP ]
+                                            <Table striped>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Username</th>
+                                                        <th>Accept</th>
+                                                        <th>Reject</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {generatedPending}
+                                                </tbody>
+                                            </Table>
                                         </CardBody>
                                     </Card>
                                 </TabPane>
@@ -228,7 +289,7 @@ class AdminPanel extends React.Component {
                                 <TabPane tabId="3">
                                     <Card className="text-center">
                                         <CardBody>
-                                            <Button onClick={this.disbandHandler} color="danger" disabled>Disband Group</Button>
+                                            <Button onClick={this.disbandHandler} color="danger" disabled>Disband Group [Currently Disabled]</Button>
                                         </CardBody>
                                     </Card>
                                 </TabPane>
@@ -243,6 +304,7 @@ class AdminPanel extends React.Component {
 
 AdminPanel.propTypes = {
     group: PropTypes.object.isRequired,
+    pendingUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 
