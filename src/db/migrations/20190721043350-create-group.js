@@ -60,7 +60,12 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),
         type: Sequelize.DATE
-      }
+      },
+      mailingList: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '',
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

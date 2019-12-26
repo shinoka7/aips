@@ -24,6 +24,7 @@ class AdminPanel extends React.Component {
             meetingTime: props.group.meetingTime,
             meetingPlace: props.group.meetingPlace,
             pendingUsers: props.pendingUsers,
+            mailingList: props.group.mailingList,
         };
 
         // this.addUser = this.addUser.bind(this);
@@ -177,7 +178,7 @@ class AdminPanel extends React.Component {
 
     render() {
         const { group } = this.props;
-        const { pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
+        const { mailingList, pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
 
         const generatedPending = this.generatePending(pendingUsers);
 
@@ -189,9 +190,19 @@ class AdminPanel extends React.Component {
                             <b>Settings</b>
                             <Card>
                                 <CardBody>
-                                    [ WIP ]
-                                    {/* Pending users */}
-                                    {/* <a onClick={this.addUser}><i class="fas fa-plus-circle"></i></a> */}
+                                    Mailing List [WIP]
+                                    <Form>
+                                        <FormGroup>
+                                            <Label for="mailingList">Mailing List: </Label>
+                                            <Input
+                                                type="text"
+                                                name="mailingList"
+                                                id="mailingList"
+                                                placeholder={mailingList}
+                                                onChange={(e)=>{this.setState({ mailingList: e.target.value.trim() })}}    
+                                            ></Input>
+                                        </FormGroup>
+                                    </Form>
                                 </CardBody>
                             </Card>
                         </Col>
@@ -210,7 +221,7 @@ class AdminPanel extends React.Component {
                                         className={classnames({ active: activeTab === '2' })}
                                         onClick={() => { this.toggleTab('2') }}
                                     >
-                                        <b>Group Info</b>
+                                        <b>Edit Info</b>
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
