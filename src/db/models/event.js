@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     endDate: DataTypes.STRING,
     endTime: DataTypes.STRING,
     name: DataTypes.STRING,
-    description: DataTypes.STRING,
+    description: DataTypes.TEXT,
     image: DataTypes.STRING,
   }, { freezeTableName: true });
   Event.associate = (models) => {

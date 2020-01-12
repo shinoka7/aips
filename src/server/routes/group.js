@@ -178,7 +178,7 @@ module.exports = (aips) => {
             return res.status(404).send({ error: 'user not found' });
         }
 
-        const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId });
+        const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId, statement: "" });
         user = await user.update({ groupsCreated: user.groupsCreated + 1 });
         await group.addUser(user);
 

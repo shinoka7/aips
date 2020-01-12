@@ -14,7 +14,7 @@ class Footer extends React.Component {
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
                 <div className="text-left">
-                    An RCOS Project ♥ - Contact: <a href="#">rpiaips@gmail.com</a>
+                    An RCOS Project ♥ - <i className="far fa-envelope"></i> <a href="#">rpiaips@gmail.com</a>
                 </div>
             </nav>
         );

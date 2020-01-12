@@ -8,28 +8,30 @@ class Header extends React.Component {
 
         this.state = {
             atTop: true,
+            options: 'fixed-top',
         };
     }
 
     componentDidMount() {
         window.onscroll = () => {
             if (window.scrollY > 50) {
-                this.setState({ atTop: false });
+                this.setState({ atTop: false, options: 'fixed-top' });
             }
             else {
-                this.setState({ atTop: true });
+                this.setState({ atTop: true, options: 'fixed-top' });
             }
         }
     }
 
     render() {
         const { user } = this.props;
+        const { options } = this.state;
 
         const opacity = this.state.atTop ? 1 : 0.5;
 
         return (
             <div className="container" style={{opacity}}>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                <nav className={`navbar navbar-expand-lg navbar-light bg-light ${options}`}>
                     <a className="navbar-brand" href="/">AIPS</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>

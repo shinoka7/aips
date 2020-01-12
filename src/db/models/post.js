@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define('Post', {
     userId: DataTypes.INTEGER,
     groupId: DataTypes.INTEGER,
-    content: DataTypes.STRING,
+    content: DataTypes.TEXT,
     title: DataTypes.STRING
   }, { freezeTableName: true });
   Post.associate = function(models) {

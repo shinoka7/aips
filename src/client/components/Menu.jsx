@@ -41,7 +41,7 @@ class Menu extends React.Component {
 
         return (
             <div className="d-flex flex-row-reverse pr-2 fixed-bottom pb-5">
-                <Button color="primary" className="btn btn-lg btn-outline-danger" onClick={this.toggleMenu}>
+                <Button color="primary" className="btn btn-lg btn-danger" onClick={this.toggleMenu}>
                     <i className="fas fa-plus" />
                 </Button>
                 <Collapse isOpen={isOpen}>

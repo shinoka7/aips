@@ -23,7 +23,7 @@ module.exports = {
         }
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       title: {
         type: Sequelize.STRING,

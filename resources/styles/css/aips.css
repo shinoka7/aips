@@ -219,3 +219,29 @@ body {
 .icon {
   max-width: 6%;
   height: auto; }
+
+.features_preview {
+  width: 500px;
+  height: auto; }
+
+.dot {
+  display: block;
+  height: 70px;
+  width: 70px;
+  line-height: 70px;
+  -moz-border-radius: 50%;
+  /* or 50% */
+  border-radius: 50%;
+  /* or 50% */
+  background-color: #bbb;
+  color: black;
+  text-align: center;
+  font-size: 3em; }
+
+.dot:hover {
+  background-color: turquoise; }
+
+.features_preview_container {
+  height: 10em;
+  display: flex;
+  align-items: center; }

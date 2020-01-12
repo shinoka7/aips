@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FeaturesPanel from '../src/client/components/FeaturesPanel.jsx';
 import RecentActivity  from '../src/client/components/RecentActivity.jsx';
 import Preview from '../src/client/components/Preview.jsx';
 import Menu from '../src/client/components/Menu.jsx';
@@ -35,8 +36,9 @@ class MainPage extends React.Component {
             <div>
                 <Preview events={shownEvents} />
                 <Menu events={events} groups={groups} images={images} csrfToken={csrfToken} />
-                <hr />
+                <br />
                 <RecentActivity csrfToken={csrfToken} groups={groups} />
+                <FeaturesPanel />
             </div>
         );
     }

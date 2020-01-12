@@ -46,6 +46,13 @@ class FilterPanel extends React.Component {
                         {category}
                     </DropdownToggle>
                     <DropdownMenu>
+                        <DropdownItem
+                            key={0}
+                            onClick={() => {this.setCategory(0); this.setState({ category: "All"});}}
+                            value={0}
+                        >
+                            All
+                        </DropdownItem>
                         {generatedItems}
                     </DropdownMenu>
                 </Dropdown>

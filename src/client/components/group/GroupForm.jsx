@@ -120,7 +120,7 @@ class GroupForm extends React.Component {
                             <AvField name="groupname" label="Group Name" type="text" onChange={this.setGroupName} required />
                         </AvForm>
                         <AvForm onInvalidSubmit={this.handleEmailInvalidSubmit}>
-                            <AvField name="groupemail" label="Group Email" type="email" placeholder="example420@example.com" onChange={this.setGroupEmail} required />
+                            <AvField name="groupemail" label="Group Email" type="email" placeholder="example@example.com" onChange={this.setGroupEmail} required />
                         </AvForm>
                         <FormGroup>
                             <Label for="category">Category :</Label>

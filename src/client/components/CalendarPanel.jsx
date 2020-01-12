@@ -236,7 +236,7 @@ class CalendarPanel extends React.Component {
             <div>
                 <Modal size="lg" isOpen={modal} toggle={toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
                     <ModalBody>
-                        <div className="pb-5 mb-2">
+                        <div className="pb-2">
                             <Calendar 
                                 localizer={localizer}
                                 defaultDate={new Date()}
