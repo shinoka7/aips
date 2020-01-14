@@ -58,9 +58,13 @@ module.exports = (aips) => {
         nextWeek.setDate(nextWeek.getDate() + 7);
         const shownEvents = await Event.findAll({
             where: {
-                startDate: {
-                    [Op.gte]: today,
-                    [Op.lte]: nextWeek,
+                [Op.or]: {
+                    startDate: {
+                        [Op.between]: [today, nextWeek],
+                    },
+                    endDate: {
+                        [Op.between]: [today, nextWeek],
+                    },
                 }
             },
             include: [{
