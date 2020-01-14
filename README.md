@@ -13,13 +13,3 @@ AIPS is a Web App to create a general, intuitive and interactive way of communic
 1. Sequelize migrations ```yarn db:migrate```
 1. Sequelize seeds ```yarn db:seed```
 1. Run server ```yarn dev```
-
-# TODO
-
-- [ ] Websocket
-- [ ] GUI for chat feature
-- [ ] Clean up Group page, Profile page
-- [ ] Group Admin page
-- [x] Calendar Feature
-- [ ] Tests
-- [ ] Accessibility
