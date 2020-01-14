@@ -24,7 +24,7 @@ module.exports = (aips) => {
     // GET posts
     router.get('/', asyncMiddleware(async(req, res) => {
         const posts = await Post.findAll({
-            limit: 10,
+            limit: 8,
             order: [[ 'createdAt', 'DESC' ]],
             include: [{
                 model: Group
