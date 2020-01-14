@@ -245,3 +245,7 @@ body {
   height: 10em;
   display: flex;
   align-items: center; }
+
+.card_image {
+  width: 150px;
+  height: auto; }

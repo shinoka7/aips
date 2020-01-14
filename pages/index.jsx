@@ -37,8 +37,8 @@ class MainPage extends React.Component {
                 <Preview events={shownEvents} />
                 <Menu events={events} groups={groups} images={images} csrfToken={csrfToken} />
                 <br />
-                <RecentActivity csrfToken={csrfToken} groups={groups} />
                 <FeaturesPanel />
+                <RecentActivity csrfToken={csrfToken} groups={groups} />
             </div>
         );
     }

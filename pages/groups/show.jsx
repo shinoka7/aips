@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Card, CardHeader, CardBody,
-    CardText, Col, Row, Nav,
+    CardText, CardImg, Col, Row, Nav,
     Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
@@ -104,12 +104,27 @@ class GroupsDetail extends React.Component {
                 // Images, description
                 <Col className="col-5 pt-4" key={group.id}>
                     <Card className="text-center" body outline color="secondary">
-                        <CardHeader><a href={`/group/${group.id}`}>{group.name}</a></CardHeader>
-                        <CardBody>
-                        <CardText>
-                            {group.description}
-                        </CardText>
-                        </CardBody>
+                        <Row>
+                            <Col className="d-flex justify-content-center" md="12" lg="3">
+                                <div className="card_image">
+                                    <CardImg src="/resources/img/default/default_group.png" />
+                                </div>
+                            </Col>
+                            <Col md="12" lg="9">
+                                <CardHeader><a href={`/group/${group.id}`}>{group.name}</a></CardHeader>
+                                <CardBody>
+                                <CardText>
+                                    { group.description.length > 210 &&
+                                        group.description.slice(0,210) + '...'                                    
+                                    }
+                                    { group.description.length <= 210 &&
+                                        group.description                               
+                                    }
+                                </CardText>
+                                </CardBody>
+                            </Col>
+                        </Row>
+
                     </Card>
                 </Col>
             );

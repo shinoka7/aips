@@ -8,17 +8,18 @@ class Preview extends React.Component {
 
         this.state = {
             currentEvent: 0,
-            calendarIsOpen: false
+            calendarIsOpen: false,
+            detailModal: false,
         };
 
         // Swap events every 10 seconds
         this.timer = 10000;
+        this.toggleEventDetails = this.toggleEventDetails.bind(this);
     }
 
     // Advance the slider to the next event
     advance() {
         this.setState((state) => {
-            console.log(state.currentEvent);
             if (state.currentEvent >= this.props.events.length - 1)
                 return {currentEvent: 0};
             return {currentEvent: state.currentEvent + 1};
@@ -31,7 +32,16 @@ class Preview extends React.Component {
         setTimeout(this.advance.bind(this), this.timer);
     }
 
+    async toggleEventDetails(e) {
+        const selectedEvent = await this.props.events.filter((event) => (
+            event.name === e.title
+        ));
+        console.log('hi');
+        await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
+    }
+
     render() {
+        const { selectedEvent } = this.state;
         const { events } = this.props;
         let event = events[this.state.currentEvent];
 
@@ -62,10 +72,15 @@ class Preview extends React.Component {
                                 {event.startDate} at {event.startTime}
                             </span>
                             <div className="blog-slider__title">
-                                {event.name}
+                                <a href="/" onClick={this.toggleEventDetails}>{event.name}</a>
                             </div>
                             <div className="blog-slider__text">
-                                {event.description}
+                                { event.description.length > 175 &&
+                                    event.description.slice(0,175) + '...'
+                                }
+                                { event.description.length <= 175 &&
+                                    event.description
+                                }
                             </div>
                             <div className="blog-slider__button">
                                 <a href={`/group/${event.Group.id}`}>
@@ -78,7 +93,36 @@ class Preview extends React.Component {
                 <div className="blog-slider__pagination"></div>
             </div>
         );
-        return blog_slider;
+
+        return (
+            <React.Fragment>
+                {blog_slider}
+                {/* { selectedEvent && selectedEvent.Group &&
+                    <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
+                        <ModalHeader>{selectedEvent.name}</ModalHeader>
+                        <ModalBody>
+                            { selectedEvent.image !== '' &&
+                                <div>
+                                    <img src={`/resources/img/buildings/${selectedEvent.image}`} className="image_preview" alt="Event Image"></img>
+                                    <hr />
+                                </div>
+                            }
+                            <b>
+                            <h5>{selectedEvent.description}</h5>
+                            <br />
+                            Starts: [{selectedEvent.startDate}] at {selectedEvent.startTime}
+                            <br />
+                            Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
+                            </b>
+                            <br />
+                            <div className="text-right">
+                                Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                            </div>
+                        </ModalBody>
+                    </Modal>
+                } */}
+            </React.Fragment>
+        );
     }
 }
 

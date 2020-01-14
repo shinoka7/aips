@@ -30,10 +30,8 @@ class RecentActivity extends React.Component {
             return (
                 <Col className="col-3 pb-4" key={post.id}>
                     <Card body outline color="danger" className="d-flex justify-content-center">
-                        <CardHeader color="danger"><a href={`/group/${post.Group.id}`}>{post.Group.name}</a></CardHeader>
-                        {/* <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" /> */}
+                    <CardHeader color="danger">{post.title} ~ <a href={`/group/${post.Group.id}`}>{post.Group.name}</a> ~</CardHeader>
                         <CardBody>
-                            <CardTitle>{post.title}</CardTitle>
                             <CardText>{post.content}</CardText>
                             <CardText className="text-right">
                                 <small className="text-muted">Updated {post.updatedAt}</small>
@@ -56,6 +54,7 @@ class RecentActivity extends React.Component {
 
         return (
             <div className="pt-4">
+                <h1 className="text-black text-center"><strong>Recent Posts</strong></h1><br/>
                 <Row className="row justify-content-around">
                     {generatedPosts}
                 </Row>
