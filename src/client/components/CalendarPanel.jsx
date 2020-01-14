@@ -117,8 +117,13 @@ class CalendarPanel extends React.Component {
 
     generateImages(images) {
         return images.map((image) => {
+            const words = image.split('_');
+            const imageName = words.map((word) => {
+                const temp = word[0].toUpperCase()
+                return temp + word.slice(1);
+            });
             return (
-                <option key={image} value={image}>{image}</option>
+                <option key={image} value={image}>{imageName.join(' ').slice(0,-4)}</option>
             );
         });
     }
