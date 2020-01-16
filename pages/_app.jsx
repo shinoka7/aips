@@ -21,15 +21,15 @@ export default class MyApp extends App {
         const { user } = pageProps;
 
         return (
-            <Container>
+            <React.Fragment>
                 <Header
-                   user={user}
+                    user={user}
                 />
                 <Component {...pageProps} />
                 <div className="pt-4">
                     <Footer />
                 </div>
-            </Container>
+            </React.Fragment>
         );
     }
 }
