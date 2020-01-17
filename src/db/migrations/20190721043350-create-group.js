@@ -66,6 +66,11 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: '',
       },
+      mode: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: 'Public',
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

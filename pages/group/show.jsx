@@ -177,7 +177,7 @@ class GroupDetail extends React.Component {
                                 <DetailPanel group={group} />
                             </TabPane>
                             <TabPane tabId="2">
-                                <AdminPanel group={group} pendingUsers={pendingUsers} csrfToken={csrfToken} />
+                                <AdminPanel group={group} pendingUsers={pendingUsers} isVerified={isVerified} csrfToken={csrfToken} />
                             </TabPane>
                         </TabContent>
                     </Container>

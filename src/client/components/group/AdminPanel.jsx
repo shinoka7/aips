@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Container, Badge, Card, CardBody, Row, Col, Form, FormGroup, Label, Input,
+import { Button, Badge, Card, CardBody, Row, Col, Form, FormGroup, Label, Input,
 NavItem, NavLink, Nav, TabContent, TabPane, Table } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
@@ -177,7 +177,7 @@ class AdminPanel extends React.Component {
     }
 
     render() {
-        const { group } = this.props;
+        const { group, isVerified } = this.props;
         const { mailingList, pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
 
         const generatedPending = this.generatePending(pendingUsers);
@@ -190,19 +190,22 @@ class AdminPanel extends React.Component {
                             <b>Settings</b>
                             <Card>
                                 <CardBody>
-                                    Mailing List [WIP]
-                                    <Form>
-                                        <FormGroup>
-                                            <Label for="mailingList">Mailing List: </Label>
-                                            <Input
-                                                type="text"
-                                                name="mailingList"
-                                                id="mailingList"
-                                                placeholder={mailingList}
-                                                onChange={(e)=>{this.setState({ mailingList: e.target.value.trim() })}}    
-                                            ></Input>
-                                        </FormGroup>
-                                    </Form>
+                                <FormGroup tag="fieldset" row>
+                                    <Col sm={10}>
+                                    <FormGroup check>
+                                        <Label check>
+                                        <Input type="radio" name="radio2" checked={group.mode === 'Public'} />{' '}
+                                        Public Mode
+                                        </Label>
+                                    </FormGroup>
+                                    <FormGroup check>
+                                        <Label check>
+                                        <Input type="radio" name="radio2" checked={group.mode === 'Private'} disabled={!isVerified} />{' '}
+                                        Private Mode
+                                        </Label>
+                                    </FormGroup>
+                                    </Col>
+                                </FormGroup>
                                 </CardBody>
                             </Card>
                         </Col>
@@ -316,6 +319,7 @@ class AdminPanel extends React.Component {
 AdminPanel.propTypes = {
     group: PropTypes.object.isRequired,
     pendingUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    isVerified: PropTypes.bool.isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 
