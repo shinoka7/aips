@@ -4,8 +4,8 @@ AIPS is a Web App to create a general, intuitive and interactive way of communic
 
 # Start up
 
-1. node.js(10.x <= 12.x), npm(6.x >=), yarn are required.
-1. Install and run Docker on local environment
+1. [Node.js](https://nodejs.org/en/)(10.x <= 12.x), npm(6.x >=), [Yarn](https://yarnpkg.com/lang/en/), [Docker](https://www.docker.com/) are required.
+1. Run Docker on local environment
 1. Add a env var file to the /config (**ask admin**)
 1. Start docker containers ```docker-compose -f docker-compose.dev.yml up -d```
 1. Install Yarn
