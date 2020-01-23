@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Jumbotron } from 'reactstrap';
+import { Jumbotron, Button } from 'reactstrap';
 
 import UserProfile from '../../src/client/components/user/UserProfile';
 import GroupList from '../../src/client/components/group/GroupList';
@@ -30,6 +30,9 @@ class UserDetail extends React.Component {
                         {/* Show Profile */}
                         {/* TODO make cool arrow button && transition Dropdown? */}
                     {/* </Button> */}
+                    <form action="/auth/google" method="GET">
+                        <Button block className="btn btn-primary"><i className="fab fa-google"></i> Conenct Google Calendars</Button>
+                    </form>
                     <hr />
                     <GroupList notifications={notifications} csrfToken={csrfToken} />
                 </Jumbotron>

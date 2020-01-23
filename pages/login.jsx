@@ -13,10 +13,10 @@ export default class extends React.Component {
                 <h4>Login</h4>
                 <hr/>
                 <div>
-                    <form action="/auth/google" method="GET">
+                    {/* <form action="/auth/google" method="GET">
                         <Button block className="btn btn-primary"><i className="fab fa-google"></i> Login with Google</Button>
                     </form>
-                    <br/>
+                    <br/> */}
                     <form action="/auth/cas" method="GET">
                         {/* <input type="hidden" name="returnTo" value="/auth/cas/callback" /> */}
                         <Button block className="btn btn-primary"><img className="icon" src="/resources/img/RPI.png" /> Login with CAS</Button>

@@ -9,18 +9,38 @@ module.exports = (sequelize, DataTypes) => {
     Account.belongsTo(models.User);
   };
 
-  /**
-   * create or link an account
-   * 
-   * @param {string} provider
-   * @param {string} accountId
-   * @param {object} username when user is not found
-   * @returns {Promise<Account>}
-   * @memberof Account
-   */
-  Account.createOrLink = async function(provider, accountId, username) {
-      const { User } = require('.');
+//   /**
+//    * create or link an account
+//    * 
+//    * @param {string} provider
+//    * @param {string} accountId
+//    * @param {object} username when user is not found
+//    * @returns {Promise<Account>}
+//    * @memberof Account
+//    */
+//   Account.createOrLink = async function(provider, accountId, username) {
+//       const { User } = require('.');
 
+//       let account = await Account.findOne({
+//           where: {
+//               provider, accountId
+//           }
+//       });
+
+//       if (!account) {
+//           const user = await User.create({ username, email: username });
+//           account = await Account.create({
+//               provider,
+//               accountId,
+//               UserId: user.id
+//           });
+//       }
+
+//       account = await account.reload({ include: [{ model: User }] });
+//       return account;
+//   };
+
+  Account.linkAccount = async function(provider, accountId, userId) {
       let account = await Account.findOne({
           where: {
               provider, accountId
@@ -28,17 +48,16 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       if (!account) {
-          const user = await User.create({ username, email: username });
           account = await Account.create({
-              provider,
-              accountId,
-              UserId: user.id
+            provider,
+            accountId,
+            UserId: userId
           });
       }
 
-      account = await account.reload({ include: [{ model: User }] });
+      account = await account.reload({ include: [{ model: User  }] });
       return account;
-  };
+  }
 
   return Account;
 };

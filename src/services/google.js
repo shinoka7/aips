@@ -1,3 +1,5 @@
+// https://developers.google.com/calendar/quickstart/nodejs
+
 const { google } = require('googleapis');
 
 class GoogleService {
@@ -12,6 +14,7 @@ class GoogleService {
         this.defaultScope = [
             'https://www.googleapis.com/auth/plus.me',
             'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/calendar',
         ];
     }
 
@@ -46,6 +49,7 @@ class GoogleService {
         const data = await auth.getToken(code);
         const tokens = data.tokens;
         auth.setCredentials(tokens);
+        const calendar = google.calendar({ version: 'v3', auth });
         const plus = this.getGooglePlusApi(auth);
         const me = await plus.people.get({ userId: 'me' });
         const userGoogleId = me.data.id;
@@ -54,6 +58,7 @@ class GoogleService {
           id: userGoogleId,
           email: userGoogleEmail,
           tokens: tokens,
+          calendar: calendar,
         };
     }
 
