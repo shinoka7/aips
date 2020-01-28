@@ -19,8 +19,9 @@ module.exports = (aips) => {
     res.redirect(url);
   });
 
-  // convert to callback function for allowing calendar R/Wr
+  // https://support.google.com/cloud/answer/7454865?authuser=0
   // DON'T CREATE USER, BUT ONLY LINK
+  // ONLY ACCESSES THE CALENDARS ON SESSION => FUNC FOR ACCESS ALL THE TIME?
   router.get('/google/callback', asyncMiddleware(async(req, res) => {
     const userId = req.session.user ? req.session.user.id : 0;
     const user = await User.findByPk(userId);
@@ -33,6 +34,7 @@ module.exports = (aips) => {
     const account = await Account.linkAccount('google', id, user.id);
     req.session.user = account.User;
     req.session.calendar = calendar;
+    console.log(req.session.calendar);
     req.session.save((err) => {
       res.redirect('/user');
     });

@@ -46,6 +46,7 @@ class CalendarPanel extends React.Component {
         this.setImage = this.setImage.bind(this);
         this.createHandler = this.createHandler.bind(this);
         this.validate = this.validate.bind(this);
+        this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -224,6 +225,11 @@ class CalendarPanel extends React.Component {
         window.location.reload();
     }
 
+    async addToGoogleCalendarHandler() {
+        // https://developers.google.com/calendar/create-events
+        // verify whether user is true && connected with google calendars
+    }
+
     validate() {
         const { startDate, startTime, endDate, endTime, name, groupId } = this.state.newEvent;
         return startDate && startTime && endDate && endTime && name !== '' && groupId;
@@ -326,7 +332,16 @@ class CalendarPanel extends React.Component {
                         </Modal>
                         { selectedEvent && selectedEvent.Group &&
                             <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                                <ModalHeader>{selectedEvent.name}</ModalHeader>
+                                <ModalHeader>
+                                    <div className="d-flex bd-highlight">
+                                        <div className="p-2 bd-highlight">
+                                            {selectedEvent.name}
+                                        </div>
+                                        <div className="p-2 bd-highlight flex-row-reverse">
+                                            <Button size="sm" className="" onClick={this.addToGoogleCalendarHandler}><i className="fab fa-google"> Add to Calendar</i></Button>
+                                        </div>
+                                    </div>
+                                </ModalHeader>
                                 <ModalBody>
                                     { selectedEvent.image !== '' &&
                                         <div>
