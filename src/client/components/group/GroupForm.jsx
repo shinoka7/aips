@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 
-import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Tooltip, FormGroup } from 'reactstrap';
 
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
@@ -18,6 +18,7 @@ class GroupForm extends React.Component {
             groupEmail: '',
             categoryId: 0,
             description: '',
+            groupFormToolTipOpen: false,
         };
 
         this.valid = {
@@ -102,14 +103,17 @@ class GroupForm extends React.Component {
     }
 
     render() {
-        const { categoryId } = this.state;
+        const { categoryId, groupFormToolTipOpen } = this.state;
         const { categories, user } = this.props;
 
         const generatedCategories = this.generateCategories(categories);
     
         return (
             <div className="text-right" >
-                <Button onClick={this.toggle} className="btn btn-danger"><i className="fas fa-plus-circle"></i> Create</Button>
+                <Tooltip placement="auto" isOpen={groupFormToolTipOpen} target="groupFormToolTip" toggle={() => {this.setState({ groupFormToolTipOpen: !groupFormToolTipOpen })}}>
+                    Create a Group
+                </Tooltip>
+                <Button onClick={this.toggle} className="btn btn-danger" id="groupFormToolTip"><i className="fas fa-plus-circle"></i> Create</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                     <ModalHeader toggle={this.toggle}>Create Group</ModalHeader>
                     <ModalBody>
@@ -132,7 +136,12 @@ class GroupForm extends React.Component {
                         <Label for="description">Description</Label>
                         <Input type="textarea" id="description" placeholder="This is very important" onChange={this.setDescription} rows={3} />
                         <ModalFooter>
-                            <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Create</Button>
+                            { !user.username &&
+                                <Button href="/login" color="primary">Login</Button>
+                            }
+                            { user.username &&
+                                <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Create</Button>
+                            }
                             <Button onClick={this.toggle} color="secondary">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>

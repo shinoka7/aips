@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Jumbotron, Button, ButtonGroup } from 'reactstrap';
+import { Jumbotron, Button, ButtonGroup, Tooltip } from 'reactstrap';
 
 import UserProfile from '../../src/client/components/user/UserProfile';
 import GroupList from '../../src/client/components/group/GroupList';
@@ -13,6 +13,7 @@ class UserDetail extends React.Component {
 
         this.state = {
             calendarIsOpen: false,
+            calendarToolTipOpen: false,
         }
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
@@ -28,7 +29,7 @@ class UserDetail extends React.Component {
 
     render() {
         const { user, notifications, csrfToken, events, groups, images } = this.props;
-        const { calendarIsOpen } = this.state;
+        const { calendarIsOpen, calendarToolTipOpen } = this.state;
 
         return (
             <div>
@@ -41,13 +42,15 @@ class UserDetail extends React.Component {
                     {/* </Button> */}
                     <hr />
                     <ButtonGroup className="text-right">
-                        <Button onClick={this.toggleCalendar} className="btn btn-info">
+                        <Button onClick={this.toggleCalendar} className="btn btn-info" id="calendarToolTip">
                             <i className="fas fa-calendar-alt"> Events</i>
                         </Button>
                     </ButtonGroup>
+                    <Tooltip placement="auto" isOpen={calendarToolTipOpen} target="calendarToolTip" toggle={() => {this.setState({ calendarToolTipOpen: !calendarToolTipOpen })}}>
+                        Individual Calendar
+                    </Tooltip>
                     <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} modal={calendarIsOpen} images={images} />
                     <GroupList notifications={notifications} csrfToken={csrfToken} />
-                    {console.log(events)}
                 </Jumbotron>
             </div>
         );
