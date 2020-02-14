@@ -36,22 +36,22 @@ class Preview extends React.Component {
         const selectedEvent = await this.props.events.filter((event) => (
             event.name === e.title
         ));
-        console.log('hi');
         await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
     }
 
     render() {
-        const { selectedEvent } = this.state;
         const { events } = this.props;
         let event = events[this.state.currentEvent];
 
         if (event == null) {
             event = {
-                imagePath: "",
-                startDate: "01-01-1969",
+                image: "defaultImage.png",
+                startDate: "10-28-2015",
                 startTime: "0:00",
                 name: "Hmm... Nothing going on this week",
                 description: "Add your event here",
+                endDate: "10-28-2015",
+                endTime: "11:59",
                 Group: {
                     name: "Display Calendar"
                 }
