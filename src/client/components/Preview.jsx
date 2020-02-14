@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Swiper from 'swiper';
+
 class Preview extends React.Component {
 
     constructor(props) {
@@ -11,6 +13,20 @@ class Preview extends React.Component {
             calendarIsOpen: false,
             detailModal: false,
         };
+
+        this.swiper = new Swiper('.blog-slider', {
+            spaceBetween: 30,
+            effect: 'fade',
+            loop: true,
+            mousewheel: {
+              invert: false,
+            },
+            // autoHeight: true,
+            pagination: {
+              el: '.blog-slider__pagination',
+              clickable: true,
+            }
+          });
 
         // Swap events every 10 seconds
         this.timer = 10000;
@@ -53,6 +69,7 @@ class Preview extends React.Component {
                 endDate: "10-28-2015",
                 endTime: "11:59",
                 Group: {
+                    id: "#",
                     name: "Display Calendar"
                 }
             }
@@ -68,12 +85,8 @@ class Preview extends React.Component {
                             <img src={imagePath} alt="Event Image"></img>
                         </div>
                         <div className="blog-slider__content">
-                            <span className="blog-slider__code">
-                                {event.startDate} at {event.startTime}
-                            </span>
-                            <div className="blog-slider__title">
-                                <a href="/" onClick={this.toggleEventDetails}>{event.name}</a>
-                            </div>
+                            <span className="blog-slider__code">{event.startDate} at {event.startTime}</span>
+                            <div className="blog-slider__title"><a href="/" onClick={this.toggleEventDetails}>{event.name}</a></div>
                             <div className="blog-slider__text">
                                 { event.description.length > 175 &&
                                     event.description.slice(0,175) + '...'
@@ -82,11 +95,9 @@ class Preview extends React.Component {
                                     event.description
                                 }
                             </div>
-                            <div className="blog-slider__button">
-                                <a href={`/group/${event.Group.id}`}>
-                                    {event.Group.name}
-                                </a>
-                            </div>
+                            <a href={`/group/${event.Group.id}`} className="blog-slider__button">
+                                {event.Group.name}
+                            </a>
                         </div>
                     </div>
                 </div>
