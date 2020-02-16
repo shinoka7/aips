@@ -16,19 +16,24 @@ class UserDetail extends React.Component {
             calendarToolTipOpen: false,
         }
 
-        this.toggleCalendar = this.toggleCalendar.bind(this);
+        this.isGoogleCalendarAvailable = this.isGoogleCalendarAvailable.bind(this);
+		this.toggleCalendar = this.toggleCalendar.bind(this);
     }
     
     static async getInitialProps(context) {
         return context.query || {};
     }
 
+    isGoogleCalendarAvailable() {
+        return !!this.props.googleCalendar.events
+	}
+
     toggleCalendar() {
         this.setState({ calendarIsOpen: !this.state.calendarIsOpen });
     }
 
     render() {
-        const { user, notifications, csrfToken, events, groups, images } = this.props;
+        const { user, notifications, csrfToken, events, groups, images, googleCalendar } = this.props;
         const { calendarIsOpen, calendarToolTipOpen } = this.state;
 
         return (
@@ -40,6 +45,9 @@ class UserDetail extends React.Component {
                         {/* Show Profile */}
                         {/* TODO make cool arrow button && transition Dropdown? */}
                     {/* </Button> */}
+                    <form action="/auth/google" method="GET">
+                        <Button disabled={this.isGoogleCalendarAvailable()} block className="btn btn-primary"><i className="fab fa-google"></i> Connect Google Calendars</Button>
+                    </form>
                     <hr />
                     <ButtonGroup className="text-right">
                         <Button onClick={this.toggleCalendar} className="btn btn-info" id="calendarToolTip">
@@ -60,6 +68,7 @@ class UserDetail extends React.Component {
 UserDetail.propTypes = {
     user: PropTypes.object.isRequired,
     notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
+    googleCalendar: PropTypes.object.isRequired,
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,

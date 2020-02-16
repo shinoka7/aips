@@ -51,6 +51,7 @@ class CalendarPanel extends React.Component {
         this.validate = this.validate.bind(this);
         this.setRepeats = this.setRepeats.bind(this);
         this.toggleAllDay = this.toggleAllDay.bind(this);
+		this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -254,6 +255,41 @@ class CalendarPanel extends React.Component {
         window.location.reload();
     }
 
+    async addToGoogleCalendarHandler() {
+        // https://developers.google.com/calendar/create-events
+        // verify whether user is true && connected with google calendars
+        // const { googleCalendar } = this.props;
+        // const { selectedEvent } = this.state;
+        // if (googleCalendar.events && selectedEvent.groupId) {
+        //     const newEvent = {
+        //         summary: selectedEvent.name,
+        //         description: selectedEvent.description,
+        //         organizer: {
+        //             displayName: selectedEvent.Group.name,
+        //             email: selectedEvent.Group.groupEmail
+        //         },
+        //         start: {
+        //             date: selectedEvent.startDate
+        //         },
+        //         end: {
+        //             date: selectedEvent.endDate
+        //         },
+        //     };
+        //     await googleCalendar.Events.insert({
+        //         calendarId: 'primary',
+        //         resource: newEvent,
+        //       }, function(err, newEvent) {
+        //         if (err) {
+        //           console.log('There was an error contacting the Calendar service: ' + err);
+        //           return;
+        //         }
+        //         console.log('Event created: %s', newEvent.htmlLink);
+        //       });
+        // }
+        // THIS ===================================================
+        // https://www.npmjs.com/package/react-google-calendar-api
+    }
+
     validate() {
         const { startDate, startTime, endDate, endTime, name, groupId } = this.state.newEvent;
         return startDate && startTime && endDate && endTime && name !== '' && groupId;
@@ -261,11 +297,17 @@ class CalendarPanel extends React.Component {
 
     render() {
         const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen } = this.state;
-        const { modal, toggleCalendar, images } = this.props;
+        const { modal, toggleCalendar, images, user, isUserInGroup, googleCalendar } = this.props;
 
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
         const generatedImages = this.generateImages(images);
+
+        const googleButton = (
+            <Button outline color="primary" onClick={this.addToGoogleCalendarHandler}>
+                Add to <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
+            </Button>
+        );
 
         return (
             <div>
@@ -391,7 +433,7 @@ class CalendarPanel extends React.Component {
                         </Modal>
                         { selectedEvent && selectedEvent.Group &&
                             <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                                <ModalHeader>{selectedEvent.name}</ModalHeader>
+                                <ModalHeader close={googleButton}>{selectedEvent.name}</ModalHeader>
                                 <ModalBody>
                                     { selectedEvent.image !== '' &&
                                         <div>
@@ -406,11 +448,22 @@ class CalendarPanel extends React.Component {
                                     <br />
                                     Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
                                     </b>
-                                    <br />
                                     <div className="text-right">
                                         Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
                                     </div>
                                 </ModalBody>
+                                { isUserInGroup &&
+                                    <ModalFooter>
+                                        <Row>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Button color="link"><i className="fas fa-user-edit"></i> Edit</Button>
+                                            </Col>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Button color="link"><i className="fas fa-trash-alt"></i> Delete</Button>
+                                            </Col>
+                                        </Row>
+                                    </ModalFooter>
+                                }
                             </Modal>
                         }
                     </ModalBody>
@@ -473,6 +526,9 @@ CalendarPanel.propTypes = {
     toggleCalendar: PropTypes.func.isRequired,
     modal: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    user: PropTypes.object.isRequired,
+    isUserInGroup: PropTypes.bool,
+    googleCalendar: PropTypes.object.isRequired,
 }
 
 export default CalendarPanel;
