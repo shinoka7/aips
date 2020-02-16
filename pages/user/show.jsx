@@ -12,14 +12,20 @@ class UserDetail extends React.Component {
 
         this.state = {
         }
+
+        this.isGoogleCalendarAvailable = this.isGoogleCalendarAvailable.bind(this);
     }
     
     static async getInitialProps(context) {
         return context.query || {};
     }
 
+    isGoogleCalendarAvailable() {
+        return !!this.props.googleCalendar.events
+    }
+
     render() {
-        const { user, notifications, csrfToken } = this.props;
+        const { user, notifications, csrfToken, googleCalendar } = this.props;
 
         return (
             <div>
@@ -31,7 +37,7 @@ class UserDetail extends React.Component {
                         {/* TODO make cool arrow button && transition Dropdown? */}
                     {/* </Button> */}
                     <form action="/auth/google" method="GET">
-                        <Button block className="btn btn-primary"><i className="fab fa-google"></i> Conenct Google Calendars</Button>
+                        <Button disabled={this.isGoogleCalendarAvailable()} block className="btn btn-primary"><i className="fab fa-google"></i> Connect Google Calendars</Button>
                     </form>
                     <hr />
                     <GroupList notifications={notifications} csrfToken={csrfToken} />
@@ -44,6 +50,7 @@ class UserDetail extends React.Component {
 UserDetail.propTypes = {
     user: PropTypes.object.isRequired,
     notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
+    googleCalendar: PropTypes.object.isRequired,
     csrfToken: PropTypes.string.isRequired,
 };
 

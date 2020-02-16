@@ -35,7 +35,7 @@
     "express-session": "^1.17.0",
     "express-validator": "^6.1.1",
     "fs": "^0.0.1-security",
-    "googleapis": "^42.0.0",
+    "googleapis": "^47.0.0",
     "mariadb": "^2.1.0",
     "moment": "^2.24.0",
     "next": "^9.0.1",

@@ -4,7 +4,7 @@ const blacklist = require('express-blacklist');
 const Cabin = require('cabin');
 const cabin = new Cabin();
 
-const { Event, Group } = require('../../db/models');
+const { Event, Group, User } = require('../../db/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -38,6 +38,9 @@ module.exports = (aips) => {
 
     // pages/index
     app.get('/', csrf, async(req, res) => {
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
+
         // will only contain events that are old 3 months ago and on
         const date = new Date();
         date.setMonth(date.getMonth() - 3);
@@ -87,6 +90,8 @@ module.exports = (aips) => {
             events: events,
             shownEvents: shownEvents,
             images: images,
+            user: user || {},
+            googleCalendar: req.session.calendar || {},
         });
     });
 

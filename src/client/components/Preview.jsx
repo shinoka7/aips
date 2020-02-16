@@ -36,7 +36,6 @@ class Preview extends React.Component {
         const selectedEvent = await this.props.events.filter((event) => (
             event.name === e.title
         ));
-        console.log('hi');
         await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
     }
 

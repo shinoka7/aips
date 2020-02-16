@@ -31,10 +31,10 @@ module.exports = (aips) => {
     const { code } = req.query;
     const { id, email, tokens, calendar }  = await googleService.getGoogleAccountFromCode(code);
     // const account = await Account.createOrLink('google', id, email);
-    const account = await Account.linkAccount('google', id, user.id);
-    req.session.user = account.User;
+    // const account = await Account.linkAccount('google', id, user.id);
+    // req.session.user = account.User;
+    // console.log(calendar.calendarList.list());
     req.session.calendar = calendar;
-    console.log(req.session.calendar);
     req.session.save((err) => {
       res.redirect('/user');
     });
