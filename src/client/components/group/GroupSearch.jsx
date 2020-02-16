@@ -11,7 +11,7 @@ class GroupSearch extends React.Component
         super(props);
 
         this.state = {
-           value: "Search for groups!",
+           value: "",
            categoryID: props.categoryID
         };
 
@@ -50,7 +50,7 @@ class GroupSearch extends React.Component
                         <InputGroup>
                             <Input
                                 id = "searchBar" 
-                                placeholder = {this.state.value} 
+                                placeholder = {"Search for groups!"} 
                                 onChange={this.handleChange}    
                                     />
                             <InputGroupAddon addonType="append">
