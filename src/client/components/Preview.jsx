@@ -75,7 +75,7 @@ class Preview extends React.Component {
             }
         }
 
-        const imagePath = "/resources/img/buildings/" + event.image;
+        const imagePath = event.image ? "/resources/img/buildings/" + event.image : "/resources/img/buildings/defaultImage.png";
 
         const blog_slider = (
             <div className="blog-slider">
