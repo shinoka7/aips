@@ -24,13 +24,14 @@ module.exports = (aips) => {
         body('endDate').not().isEmpty().trim(),
         body('endTime').not().isEmpty().trim(),
         body('name').not().isEmpty().trim(),
-        body('description').not().isEmpty().trim(),
+        body('description').exists().trim(),
+        body('repeats').not().isEmpty().trim(),
     ];
 
     // POST event
     router.post('/', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const {
-            groupId, startDate, startTime, endDate, endTime, name, description, image
+            groupId, startDate, startTime, endDate, endTime, name, description, image, repeats
         } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);

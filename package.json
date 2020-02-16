@@ -48,7 +48,7 @@
     "react-dom": "^16.8.6",
     "react-id-swiper": "^2.4.0",
     "react-switch": "^5.0.1",
-    "reactstrap": "^8.1.1",
+    "reactstrap": "^8.4.1",
     "sequelize": "^5.18.4",
     "sequelize-cli": "^5.5.0",
     "sequelize-file": "^0.3.0",
