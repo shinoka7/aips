@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { InputGroup, InputGroupAddon, 
+import { Form, InputGroup, InputGroupAddon, 
     Input, Button, Col, Row} from 'reactstrap';
 
 /* Search bar component on 'groups' page
@@ -11,20 +11,34 @@ class GroupSearch extends React.Component
         super(props);
 
         this.state = {
-           value: ""
+           value: "Search for groups!",
+           categoryID: props.categoryID
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.searchHandler = this.searchHandler.bind(this);
     };
-    setString(searchString)
+
+    /* When the search button is pressed, this function
+    filters the groups through the 'show' page. */
+    searchHandler()
     {
-        const {categoryID} = this.props;
-        this.props.filter(categoryID, searchString);
+        const {value, categoryID} = this.state;
+        this.props.filter(categoryID, value);
     }
+
+    /* When the category is changed through the
+    FilterPanel, revert search bar to empty state. */
+    static getDerivedStateFromProps(props, state) {
+        if (props.categoryID !== state.categoryID) {
+            document.getElementById("form").reset();
+            return {value: "", 
+                categoryID: props.categoryID};
+        }
+    }
+
     handleChange(e)
     {
-        if (e.target.value == "")
-            this.setString("");
         this.setState({value: e.target.value});
     }
 
@@ -32,20 +46,21 @@ class GroupSearch extends React.Component
         return (
             <Row>
                 <Col>
-                    <InputGroup>
-                        <Input
-                            id = "searchBar" 
-                            placeholder = {"Search for groups!"} 
-                            onChange={this.handleChange}    
-                                />
-                        <InputGroupAddon addonType="append">
-                            <Button 
-                            disabled = {!this.state.value}
-                            onClick= {() => 
-                                {this.setString(document.getElementById("searchBar").value);}}
-                            color = "default">Search</Button>
-                        </InputGroupAddon>
-                    </InputGroup>
+                    <Form id = "form">
+                        <InputGroup>
+                            <Input
+                                id = "searchBar" 
+                                placeholder = {this.state.value} 
+                                onChange={this.handleChange}    
+                                    />
+                            <InputGroupAddon addonType="append">
+                                <Button 
+                                disabled = {!this.state.value}
+                                onClick= {this.searchHandler}
+                                color = "default">Search</Button>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </Form>
                 </Col>
             </Row>
         );
@@ -53,7 +68,7 @@ class GroupSearch extends React.Component
 };
 
 GroupSearch.propTypes = {
-    categoryID: PropTypes.object.isRequired,
+    categoryID: PropTypes.number.isRequired,
     filter: PropTypes.func.isRequired,
 };
 

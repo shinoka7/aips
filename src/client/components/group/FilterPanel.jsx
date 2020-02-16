@@ -17,7 +17,6 @@ class FilterPanel extends React.Component {
     };
 
     setCategory(id) {
-        //Aaded string here
         const {searchString} = this.props;
         this.props.filter(id, searchString);
     }

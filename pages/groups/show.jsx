@@ -39,17 +39,31 @@ class GroupsDetail extends React.Component {
         const { currentPage } = this.state;
         this.setState({ searchString: searchString});
         this.setState({ categoryId: categoryId });
-        if (searchString === undefined || searchString == "")
+
+        /* If the search bar is empty, the groups shown are based only
+        on the categoryID and currentPage. */
+        if (searchString === undefined || searchString === "")
         {
-            searchString = "sentinelValue";
-        }
-        await axios.get(`/group/page/${categoryId}/${currentPage}/${searchString}`).then((res) => {
-            this.setState({
-                user: res.data.user,
-                groups: res.data.groups,
-                totalPages: res.data.totalPages
+            await axios.get(`/group/page/${categoryId}/${currentPage}`).then((res) => {
+                this.setState({
+                    user: res.data.user,
+                    groups: res.data.groups,
+                    totalPages: res.data.totalPages
+                });
             });
-        });
+        }
+         /* Otherwise, the search string is included in the
+         database query */
+        else
+        {
+            await axios.get(`/group/page/${categoryId}/${currentPage}?searchString=${searchString}`).then((res) => {
+                this.setState({
+                    user: res.data.user,
+                    groups: res.data.groups,
+                    totalPages: res.data.totalPages
+                });
+            });
+        }
         const groupNames = [];
         await this.state.groups.forEach((group) => {
                 groupNames.push(group.name);
@@ -155,19 +169,19 @@ class GroupsDetail extends React.Component {
         return(
             <div className="pt-3 text-right">
                 <Nav pills className="text-center">
-                    
-                    
-                    <FilterPanel searchString ={""} categories={this.props.categories} filter={this.init}/>
-                   
+                    <FilterPanel 
+                        searchString ={""} 
+                        categories={this.props.categories} 
+                        filter={this.init}/>
                     <GroupForm
                         user={user}
                         groupNames={groupNames}
                         categories={this.props.categories}
                         csrfToken={this.props.csrfToken}
                     />
-
-                    <GroupSearch categoryID={this.state.categoryId} filter = {this.init}/>
-                    
+                    <GroupSearch 
+                     categoryID={this.state.categoryId} 
+                        filter = {this.init}/>
                 </Nav>
                 <Row className="row justify-content-around">
                     {groupList}

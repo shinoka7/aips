@@ -10,6 +10,9 @@ const { User, Group, Notification, Event, Category, Pending } = require('../../d
 const { Op } = require('sequelize');
 const fs = require('fs');
 const mailerService = require('../../services/mailer');
+//
+const url = require('url');
+const querystring = require('querystring');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -35,12 +38,12 @@ module.exports = (aips) => {
     /**
      * GET groups for page
      */
-    router.get('/page/:categoryId(\\d+)/:num(\\d+)/:searchString', asyncMiddleware(async(req, res) => {
+    router.get('/page/:categoryId(\\d+)/:num(\\d+)', asyncMiddleware(async(req, res) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);
         const num = Number(req.params.num);
         const categoryId = Number(req.params.categoryId);
-        const searchString = String(req.params.searchString);
+        const searchString = req.query.searchString;
         if (num <= 0) {
             return res.status(404).send({ error: 'page not found' });
         }
@@ -48,8 +51,10 @@ module.exports = (aips) => {
         let groupCount = 1;
         const limit = 8;
         const offset = (num - 1) * limit;
-        
-        if (categoryId === 0 && searchString == "sentinelValue") {
+        /* If the search bar is empty and category is 'all',
+        return all groups. */
+        if (categoryId === 0 && !searchString)
+        {
             await Group.findAndCountAll({
                 offset,
                 limit,
@@ -58,15 +63,14 @@ module.exports = (aips) => {
                 groupCount = result.count;
             });
         }
+        /* If the search bar is non-empty and category is 'all',
+        return groups containing the substring searched for. */
         else if (categoryId === 0)
         {
             await Group.findAndCountAll({
             offset,
             limit,
             where: {
-
-                /* Search string specified by 
-                search bar input */
                 name : {
                     [Op.substring]: searchString
                 }
@@ -76,7 +80,10 @@ module.exports = (aips) => {
                 groupCount = result.count;
             });
         }
-        else if (categoryId != 0 && searchString == "sentinelValue"){
+        /* If the search bar is empty and category is
+        specified, return groups based on categoryID. */
+        else if (categoryId != 0 && !searchString)
+        {
             await Group.findAndCountAll({
                 offset,
                 limit,
@@ -88,6 +95,9 @@ module.exports = (aips) => {
                 groupCount = result.count;
             });
         }
+        /* If the search bar is non-empty and category is specified,
+        return groups within the specified category,
+        containing the substring searched for. */
         else
         { 
             await Group.findAndCountAll({
@@ -105,7 +115,6 @@ module.exports = (aips) => {
             });
            
         }
-
         res.json({ groups, totalPages: Math.ceil(groupCount/limit), user: user || {} });
     }));
 
