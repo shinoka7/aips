@@ -11,6 +11,7 @@ class GroupSearch extends React.Component
         super(props);
 
         this.state = {
+           reset: false,
            value: "",
            categoryID: props.categoryID
         };
@@ -28,17 +29,21 @@ class GroupSearch extends React.Component
     }
 
     /* When the category is changed through the
-    FilterPanel, revert search bar to empty state. */
+    FilterPanel, or if the reset button has been
+    pressed, revert search bar to empty state. */
     static getDerivedStateFromProps(props, state) {
-        if (props.categoryID !== state.categoryID) {
+        if (props.categoryID !== state.categoryID || props.reset !== state.reset) {
             document.getElementById("form").reset();
             return {value: "", 
-                categoryID: props.categoryID};
+                categoryID: props.categoryID,
+                reset: props.reset};
         }
+        return null;
     }
 
     handleChange(e)
     {
+        this.props.returnString(e.target.value);
         this.setState({value: e.target.value});
     }
 
@@ -68,8 +73,10 @@ class GroupSearch extends React.Component
 };
 
 GroupSearch.propTypes = {
+    reset: PropTypes.bool.isRequired,
     categoryID: PropTypes.number.isRequired,
     filter: PropTypes.func.isRequired,
+    returnString: PropTypes.func.isRequired
 };
 
 export default GroupSearch;

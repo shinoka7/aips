@@ -11,6 +11,7 @@ import FilterPanel from '../../src/client/components/group/FilterPanel.jsx';
 import GroupSearch from '../../src/client/components/group/GroupSearch.jsx';
 
 import axios from 'axios';
+import ResetButton from '../../src/client/components/group/ResetButton.jsx';
 
 class GroupsDetail extends React.Component {
     constructor(props) {
@@ -23,12 +24,15 @@ class GroupsDetail extends React.Component {
             currentPage: 1,
             totalPages: 1,
             categoryId: 0,
-            searchString: ""
+            searchString: "",
+            reset: false
         };
 
         this.generatePagination = this.generatePagination.bind(this);
         this.changePage = this.changePage.bind(this);
         this.init = this.init.bind(this);
+        this.setString = this.setString.bind(this);
+        this.resetPage = this.resetPage.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -120,6 +124,26 @@ class GroupsDetail extends React.Component {
         await this.init(this.state.categoryId);
     }
 
+    /* This function sets the state of the search string
+    whenever it is modified in the GroupSearch component. */
+    async setString(searchString)
+    {
+        this.setState({searchString: searchString});
+    }
+
+    /* This function sets the state of the page
+    to default filter values and then reinitializes
+    the page with default filters. The reset prop
+    is used to signal the FilterPanel and GroupSearch 
+    components to revert to the original state. */
+    async resetPage()
+    {
+        this.setState({ searchString: "", 
+                        categoryId: 0, 
+                        reset: !this.state.reset});
+        this.init(0, "");
+    }
+
     render() {
         const { groups, totalPages, groupNames, user } = this.state;
         const groupList = groups.map((group) => {
@@ -170,6 +194,7 @@ class GroupsDetail extends React.Component {
             <div className="pt-3 text-right">
                 <Nav pills className="text-center">
                     <FilterPanel 
+                        reset={this.state.reset}
                         searchString ={""} 
                         categories={this.props.categories} 
                         filter={this.init}/>
@@ -180,8 +205,14 @@ class GroupsDetail extends React.Component {
                         csrfToken={this.props.csrfToken}
                     />
                     <GroupSearch 
-                     categoryID={this.state.categoryId} 
-                        filter = {this.init}/>
+                        reset={this.state.reset}
+                        categoryID={this.state.categoryId} 
+                        filter = {this.init}
+                        returnString = {this.setString}/>
+                    <ResetButton
+                        categoryID={this.state.categoryId}
+                        searchString={this.state.searchString}
+                        reset={this.resetPage}/>
                 </Nav>
                 <Row className="row justify-content-around">
                     {groupList}
