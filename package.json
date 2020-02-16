@@ -48,14 +48,14 @@
     "react-dom": "^16.8.6",
     "react-id-swiper": "^2.4.0",
     "react-switch": "^5.0.1",
-    "reactstrap": "^8.1.1",
+    "reactstrap": "^8.4.1",
     "sequelize": "^5.18.4",
     "sequelize-cli": "^5.5.0",
     "sequelize-file": "^0.3.0",
     "sequelize-paginate": "^1.1.6",
     "styled-jsx": "^3.2.2",
     "sweetalert2": "^8.14.0",
-    "swiper": "^5.2.0",
+    "swiper": "^5.3.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {

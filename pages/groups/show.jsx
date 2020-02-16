@@ -8,6 +8,8 @@ import { Card, CardHeader, CardBody,
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
 import FilterPanel from '../../src/client/components/group/FilterPanel.jsx';
 
+import GroupSearch from '../../src/client/components/group/GroupSearch.jsx';
+
 import axios from 'axios';
 
 class GroupsDetail extends React.Component {
@@ -21,6 +23,7 @@ class GroupsDetail extends React.Component {
             currentPage: 1,
             totalPages: 1,
             categoryId: 0,
+            searchString: ""
         };
 
         this.generatePagination = this.generatePagination.bind(this);
@@ -32,21 +35,41 @@ class GroupsDetail extends React.Component {
         return context.query || {};
     }
 
-    async init(categoryId) {
+    async init(categoryId, searchString) {
         const { currentPage } = this.state;
+        this.setState({ searchString: searchString});
         this.setState({ categoryId: categoryId });
-        await axios.get(`/group/page/${categoryId}/${currentPage}`).then((res) => {
-            this.setState({
-                user: res.data.user,
-                groups: res.data.groups,
-                totalPages: res.data.totalPages
+
+        /* If the search bar is empty, the groups shown are based only
+        on the categoryID and currentPage. */
+        if (searchString === undefined || searchString === "")
+        {
+            await axios.get(`/group/page/${categoryId}/${currentPage}`).then((res) => {
+                this.setState({
+                    user: res.data.user,
+                    groups: res.data.groups,
+                    totalPages: res.data.totalPages
+                });
             });
-        });
+        }
+         /* Otherwise, the search string is included in the
+         database query */
+        else
+        {
+            await axios.get(`/group/page/${categoryId}/${currentPage}?searchString=${searchString}`).then((res) => {
+                this.setState({
+                    user: res.data.user,
+                    groups: res.data.groups,
+                    totalPages: res.data.totalPages
+                });
+            });
+        }
         const groupNames = [];
         await this.state.groups.forEach((group) => {
-            groupNames.push(group.name);
+                groupNames.push(group.name);
         });
         this.setState({ groupNames: groupNames });
+        
     }
 
     async componentDidMount() {
@@ -146,13 +169,19 @@ class GroupsDetail extends React.Component {
         return(
             <div className="pt-3 text-right">
                 <Nav pills className="text-center">
-                    <FilterPanel categories={this.props.categories} filter={this.init}/>
+                    <FilterPanel 
+                        searchString ={""} 
+                        categories={this.props.categories} 
+                        filter={this.init}/>
                     <GroupForm
                         user={user}
                         groupNames={groupNames}
                         categories={this.props.categories}
                         csrfToken={this.props.csrfToken}
                     />
+                    <GroupSearch 
+                     categoryID={this.state.categoryId} 
+                        filter = {this.init}/>
                 </Nav>
                 <Row className="row justify-content-around">
                     {groupList}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Collapse, Button, ButtonGroup } from 'reactstrap';
+import { Collapse, Button, ButtonGroup, Tooltip } from 'reactstrap';
 
 import CalendarPanel from './CalendarPanel.jsx';
 import PostForm from './PostForm';
@@ -16,6 +16,7 @@ class Menu extends React.Component {
             isOpen: false,
             postIsOpen: false,
             calendarIsOpen: false,
+            menuToolTipOpen: false,
         };
 
         this.toggleMenu = this.toggleMenu.bind(this);
@@ -36,14 +37,17 @@ class Menu extends React.Component {
     }
 
     render() {
-        const { isOpen, postIsOpen, calendarIsOpen } = this.state;
+        const { isOpen, postIsOpen, calendarIsOpen, menuToolTipOpen } = this.state;
         const { events, groups, csrfToken, images, user, googleCalendar } = this.props;
 
         return (
             <div className="d-flex flex-row-reverse pr-2 fixed-bottom pb-5">
-                <Button color="primary" className="btn btn-lg btn-danger" onClick={this.toggleMenu}>
+                <Button color="primary" className="btn btn-lg btn-danger" id="menuToolTip" onClick={this.toggleMenu}>
                     <i className="fas fa-plus" />
                 </Button>
+                <Tooltip placement="left" isOpen={menuToolTipOpen} target="menuToolTip" toggle={() => {this.setState({ menuToolTipOpen: !menuToolTipOpen })}}>
+                    Expand menu for general calendar and post form
+                </Tooltip>
                 <Collapse isOpen={isOpen}>
                     <ButtonGroup vertical className="pr-2">
                         <Button onClick={this.togglePostForm} className="btn btn-lg" color="danger" outline>

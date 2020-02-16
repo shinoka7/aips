@@ -10,6 +10,9 @@ const { User, Group, Notification, Event, Category, Pending } = require('../../d
 const { Op } = require('sequelize');
 const fs = require('fs');
 const mailerService = require('../../services/mailer');
+//
+const url = require('url');
+const querystring = require('querystring');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -40,15 +43,18 @@ module.exports = (aips) => {
         const user = await User.findByPk(userId);
         const num = Number(req.params.num);
         const categoryId = Number(req.params.categoryId);
+        const searchString = req.query.searchString;
         if (num <= 0) {
             return res.status(404).send({ error: 'page not found' });
         }
-
         let groups = [];
         let groupCount = 1;
         const limit = 8;
         const offset = (num - 1) * limit;
-        if (categoryId === 0) {
+        /* If the search bar is empty and category is 'all',
+        return all groups. */
+        if (categoryId === 0 && !searchString)
+        {
             await Group.findAndCountAll({
                 offset,
                 limit,
@@ -57,19 +63,58 @@ module.exports = (aips) => {
                 groupCount = result.count;
             });
         }
-        else {
+        /* If the search bar is non-empty and category is 'all',
+        return groups containing the substring searched for. */
+        else if (categoryId === 0)
+        {
+            await Group.findAndCountAll({
+            offset,
+            limit,
+            where: {
+                name : {
+                    [Op.substring]: searchString
+                }
+            },
+            }).then((result) => {
+                groups = result.rows;
+                groupCount = result.count;
+            });
+        }
+        /* If the search bar is empty and category is
+        specified, return groups based on categoryID. */
+        else if (categoryId != 0 && !searchString)
+        {
             await Group.findAndCountAll({
                 offset,
                 limit,
                 where: {
-                    categoryId
+                    categoryId,
                 },
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
             });
         }
-
+        /* If the search bar is non-empty and category is specified,
+        return groups within the specified category,
+        containing the substring searched for. */
+        else
+        { 
+            await Group.findAndCountAll({
+            offset,
+            limit,
+            where: {
+                categoryId,
+                name : {
+                    [Op.substring]: searchString
+                }
+            },
+            }).then((result) => {
+                groups = result.rows;
+                groupCount = result.count;
+            });
+           
+        }
         res.json({ groups, totalPages: Math.ceil(groupCount/limit), user: user || {} });
     }));
 
