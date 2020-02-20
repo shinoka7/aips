@@ -11,6 +11,8 @@ services:
     volumes:
       - db_data:/var/lib/mariadb
       - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    env_file:
+      - ./config/prod.env
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -23,6 +25,8 @@ services:
     depends_on:
       - db
     restart: always
+    env_file:
+      - ./config/prod.env
     ports:
       - ${PHPMYADMIN_PORT}
 
