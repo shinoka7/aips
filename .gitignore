@@ -4,8 +4,8 @@ node_modules
 src/db/potential-seeders
 config/env.dev.js
 config/env.prod.js
-config/prod.env
 logs
 resources/styles/css/aips.css
+docker-compose.prod.yml
 
 /yarn-error.log
