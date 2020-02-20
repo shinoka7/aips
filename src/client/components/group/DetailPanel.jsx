@@ -28,7 +28,7 @@ class DetailPanel extends React.Component {
                             <pre>{group.meetingPlace}</pre>
                         </Col>
                         <Col xs="6" sm="6" md="6">
-                            <b>Current Positions</b>
+                            <b>Current Positions</b> [Work In Progress]
                             <Table striped>
                             <thead>
                                 <tr>

@@ -17,6 +17,7 @@ class GroupSearch extends React.Component
 
         this.handleChange = this.handleChange.bind(this);
         this.searchHandler = this.searchHandler.bind(this);
+        this._handleKeyDown = this._handleKeyDown.bind(this);
     };
 
     /* When the search button is pressed, this function
@@ -42,28 +43,31 @@ class GroupSearch extends React.Component
         this.setState({value: e.target.value});
     }
 
+    _handleKeyDown(e) {
+        if (e.key === 'Enter') {
+            this.searchHandler();
+        }
+    }
+
     render() {
         return (
-            <Row>
-                <Col>
-                    <Form id = "form">
-                        <InputGroup>
-                            <Input
-                                id = "searchBar" 
-                                placeholder = {"Search for groups!"} 
-                                onChange={this.handleChange}    
-                                    />
-                            <InputGroupAddon addonType="append">
-                                <Button 
-                                disabled = {!this.state.value}
-                                onClick= {this.searchHandler}
-                                color = "default">Search</Button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Form>
-                </Col>
-            </Row>
-        );
+            <Form id = "form">
+                <InputGroup>
+                    <Input
+                        id = "searchBar" 
+                        placeholder = {"Search for groups!"} 
+                        onChange={this.handleChange}
+                            />
+                    <InputGroupAddon addonType="append">
+                        <Button 
+                        disabled = {!this.state.value}
+                        onClick= {this.searchHandler}
+                        onKeyDown={this._handleKeyDown}
+                        color = "default">Search</Button>
+                    </InputGroupAddon>
+                </InputGroup>
+            </Form>
+    );
     }     
 };
 

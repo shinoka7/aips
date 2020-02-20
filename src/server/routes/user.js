@@ -88,10 +88,10 @@ module.exports = (aips) => {
         if (!user) {
             return res.status(404).send({ error: 'Something went wrong...' });
         }
-
         
         user = await user.update(req.body);
-        
+        req.session.user = user;
+
         res.json({ user });
     }));
 

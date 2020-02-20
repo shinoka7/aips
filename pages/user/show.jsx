@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Jumbotron, Button, ButtonGroup, Tooltip } from 'reactstrap';
+import { Jumbotron, Button, ButtonGroup, Tooltip, Row, Col } from 'reactstrap';
 
 import UserProfile from '../../src/client/components/user/UserProfile';
 import GroupList from '../../src/client/components/group/GroupList';
@@ -45,15 +45,19 @@ class UserDetail extends React.Component {
                         {/* Show Profile */}
                         {/* TODO make cool arrow button && transition Dropdown? */}
                     {/* </Button> */}
-                    <form action="/auth/google" method="GET">
-                        <Button disabled={this.isGoogleCalendarAvailable()} block className="btn btn-primary"><i className="fab fa-google"></i> Connect Google Calendars</Button>
-                    </form>
+                    <Row>
+                        <Col xs="6" sm="6" md="6">
+                            <Button onClick={this.toggleCalendar} className="btn btn-info" id="calendarToolTip" block>
+                                <i className="fas fa-calendar-alt"> Events</i>
+                            </Button>
+                        </Col>
+                        <Col xs="6" sm="6" md="6">
+                            <form action="/auth/google" method="GET">
+                                <Button disabled={this.isGoogleCalendarAvailable()} block className="btn btn-primary"><i className="fab fa-google"></i> Connect Google Calendars</Button>
+                            </form>
+                        </Col>
+                    </Row>
                     <hr />
-                    <ButtonGroup className="text-right">
-                        <Button onClick={this.toggleCalendar} className="btn btn-info" id="calendarToolTip">
-                            <i className="fas fa-calendar-alt"> Events</i>
-                        </Button>
-                    </ButtonGroup>
                     <Tooltip placement="auto" isOpen={calendarToolTipOpen} target="calendarToolTip" toggle={() => {this.setState({ calendarToolTipOpen: !calendarToolTipOpen })}}>
                         Individual Calendar
                     </Tooltip>

@@ -158,8 +158,9 @@ class GroupDetail extends React.Component {
                                 <NavLink
                                     className={classnames({ active: activeTab === '1'})}
                                     onClick={() => { this.toggleTab('1'); }}
+                                    href="#"
                                 >
-                                    Details
+                                    General <i className="fas fa-info-circle"></i>
                                 </NavLink>
                             </NavItem>
                             <NavItem>
@@ -167,8 +168,9 @@ class GroupDetail extends React.Component {
                                     disabled={!isUserInGroup}
                                     className={classnames({ active: activeTab === '2'})}
                                     onClick={() => { this.toggleTab('2'); }}
+                                    href="#"
                                 >
-                                    Admin
+                                    Admin <i className="fas fa-user-lock"></i>
                                 </NavLink>
                             </NavItem>
                         </Nav>
