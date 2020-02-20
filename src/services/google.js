@@ -54,13 +54,12 @@ class GoogleService {
         const me = await plus.people.get({ userId: 'me' });
         const userGoogleId = me.data.id;
         const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;
-        return calendar;
-        // return {
-        //   id: userGoogleId,
-        //   email: userGoogleEmail,
-        //   tokens: tokens,
-        //   calendar: calendar,
-        // };
+        return {
+          id: userGoogleId,
+          email: userGoogleEmail,
+          tokens: tokens,
+          calendar: calendar,
+        };
     }
 
 }

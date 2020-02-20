@@ -6,7 +6,6 @@ import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 const localizer = momentLocalizer(moment);
 
@@ -259,39 +258,36 @@ class CalendarPanel extends React.Component {
     async addToGoogleCalendarHandler() {
         // https://developers.google.com/calendar/create-events
         // verify whether user is true && connected with google calendars
-        const { googleCalendar } = this.props;
-        const { selectedEvent } = this.state;
-        
-        if (selectedEvent.groupId) {
-            await Swal.fire({
-                title: 'Add to Google Calendars',
-                type: 'info',
-                html: `Confirm to add the event "${selectedEvent.name}" to your Google Calendar`,
-                showCancelButton: true,
-                confirmButtonText: 'Add',
-                confirmButtonColor: 'success',
-                preConfirm: async() => {
-                    try {
-                        return await axios.post(`/auth/google/addToCalendar`, {
-                            ...selectedEvent,
-                            _csrf: this.props.csrfToken,
-                        });
-                    }
-                    catch (err) {
-                        console.log(err);
-                    }
-                }
-            })
-            .then((res) => {
-                if (res.value) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'The event has been added to your Google Calendar',
-                        type: 'success',
-                    });
-                }
-            });
-        }
+        // const { googleCalendar } = this.props;
+        // const { selectedEvent } = this.state;
+        // if (googleCalendar.events && selectedEvent.groupId) {
+        //     const newEvent = {
+        //         summary: selectedEvent.name,
+        //         description: selectedEvent.description,
+        //         organizer: {
+        //             displayName: selectedEvent.Group.name,
+        //             email: selectedEvent.Group.groupEmail
+        //         },
+        //         start: {
+        //             date: selectedEvent.startDate
+        //         },
+        //         end: {
+        //             date: selectedEvent.endDate
+        //         },
+        //     };
+        //     await googleCalendar.Events.insert({
+        //         calendarId: 'primary',
+        //         resource: newEvent,
+        //       }, function(err, newEvent) {
+        //         if (err) {
+        //           console.log('There was an error contacting the Calendar service: ' + err);
+        //           return;
+        //         }
+        //         console.log('Event created: %s', newEvent.htmlLink);
+        //       });
+        // }
+        // THIS ===================================================
+        // https://www.npmjs.com/package/react-google-calendar-api
     }
 
     validate() {
