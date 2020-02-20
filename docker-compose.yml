@@ -24,7 +24,7 @@ services:
       - db
     restart: always
     ports:
-      - "8080:80"
+      - ${PHPMYADMIN_PORT}
 
 volumes:
   db_data:
