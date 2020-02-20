@@ -12,7 +12,7 @@
     "db:seed:prod": "env-cmd -f config/env.prod.js sequelize db:seed:all --env production",
     "db:seed:undo": "env-cmd -f config/env.dev.js sequelize db:seed:undo --env development",
     "db:seed:undo:all": "env-cmd -f config/env.dev.js sequelize db:seed:undo:all --env development",
-    "build": "env-cmd -f config/env.prod.js next build",
+    "build": "yarn sass:compile && env-cmd -f config/env.prod.js next build",
     "start": "env-cmd -f config/env.prod.js node index.js",
     "sass:compile": "node-sass resources/styles/scss/style.scss resources/styles/css/aips.css"
   },
