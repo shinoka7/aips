@@ -100,7 +100,7 @@ class GroupDetail extends React.Component {
     }
 
     render() {
-        const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers } = this.props;
+        const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers, googleCalendar } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert } = this.state;
 
         return (
@@ -151,15 +151,16 @@ class GroupDetail extends React.Component {
                             </Button>
                         </ButtonGroup>
                         <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
-                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} modal={calendarIsOpen} images={images} />
+                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={isUserInGroup}  groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} user={user} googleCalendar={googleCalendar} modal={calendarIsOpen} images={images} />
                         <br />
                         <Nav tabs>
                             <NavItem>
                                 <NavLink
                                     className={classnames({ active: activeTab === '1'})}
                                     onClick={() => { this.toggleTab('1'); }}
+                                    href="#"
                                 >
-                                    Details
+                                    General <i className="fas fa-info-circle"></i>
                                 </NavLink>
                             </NavItem>
                             <NavItem>
@@ -167,8 +168,9 @@ class GroupDetail extends React.Component {
                                     disabled={!isUserInGroup}
                                     className={classnames({ active: activeTab === '2'})}
                                     onClick={() => { this.toggleTab('2'); }}
+                                    href="#"
                                 >
-                                    Admin
+                                    Admin <i className="fas fa-user-lock"></i>
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -199,6 +201,7 @@ GroupDetail.propTypes = {
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     pendingUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    googleCalendar: PropTypes.object.isRequired,
 };
 
 export default GroupDetail;

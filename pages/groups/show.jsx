@@ -183,30 +183,36 @@ class GroupsDetail extends React.Component {
         const pagination = this.generatePagination(paginationItems);
 
         return(
-            <div className="pt-3 text-right">
-                <Nav pills className="text-center">
-                    <FilterPanel 
-                        reset={this.state.reset}
-                        categories={this.props.categories} 
-                        filter={this.init}
-                    />
-                    <GroupForm
-                        user={user}
-                        groupNames={groupNames}
-                        categories={this.props.categories}
-                        csrfToken={this.props.csrfToken}
-                    />
-                    <GroupSearch 
-                        reset={this.state.reset}
-                        categoryID={this.state.categoryId} 
-                        filter = {this.init}
-                    />
-                    <ResetButton
-                        categoryID={this.state.categoryId}
-                        searchString={this.state.searchString}
-                        reset={this.resetPage}
-                    />
-                </Nav>
+            <div className="pt-3">
+                <Row>
+                    <Col xs="4" sm="4" md="4">
+                        <FilterPanel
+                            categories={this.props.categories} 
+                            filter={this.init}
+							reset={this.state.reset}
+						/>
+                    </Col>
+                    <Col xs="4" sm="4" md="4">
+                        <GroupSearch 
+                            categoryID={this.state.categoryId} 
+                            filter = {this.init}
+							reset={this.state.reset}
+						/>
+                    </Col>
+                    <Col xs="4" sm="4" md="4">
+						<ResetButton
+                        	categoryID={this.state.categoryId}
+                        	searchString={this.state.searchString}
+                        	reset={this.resetPage}
+                    	/>
+                        <GroupForm
+                            user={user}
+                            groupNames={groupNames}
+                            categories={this.props.categories}
+                            csrfToken={this.props.csrfToken}
+                        />
+                    </Col>
+                </Row>
                 <Row className="row justify-content-around">
                     {groupList}
                 </Row>

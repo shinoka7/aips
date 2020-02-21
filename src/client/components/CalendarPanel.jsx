@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Col, Row, Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Row, Card, CardBody, CustomInput, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Dropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -27,8 +27,11 @@ class CalendarPanel extends React.Component {
                 name: '',
                 description: '',
                 imageName: '',
+                repeats: 'Never',
             },
             selectedEvent: {},
+            showCustomDates: false,
+            repeatDropdownOpen: false,
         };
 
         this.convertISOToCalendarFormat = this.convertISOToCalendarFormat.bind(this);
@@ -46,6 +49,9 @@ class CalendarPanel extends React.Component {
         this.setImage = this.setImage.bind(this);
         this.createHandler = this.createHandler.bind(this);
         this.validate = this.validate.bind(this);
+        this.setRepeats = this.setRepeats.bind(this);
+        this.toggleAllDay = this.toggleAllDay.bind(this);
+		this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -88,7 +94,7 @@ class CalendarPanel extends React.Component {
                 newEvent: {
                     ...prevState.newEvent,
                     startDate: startDate,
-                    startTime: '08:00',
+                    startTime: '00:00',
                     endDate: endDate,
                     endTime: '23:59',
                 }
@@ -207,9 +213,33 @@ class CalendarPanel extends React.Component {
             }
         }));
     }
+
+    setRepeats(e) {
+        const repeats = e.target.value;
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                repeats: repeats,
+            }
+        }));
+    }
+
+    toggleAllDay() {
+        const { showCustomDates } = this.state;
+        if (showCustomDates) {
+            this.setState((prevState) => ({
+                newEvent: {
+                    ...prevState.newEvent,
+                    startTime: '00:00',
+                    endTime: '23:59',
+                }
+            }));
+        }
+        this.setState({ showCustomDates: !showCustomDates });
+    }
     
     async createHandler() {
-        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName } = this.state.newEvent;
+        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats } = this.state.newEvent;
         const res = await axios.post('/event', {
             groupId,
             startDate: startDate,
@@ -219,9 +249,45 @@ class CalendarPanel extends React.Component {
             name,
             description,
             image: imageName,
+            repeats: repeats,
             _csrf: this.props.csrfToken
         });
         window.location.reload();
+    }
+
+    async addToGoogleCalendarHandler() {
+        // https://developers.google.com/calendar/create-events
+        // verify whether user is true && connected with google calendars
+        // const { googleCalendar } = this.props;
+        // const { selectedEvent } = this.state;
+        // if (googleCalendar.events && selectedEvent.groupId) {
+        //     const newEvent = {
+        //         summary: selectedEvent.name,
+        //         description: selectedEvent.description,
+        //         organizer: {
+        //             displayName: selectedEvent.Group.name,
+        //             email: selectedEvent.Group.groupEmail
+        //         },
+        //         start: {
+        //             date: selectedEvent.startDate
+        //         },
+        //         end: {
+        //             date: selectedEvent.endDate
+        //         },
+        //     };
+        //     await googleCalendar.Events.insert({
+        //         calendarId: 'primary',
+        //         resource: newEvent,
+        //       }, function(err, newEvent) {
+        //         if (err) {
+        //           console.log('There was an error contacting the Calendar service: ' + err);
+        //           return;
+        //         }
+        //         console.log('Event created: %s', newEvent.htmlLink);
+        //       });
+        // }
+        // THIS ===================================================
+        // https://www.npmjs.com/package/react-google-calendar-api
     }
 
     validate() {
@@ -230,12 +296,18 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
-        const { events, newEvent, selectedEvent } = this.state;
-        const { modal, toggleCalendar, images } = this.props;
+        const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen } = this.state;
+        const { modal, toggleCalendar, images, user, isUserInGroup, googleCalendar } = this.props;
 
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
         const generatedImages = this.generateImages(images);
+
+        const googleButton = (
+            <Button outline color="primary" onClick={this.addToGoogleCalendarHandler}>
+                Add to <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
+            </Button>
+        );
 
         return (
             <div>
@@ -255,60 +327,95 @@ class CalendarPanel extends React.Component {
                             />
                         </div>
                         <Modal isOpen={this.state.formModal} toggle={this.toggleEventForm} unmountOnClose={this.state.unmountOnClose}>
-                            <ModalHeader toggle={this.toggleEventForm}>Create Event</ModalHeader>
+                            <ModalHeader toggle={this.toggleEventForm}>New Event</ModalHeader>
                             <ModalBody>
                                 <AvForm>
                                     <AvField
                                         type="select"
                                         name="group"
-                                        label="Group"
                                         helpMessage="Choose the group you will create as"
                                         onChange={this.setGroupId}
                                         value={'default'}
                                     >
-                                        <option value="default" disabled>--Select the Group--</option>
+                                        <option value="default" disabled>Select a Group</option>
                                         {groupOptions}
                                     </AvField>
                                 </AvForm>
                                 <Form>
                                     <FormGroup>
-                                        <Label for="name">Event Name :</Label>
-                                        <Input type="text" name="name" id="name" onChange={this.setName} />
+                                        <Input type="text" id="name" onChange={this.setName} placeholder="Title" />
                                     </FormGroup>
                                     <FormGroup>
+                                        <CustomInput type="checkbox" id="customCheckbox" label="All-day" checked={!showCustomDates} onChange={this.toggleAllDay} />
+                                    </FormGroup>
+                                    
+                                        <FormGroup>
+                                            <Row>
+                                                <Col xs="2" sm="2" md="2">Starts</Col>
+                                                { !showCustomDates &&
+                                                    <Col xs="10" sm="10" md="10">
+                                                        <Input type="date" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                                    </Col>
+                                                }
+                                                { showCustomDates &&
+                                                    <React.Fragment>
+                                                        <Col xs="5" sm="5" md="5">
+                                                            <Input type="date" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                                        </Col>
+                                                        <Col xs="5" sm="5" md="5">
+                                                            <Input type="time" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
+                                                        </Col>
+                                                    </React.Fragment>
+                                                }
+                                            </Row>
+                                            <Row>
+                                                <Col xs="2" sm="2" md="2">Ends</Col>
+                                                { !showCustomDates &&
+                                                    <Col xs="10" sm="10" md="10">
+                                                        <Input type="date" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                                    </Col>
+                                                }
+                                                { showCustomDates &&
+                                                    <React.Fragment>
+                                                        <Col xs="5" sm="5" md="5">
+                                                            <Input type="date" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                                        </Col>
+                                                        <Col xs="5" sm="5" md="5">
+                                                            <Input type="time" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
+                                                        </Col>
+                                                    </React.Fragment>
+                                                }
+                                            </Row>
+                                        </FormGroup>
+                                    <FormGroup>
                                         <Row>
-                                            <Col xs="6" sm="6" md="6">
-                                                <Label for="startDate">Start Date :</Label>
-                                                <Input type="date" name="startDate" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
-                                            </Col>
-                                            <Col xs="6" sm="6" md="6">
-                                                <Label for="startTime">Start Time :</Label>
-                                                <Input type="time" name="startTime" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
+                                            <Col xs="2" sm="2" md="2">Repeat</Col>
+                                            <Col xs="10" sm="10" md="10">
+                                                <Dropdown group isOpen={repeatDropdownOpen} size="sm" toggle={() => {this.setState({repeatDropdownOpen: !repeatDropdownOpen})}}>
+                                                    <DropdownToggle caret outline color="primary">
+                                                        {this.state.newEvent.repeats}
+                                                    </DropdownToggle>
+                                                    <DropdownMenu>
+                                                        <DropdownItem onClick={this.setRepeats} value="Never">Never</DropdownItem>
+                                                        {/* Need to redesign event model, so that the same repeating event can be tracked from one of the scheduled events */}
+                                                        <DropdownItem onClick={this.setRepeats} value="Weekly" disabled>Weekly</DropdownItem>
+                                                        <DropdownItem onClick={this.setRepeats} value="Monthly" disabled>Monthly</DropdownItem>
+                                                        <DropdownItem onClick={this.setRepeats} value="Yearly" disabled>Yearly</DropdownItem>
+                                                    </DropdownMenu>
+                                                </Dropdown>
                                             </Col>
                                         </Row>
                                     </FormGroup>
                                     <FormGroup>
-                                        <Row>
-                                            <Col xs="6" sm="6" md="6">
-                                                <Label for="endDate">End Date :</Label>
-                                                <Input type="date" name="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
-                                            </Col>
-                                            <Col xs="6" sm="6" md="6">
-                                                <Label for="endTime">End Time :</Label>
-                                                <Input type="time" name="endTime" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Label for="description">Description :</Label>
-                                        <Input type="textarea" name="description" id="description" placeholder="Event Details" onChange={this.setDescription} />
+                                        <Input type="textarea" name="description" id="description" placeholder="Description" onChange={this.setDescription} />
                                     </FormGroup>
                                     <FormGroup>
                                         <Label for="image">Event Image :</Label>
-                                        <Input type="select" name="image" id="image" value={newEvent.imageName === '' ? 'default' : newEvent.imageName} onChange={this.setImage} >
-                                            <option value="default" disabled>--Select an Image--</option>
+                                        <Input type="select" name="image" id="image" value={newEvent.imageName === '' ? "" : newEvent.imageName} onChange={this.setImage} >
+                                            <option value="">No Image</option>
                                             {generatedImages}
                                         </Input>
+                                        {/* <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" /> */}
                                     </FormGroup>
                                     { newEvent.imageName !== '' &&
                                         <Card>
@@ -326,7 +433,7 @@ class CalendarPanel extends React.Component {
                         </Modal>
                         { selectedEvent && selectedEvent.Group &&
                             <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                                <ModalHeader>{selectedEvent.name}</ModalHeader>
+                                <ModalHeader close={googleButton}>{selectedEvent.name}</ModalHeader>
                                 <ModalBody>
                                     { selectedEvent.image !== '' &&
                                         <div>
@@ -341,11 +448,22 @@ class CalendarPanel extends React.Component {
                                     <br />
                                     Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
                                     </b>
-                                    <br />
                                     <div className="text-right">
                                         Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
                                     </div>
                                 </ModalBody>
+                                { isUserInGroup &&
+                                    <ModalFooter>
+                                        <Row>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Button color="link"><i className="fas fa-user-edit"></i> Edit</Button>
+                                            </Col>
+                                            <Col xs="6" sm="6" md="6">
+                                                <Button color="link"><i className="fas fa-trash-alt"></i> Delete</Button>
+                                            </Col>
+                                        </Row>
+                                    </ModalFooter>
+                                }
                             </Modal>
                         }
                     </ModalBody>
@@ -408,6 +526,9 @@ CalendarPanel.propTypes = {
     toggleCalendar: PropTypes.func.isRequired,
     modal: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    user: PropTypes.object.isRequired,
+    isUserInGroup: PropTypes.bool,
+    googleCalendar: PropTypes.object.isRequired,
 }
 
 export default CalendarPanel;

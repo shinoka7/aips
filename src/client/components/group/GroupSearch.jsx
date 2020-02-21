@@ -47,31 +47,27 @@ class GroupSearch extends React.Component
         this.setState({value: e.target.value});
     }
 
+
     render() {
         return (
-            <Row>
-                <Col>
-                    <Form id = "form">
-                        <InputGroup>
-                            <Input
-                                onKeyPress={e => {
-                                    if (e.key === 'Enter') e.preventDefault(); }}
-                                type = "text"
-                                id = "searchBar" 
-                                placeholder = {"Search for groups!"} 
-                                onChange={this.handleChange}    
-                                    />
-                            <InputGroupAddon addonType="append">
-                                <Button 
-                                disabled = {!this.state.value}
-                                onClick= {this.searchHandler}
-                                color = "default">Search</Button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Form>
-                </Col>
-            </Row>
-        );
+            <Form id = "form">
+                <InputGroup>
+                    <Input
+                        id = "searchBar" 
+                        onKeyPress={e => {
+                            if (e.key === 'Enter') e.preventDefault(); }}
+                        placeholder = {"Search for groups!"} 
+                        onChange={this.handleChange}
+                            />
+                    <InputGroupAddon addonType="append">
+                        <Button 
+                        disabled = {!this.state.value}
+                        onClick= {this.searchHandler}
+                        color = "default">Search</Button>
+                    </InputGroupAddon>
+                </InputGroup>
+            </Form>
+    );
     }     
 };
 

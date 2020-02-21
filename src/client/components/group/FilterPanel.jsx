@@ -53,11 +53,27 @@ class FilterPanel extends React.Component {
         const generatedItems = this.generateCategories(categories);
 
         return (
-                <Dropdown nav inNavbar isOpen={isOpen} toggle={() => this.setState({ isOpen: !isOpen })}>
+                <Dropdown isOpen={isOpen} toggle={() => this.setState({ isOpen: !isOpen })}>
                     <DropdownToggle caret color="primary">
                         {category}
                     </DropdownToggle>
-                    <DropdownMenu>
+                    <DropdownMenu
+                        modifiers={{
+                        setMaxHeight: {
+                            enabled: true,
+                            order: 890,
+                            fn: (data) => {
+                            return {
+                                ...data,
+                                styles: {
+                                ...data.styles,
+                                overflow: 'auto',
+                                maxHeight: '600px',
+                                },
+                            };
+                            },
+                        },
+                        }}>
                         <DropdownItem
                             key={0}
                             onClick={() => {this.setCategory(0); this.setState({ category: "All"});}}

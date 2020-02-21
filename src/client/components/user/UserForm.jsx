@@ -75,11 +75,13 @@ class UserForm extends React.Component {
                     console.log(err);
                 }
             }
+        }).then((res) => {
+
         });
 
-        if (!res.dismiss) {
-            this.setState({ user: res.value.user });
-        }
+        // if (res.value) {
+            this.setState({ username: username, firstName, lastName });
+        // }
 
         this.toggle();
     }
@@ -90,15 +92,15 @@ class UserForm extends React.Component {
     }
 
     render() {
-        const { user, csrfToken } = this.props;
+        const { username, firstName, lastName } = this.state;
 
         return (
             <Card>
                 <CardBody>
                 <CardText>
-                    Username : {user.username}<br />
-                    First name : {user.firstName}<br />
-                    Last name : {user.lastName}<br />
+                    Username : {username}<br />
+                    First name : {firstName}<br />
+                    Last name : {lastName}<br />
                 </CardText>
                 <CardText className="text-right">
                     <Button onClick={this.toggle} className="btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>

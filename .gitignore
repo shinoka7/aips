@@ -6,5 +6,6 @@ config/env.dev.js
 config/env.prod.js
 logs
 resources/styles/css/aips.css
+docker-compose.prod.yml
 
 /yarn-error.log

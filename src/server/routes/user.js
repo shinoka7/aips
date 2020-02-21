@@ -4,8 +4,9 @@ const router = express.Router();
 const logger = require('../../services/logger');
 const { body } = require('express-validator');
 const validator = {};
+const fs = require('fs');
 
-const { User, Notification, Group } = require('../../db/models');
+const { User, Notification, Group, Event } = require('../../db/models');
 
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
@@ -27,6 +28,31 @@ module.exports = (aips) => {
             return res.redirect("/login");
         }
 
+        const groups = await user.getGroups();
+
+        let events = [];
+        groups.forEach(async(group) => {
+            const groupEvents = await Event.findAll({
+                where: {
+                    groupId: group.id,
+                },
+                include: [{
+                    model: Group,
+                }],
+            });
+            events = await events.concat(groupEvents);
+        });
+
+        const images = [];
+        fs.readdir('./resources/img/buildings', (err, files) => {
+            if (err) {
+                return console.log('Unable to scan directory:' + err);
+            }
+            files.forEach((file) => {
+                images.push(file);
+            })
+        });
+
         const notifications = await Notification.findAll({
             where: {
                 userId: user.id,
@@ -39,7 +65,11 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/user/show', {
             user: user,
             notifications: notifications,
+            googleCalendar: req.session.calendar || {},
             csrfToken: req.csrfToken(),
+            events: events,
+            groups: groups || [],
+            images: images,
         });
     }));
 
@@ -58,10 +88,10 @@ module.exports = (aips) => {
         if (!user) {
             return res.status(404).send({ error: 'Something went wrong...' });
         }
-
         
         user = await user.update(req.body);
-        
+        req.session.user = user;
+
         res.json({ user });
     }));
 

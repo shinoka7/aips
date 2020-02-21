@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Swiper from 'swiper';
+
 class Preview extends React.Component {
 
     constructor(props) {
@@ -11,6 +13,20 @@ class Preview extends React.Component {
             calendarIsOpen: false,
             detailModal: false,
         };
+
+        this.swiper = new Swiper('.blog-slider', {
+            spaceBetween: 30,
+            effect: 'fade',
+            loop: true,
+            mousewheel: {
+              invert: false,
+            },
+            // autoHeight: true,
+            pagination: {
+              el: '.blog-slider__pagination',
+              clickable: true,
+            }
+          });
 
         // Swap events every 10 seconds
         this.timer = 10000;
@@ -36,29 +52,30 @@ class Preview extends React.Component {
         const selectedEvent = await this.props.events.filter((event) => (
             event.name === e.title
         ));
-        console.log('hi');
         await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
     }
 
     render() {
-        const { selectedEvent } = this.state;
         const { events } = this.props;
         let event = events[this.state.currentEvent];
 
         if (event == null) {
             event = {
-                imagePath: "",
-                startDate: "01-01-1969",
+                image: "defaultImage.png",
+                startDate: "10-28-2015",
                 startTime: "0:00",
                 name: "Hmm... Nothing going on this week",
                 description: "Add your event here",
+                endDate: "10-28-2015",
+                endTime: "11:59",
                 Group: {
+                    id: "#",
                     name: "Display Calendar"
                 }
             }
         }
 
-        const imagePath = "/resources/img/buildings/" + event.image;
+        const imagePath = event.image ? "/resources/img/buildings/" + event.image : "/resources/img/buildings/defaultImage.png";
 
         const blog_slider = (
             <div className="blog-slider">
@@ -68,12 +85,8 @@ class Preview extends React.Component {
                             <img src={imagePath} alt="Event Image"></img>
                         </div>
                         <div className="blog-slider__content">
-                            <span className="blog-slider__code">
-                                {event.startDate} at {event.startTime}
-                            </span>
-                            <div className="blog-slider__title">
-                                <a href="/" onClick={this.toggleEventDetails}>{event.name}</a>
-                            </div>
+                            <span className="blog-slider__code">{event.startDate} at {event.startTime}</span>
+                            <div className="blog-slider__title"><a href="/" onClick={this.toggleEventDetails}>{event.name}</a></div>
                             <div className="blog-slider__text">
                                 { event.description.length > 175 &&
                                     event.description.slice(0,175) + '...'
@@ -82,11 +95,9 @@ class Preview extends React.Component {
                                     event.description
                                 }
                             </div>
-                            <div className="blog-slider__button">
-                                <a href={`/group/${event.Group.id}`}>
-                                    {event.Group.name}
-                                </a>
-                            </div>
+                            <a href={`/group/${event.Group.id}`} className="blog-slider__button">
+                                {event.Group.name}
+                            </a>
                         </div>
                     </div>
                 </div>

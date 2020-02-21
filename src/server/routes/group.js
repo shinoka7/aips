@@ -202,6 +202,7 @@ module.exports = (aips) => {
             events: events || [],
             images: images,
             pendingUsers: pendingUsers || [],
+            googleCalendar: req.session.calendar || {},
         });
     }));
 

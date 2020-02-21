@@ -192,15 +192,16 @@ class AdminPanel extends React.Component {
                                 <CardBody>
                                 <FormGroup tag="fieldset" row>
                                     <Col sm={10}>
+                                        <b>[Work in Progress]</b>
                                     <FormGroup check>
                                         <Label check>
-                                        <Input type="radio" name="radio2" checked={group.mode === 'Public'} />{' '}
+                                        <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Public'}**/ />{' '}
                                         Public Mode
                                         </Label>
                                     </FormGroup>
                                     <FormGroup check>
                                         <Label check>
-                                        <Input type="radio" name="radio2" checked={group.mode === 'Private'} disabled={!isVerified} />{' '}
+                                        <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Private'}**/ disabled={!isVerified} />{' '}
                                         Private Mode
                                         </Label>
                                     </FormGroup>
@@ -215,6 +216,7 @@ class AdminPanel extends React.Component {
                                     <NavLink
                                         className={classnames({ active: activeTab === '1' })}
                                         onClick={() => { this.toggleTab('1') }}
+                                        href="#"
                                     >
                                         <b>Pending</b> <Badge color="secondary">{pendingUsers.length}</Badge>
                                     </NavLink>
@@ -223,6 +225,7 @@ class AdminPanel extends React.Component {
                                     <NavLink
                                         className={classnames({ active: activeTab === '2' })}
                                         onClick={() => { this.toggleTab('2') }}
+                                        href="#"
                                     >
                                         <b>Edit Info</b>
                                     </NavLink>
@@ -231,6 +234,7 @@ class AdminPanel extends React.Component {
                                     <NavLink
                                         className={classnames({ active: activeTab === '3' })}
                                         onClick={() => { this.toggleTab('3') }}
+                                        href="#"
                                     >
                                         <b>Disband Group</b>
                                     </NavLink>

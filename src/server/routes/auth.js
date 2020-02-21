@@ -4,7 +4,7 @@ const router = express.Router();
 const googleService = require('../../services/google');
 const cas = require('../../services/cas');
 
-const { Account } = require('../../db/models');
+const { Account, User } = require('../../db/models');
 
 module.exports = (aips) => {
   const { nextApp, csrf } = aips;
@@ -19,11 +19,22 @@ module.exports = (aips) => {
     res.redirect(url);
   });
 
+  // https://support.google.com/cloud/answer/7454865?authuser=0
+  // DON'T CREATE USER, BUT ONLY LINK
+  // ONLY ACCESSES THE CALENDARS ON SESSION => FUNC FOR ACCESS ALL THE TIME?
   router.get('/google/callback', asyncMiddleware(async(req, res) => {
+    const userId = req.session.user ? req.session.user.id : 0;
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).send({ error: 'user not found' });
+    }
     const { code } = req.query;
-    const { id, email, tokens }  = await googleService.getGoogleAccountFromCode(code);
-    const account = await Account.createOrLink('google', id, email);
-    req.session.user = account.User;
+    const { id, email, tokens, calendar }  = await googleService.getGoogleAccountFromCode(code);
+    // const account = await Account.createOrLink('google', id, email);
+    // const account = await Account.linkAccount('google', id, user.id);
+    // req.session.user = account.User;
+    // console.log(calendar.calendarList.list());
+    req.session.calendar = calendar;
     req.session.save((err) => {
       res.redirect('/user');
     });

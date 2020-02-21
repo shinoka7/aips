@@ -82,7 +82,7 @@ aipsApp.init()
             if (err) {
                 throw err;
             }
-            console.log(`Ready on http://localhost:${process.env.PORT} as ${process.env.NODE_ENV}`);
+            console.log(`Ready on http://${process.env.DB_HOST}:${process.env.PORT} as ${process.env.NODE_ENV}`);
         });
     }).catch((err) => {
         console.log('Error: Unable to start server\n', err);
