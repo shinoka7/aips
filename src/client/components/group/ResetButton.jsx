@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Col, Row} from 'reactstrap';
 
-/*Reset button component on 'groups' page
+/* Reset button component on 'groups' page
 allows user to reset the page to its 
 default state, showing all groups. */
 class ResetButton extends React.Component
@@ -42,6 +42,7 @@ class ResetButton extends React.Component
                 <Col>
                     {  active &&
                         <Button 
+                            type = "button"
                             color = "danger"
                             onClick = {this.resetPage}>
                             Reset

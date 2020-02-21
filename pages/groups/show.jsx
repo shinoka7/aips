@@ -7,11 +7,11 @@ import { Card, CardHeader, CardBody,
 
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
 import FilterPanel from '../../src/client/components/group/FilterPanel.jsx';
-
+import ResetButton from '../../src/client/components/group/ResetButton.jsx';
 import GroupSearch from '../../src/client/components/group/GroupSearch.jsx';
 
 import axios from 'axios';
-import ResetButton from '../../src/client/components/group/ResetButton.jsx';
+
 
 class GroupsDetail extends React.Component {
     constructor(props) {
@@ -31,7 +31,6 @@ class GroupsDetail extends React.Component {
         this.generatePagination = this.generatePagination.bind(this);
         this.changePage = this.changePage.bind(this);
         this.init = this.init.bind(this);
-        this.setString = this.setString.bind(this);
         this.resetPage = this.resetPage.bind(this);
     }
 
@@ -124,13 +123,6 @@ class GroupsDetail extends React.Component {
         await this.init(this.state.categoryId);
     }
 
-    /* This function sets the state of the search string
-    whenever it is modified in the GroupSearch component. */
-    async setString(searchString)
-    {
-        this.setState({searchString: searchString});
-    }
-
     /* This function sets the state of the page
     to default filter values and then reinitializes
     the page with default filters. The reset prop
@@ -195,9 +187,9 @@ class GroupsDetail extends React.Component {
                 <Nav pills className="text-center">
                     <FilterPanel 
                         reset={this.state.reset}
-                        searchString ={""} 
                         categories={this.props.categories} 
-                        filter={this.init}/>
+                        filter={this.init}
+                    />
                     <GroupForm
                         user={user}
                         groupNames={groupNames}
@@ -208,11 +200,12 @@ class GroupsDetail extends React.Component {
                         reset={this.state.reset}
                         categoryID={this.state.categoryId} 
                         filter = {this.init}
-                        returnString = {this.setString}/>
+                    />
                     <ResetButton
                         categoryID={this.state.categoryId}
                         searchString={this.state.searchString}
-                        reset={this.resetPage}/>
+                        reset={this.resetPage}
+                    />
                 </Nav>
                 <Row className="row justify-content-around">
                     {groupList}

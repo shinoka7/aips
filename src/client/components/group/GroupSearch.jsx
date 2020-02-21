@@ -34,6 +34,7 @@ class GroupSearch extends React.Component
     static getDerivedStateFromProps(props, state) {
         if (props.categoryID !== state.categoryID || props.reset !== state.reset) {
             document.getElementById("form").reset();
+            document.getElementById("searchBar").value = "";
             return {value: "", 
                 categoryID: props.categoryID,
                 reset: props.reset};
@@ -43,7 +44,6 @@ class GroupSearch extends React.Component
 
     handleChange(e)
     {
-        this.props.returnString(e.target.value);
         this.setState({value: e.target.value});
     }
 
@@ -54,6 +54,9 @@ class GroupSearch extends React.Component
                     <Form id = "form">
                         <InputGroup>
                             <Input
+                                onKeyPress={e => {
+                                    if (e.key === 'Enter') e.preventDefault(); }}
+                                type = "text"
                                 id = "searchBar" 
                                 placeholder = {"Search for groups!"} 
                                 onChange={this.handleChange}    
@@ -76,7 +79,6 @@ GroupSearch.propTypes = {
     reset: PropTypes.bool.isRequired,
     categoryID: PropTypes.number.isRequired,
     filter: PropTypes.func.isRequired,
-    returnString: PropTypes.func.isRequired
 };
 
 export default GroupSearch;
