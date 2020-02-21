@@ -8,6 +8,7 @@ class FilterPanel extends React.Component {
         super(props);
 
         this.state = {
+            reset: false, 
             isOpen: false,
             category: "Category",
         };
@@ -17,8 +18,7 @@ class FilterPanel extends React.Component {
     };
 
     setCategory(id) {
-        const {searchString} = this.props;
-        this.props.filter(id, searchString);
+        this.props.filter(id, "");
     }
 
     generateCategories(categories) {
@@ -33,6 +33,17 @@ class FilterPanel extends React.Component {
                 </DropdownItem>
             );
         });
+    }
+
+    /* If the reset button has been pressed,
+    the dropdown is reset to its initial state. */
+    static getDerivedStateFromProps(props, state) {
+        if (props.reset !== state.reset) {
+            return {isOpen: false, 
+                category: "Category",
+                reset: props.reset};
+        }
+        return null;
     }
 
     render() {
@@ -79,6 +90,7 @@ class FilterPanel extends React.Component {
 };
 
 FilterPanel.propTypes = {
+    reset: PropTypes.bool.isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     filter: PropTypes.func.isRequired,
 };
