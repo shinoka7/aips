@@ -33,3 +33,7 @@
 # Bugs
 
 1. [ ] Joining a club after relogging in as a different user (sessions isn't updated correctly?)
+
+
+https://docs.docker.com/compose/production/
+https://docs.docker.com/engine/reference/commandline/dockerd/#/daemon-configuration-file

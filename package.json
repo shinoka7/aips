@@ -13,7 +13,7 @@
     "db:seed:undo": "env-cmd -f config/env.dev.js sequelize db:seed:undo --env development",
     "db:seed:undo:all": "env-cmd -f config/env.dev.js sequelize db:seed:undo:all --env development",
     "build": "yarn sass:compile && env-cmd -f config/env.prod.js next build",
-    "start": "env-cmd -f config/env.prod.js node index.js",
+    "start": "env-cmd -f config/env.prod.js nodemon index.js",
     "sass:compile": "node-sass resources/styles/scss/style.scss resources/styles/css/aips.css"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "next": "^9.0.1",
     "node-mailjet": "^3.3.1",
     "node-sass": "^4.13.0",
+    "nodemon": "^2.0.2",
     "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",

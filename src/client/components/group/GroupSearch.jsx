@@ -11,13 +11,13 @@ class GroupSearch extends React.Component
         super(props);
 
         this.state = {
+           reset: false,
            value: "",
            categoryID: props.categoryID
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.searchHandler = this.searchHandler.bind(this);
-        this._handleKeyDown = this._handleKeyDown.bind(this);
     };
 
     /* When the search button is pressed, this function
@@ -29,13 +29,17 @@ class GroupSearch extends React.Component
     }
 
     /* When the category is changed through the
-    FilterPanel, revert search bar to empty state. */
+    FilterPanel, or if the reset button has been
+    pressed, revert search bar to empty state. */
     static getDerivedStateFromProps(props, state) {
-        if (props.categoryID !== state.categoryID) {
+        if (props.categoryID !== state.categoryID || props.reset !== state.reset) {
             document.getElementById("form").reset();
+            document.getElementById("searchBar").value = "";
             return {value: "", 
-                categoryID: props.categoryID};
+                categoryID: props.categoryID,
+                reset: props.reset};
         }
+        return null;
     }
 
     handleChange(e)
@@ -43,11 +47,6 @@ class GroupSearch extends React.Component
         this.setState({value: e.target.value});
     }
 
-    _handleKeyDown(e) {
-        if (e.key === 'Enter') {
-            this.searchHandler();
-        }
-    }
 
     render() {
         return (
@@ -55,6 +54,8 @@ class GroupSearch extends React.Component
                 <InputGroup>
                     <Input
                         id = "searchBar" 
+                        onKeyPress={e => {
+                            if (e.key === 'Enter') e.preventDefault(); }}
                         placeholder = {"Search for groups!"} 
                         onChange={this.handleChange}
                             />
@@ -62,7 +63,6 @@ class GroupSearch extends React.Component
                         <Button 
                         disabled = {!this.state.value}
                         onClick= {this.searchHandler}
-                        onKeyDown={this._handleKeyDown}
                         color = "default">Search</Button>
                     </InputGroupAddon>
                 </InputGroup>
@@ -72,6 +72,7 @@ class GroupSearch extends React.Component
 };
 
 GroupSearch.propTypes = {
+    reset: PropTypes.bool.isRequired,
     categoryID: PropTypes.number.isRequired,
     filter: PropTypes.func.isRequired,
 };
