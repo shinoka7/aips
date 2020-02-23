@@ -1,9 +1,15 @@
 const expressDefend = require('express-defend');
 const blacklist = require('express-blacklist');
 
-// https://github.com/cabinjs/cabin/issues/130#issuecomment-517743879
+// https://github.com/cabinjs/cabin/issues/130#issuecomment-569029006
+// https://github.com/ladjs/lad.sh/blob/066427cffe9f6538ff4c97b90e762840b299008e/assets/js/logger.js#L8
 const Cabin = require('cabin');
-const cabin = new Cabin({ capture: false });
+const cabin = new Cabin({ 
+    axe: {
+        capture: false,
+        silent: process.env.NODE_ENV === 'production'
+    }
+});
 
 const { Event, Group, User } = require('../../db/models');
 const { Op } = require('sequelize');
