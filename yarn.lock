@@ -7017,6 +7017,11 @@ nodemon@^2.0.2:
     undefsafe "^2.0.2"
     update-notifier "^2.5.0"
 
+nohup@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/nohup/-/nohup-0.1.0.tgz#b280603d4d04211648b4047d011484d0bcf347e3"
+  integrity sha1-soBgPU0EIRZItAR9ARSE0LzzR+M=
+
 "nopt@2 || 3":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
