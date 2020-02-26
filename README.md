@@ -17,3 +17,7 @@ AIPS is a Web App to create a general, intuitive and interactive way of communic
 # Preview
 
 ![](./resources/img/examples/preview.gif)
+
+# Production
+
+[nohup and nodemon](https://github.com/remy/nodemon/issues/296#issuecomment-47304621)
