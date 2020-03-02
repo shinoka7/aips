@@ -31,6 +31,10 @@ export default class MyDocument extends Document {
             {/* Sass files */}
             <link rel="stylesheet" href="../resources/styles/css/aips.css"/>
 
+            {/* Swiper */}
+            <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css"/>
+            <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
+
           </Head>
           <body className="pt-5">
             <Main />
