@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     Group.belongsToMany(models.User, {
       through: 'Member',
     });
+    Group.belongsTo(models.Category);
   };
   return Group;
 };
