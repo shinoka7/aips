@@ -29,6 +29,9 @@
 1. [ ] Form validation consistency/changes
 1. [ ] Add client/db tests
 1. [ ] Linter
+1. [ ] Blog Slider show scope
+1. [ ] Search bar search on enter key
+1. [ ] Emoji handling
 
 # Bugs
 
