@@ -58,6 +58,9 @@ module.exports = (aips) => {
             await Group.findAndCountAll({
                 offset,
                 limit,
+                include: [{
+                    model: Category,
+                }],
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -75,6 +78,9 @@ module.exports = (aips) => {
                     [Op.substring]: searchString
                 }
             },
+            include: [{
+                model: Category,
+            }],
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -90,6 +96,9 @@ module.exports = (aips) => {
                 where: {
                     categoryId,
                 },
+                include: [{
+                    model: Category,
+                }],
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -109,6 +118,9 @@ module.exports = (aips) => {
                     [Op.substring]: searchString
                 }
             },
+            include: [{
+                model: Category,
+            }],
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -227,6 +239,9 @@ module.exports = (aips) => {
         const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId, statement: "" });
         user = await user.update({ groupsCreated: user.groupsCreated + 1 });
         await group.addUser(user);
+
+        const category = await Category.findByPk(categoryId);
+        await group.setCategory(category);
 
         await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });
         

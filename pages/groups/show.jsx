@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Card, CardHeader, CardBody,
     CardText, CardImg, Col, Row, Nav,
-    Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+    Pagination, PaginationItem, PaginationLink,
+    Badge } from 'reactstrap';
 
 import GroupForm from '../../src/client/components/group/GroupForm.jsx';
 import FilterPanel from '../../src/client/components/group/FilterPanel.jsx';
@@ -69,7 +70,7 @@ class GroupsDetail extends React.Component {
         }
         const groupNames = [];
         await this.state.groups.forEach((group) => {
-                groupNames.push(group.name);
+            groupNames.push(group.name);
         });
         this.setState({ groupNames: groupNames });
         
@@ -150,8 +151,33 @@ class GroupsDetail extends React.Component {
                                 </div>
                             </Col>
                             <Col md="12" lg="9">
-                                <CardHeader><a href={`/group/${group.id}`}>{group.name}</a></CardHeader>
-                                <CardBody>
+                                <CardHeader> 
+                                    <Row>
+                                        <Col md="8" lg="8">
+                                            <a href={`/group/${group.id}`}>
+                                            {group.name}</a>
+                                        </Col>
+                                    <Col md="4" lg="4">
+                                        { 
+                                        group.Category.color == "" &&
+                                        <Badge 
+                                            color = "secondary"
+                                            pill>
+                                                {group.Category.name}
+                                        </Badge>
+                                        }
+                                        {
+                                        group.Category.color != "" &&
+                                        <Badge 
+                                            style={{backgroundColor: group.Category.color}}
+                                            pill>
+                                                {group.Category.name}
+                                        </Badge>
+                                        }
+                                    </Col>
+                                    </Row>
+                                </CardHeader>
+                                <CardBody>              
                                 <CardText>
                                     { group.description.length > 210 &&
                                         group.description.slice(0,210) + '...'                                    
