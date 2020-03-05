@@ -161,7 +161,7 @@ class GroupsDetail extends React.Component {
                                         { 
                                         group.Category.color == "" &&
                                         <Badge 
-                                            color = "secondary"
+                                            color="secondary"
                                             pill>
                                                 {group.Category.name}
                                         </Badge>
@@ -211,7 +211,7 @@ class GroupsDetail extends React.Component {
         return(
             <div className="pt-3">
                 <Row>
-                    <Col xs="4" sm="4" md="4">
+                    <Col xs="4" sm="4" md="1">
                         <FilterPanel
                             categories={this.props.categories} 
                             filter={this.init}
@@ -225,12 +225,16 @@ class GroupsDetail extends React.Component {
 							reset={this.state.reset}
 						/>
                     </Col>
-                    <Col xs="4" sm="4" md="4">
+                    <Col xs="4" sm="4" md="3">
 						<ResetButton
                         	categoryID={this.state.categoryId}
                         	searchString={this.state.searchString}
                         	reset={this.resetPage}
                     	/>
+                    </Col>
+                    <Col md="3">
+                    </Col>
+                    <Col md="1">
                         <GroupForm
                             user={user}
                             groupNames={groupNames}

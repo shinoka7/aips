@@ -42,10 +42,10 @@ class ResetButton extends React.Component
                 <Col>
                     {  active &&
                         <Button 
-                            type = "button"
-                            color = "danger"
-                            onClick = {this.resetPage}>
-                            Reset
+                            type="button"
+                            color="danger"
+                            onClick={this.resetPage}>
+                            <i className="fas fa-undo-alt"></i> Reset
                         </Button>
                     }
                 </Col>

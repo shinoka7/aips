@@ -50,20 +50,20 @@ class GroupSearch extends React.Component
 
     render() {
         return (
-            <Form id = "form">
+            <Form id = "form" >
                 <InputGroup>
                     <Input
                         id = "searchBar" 
                         onKeyPress={e => {
-                            if (e.key === 'Enter') e.preventDefault(); }}
-                        placeholder = {"Search for groups!"} 
+                            if (e.key === 'Enter') {e.preventDefault(); this.searchHandler()} }}
+                        placeholder={"Search for groups!"} 
                         onChange={this.handleChange}
                             />
                     <InputGroupAddon addonType="append">
                         <Button 
-                        disabled = {!this.state.value}
-                        onClick= {this.searchHandler}
-                        color = "default">Search</Button>
+                        disabled={!this.state.value}
+                        onClick={this.searchHandler}
+                        color="default">Search</Button>
                     </InputGroupAddon>
                 </InputGroup>
             </Form>
