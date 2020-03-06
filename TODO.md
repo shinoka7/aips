@@ -15,7 +15,7 @@
 1. [ ] Upload image for groups 
 1. [ ] Repeating events
 1. [x] Category tags to group cards (more group info to groups/show.jsx)
-1. [ ] Event deletion
+1. [x] Event deletion
 1. [ ] Event edit
 
 # Improvements
