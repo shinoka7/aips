@@ -8,13 +8,11 @@
 1. [ ] File/Image storage (docker)
 1. [ ] Markdown support
 1. [ ] Event interested/going/not going 
-1. [x] Reset Filtered groups 
 1. [ ] RSVP option 
 1. [ ] Meeting times added to calendar 
 1. [ ] Upload image for event 
 1. [ ] Upload image for groups 
 1. [ ] Repeating events
-1. [x] Category tags to group cards (more group info to groups/show.jsx)
 1. [x] Event deletion
 1. [ ] Event edit
 
@@ -29,7 +27,6 @@
 1. [ ] Add client/db tests
 1. [ ] Linter
 1. [ ] Blog Slider show scope
-1. [x] Search bar search on enter key
 1. [ ] Emoji handling
 
 # Bugs
