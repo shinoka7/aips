@@ -6,6 +6,7 @@ import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const localizer = momentLocalizer(moment);
 
@@ -51,7 +52,8 @@ class CalendarPanel extends React.Component {
         this.validate = this.validate.bind(this);
         this.setRepeats = this.setRepeats.bind(this);
         this.toggleAllDay = this.toggleAllDay.bind(this);
-		this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
+        this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
+        this.deleteHandler = this.deleteHandler.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -253,6 +255,50 @@ class CalendarPanel extends React.Component {
             _csrf: this.props.csrfToken
         });
         window.location.reload();
+    }
+
+    async deleteHandler() {
+        const { selectedEvent } = this.state;
+        const params = {
+            eventId: selectedEvent.id,
+            _csrf: this.props.csrfToken,
+        };
+
+        await Swal.fire({
+            title: 'Delete Event',
+            type: 'warning',
+            text: 'Are you sure that you want to permanently delete this item',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: 'secondary',
+            preConfirm: async() => {
+                try {
+                    return await axios.post('/event/delete', params);
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your event has been deleted',
+                    'success'
+                ).then((res) => {
+                    if (!res.dismiss) {
+                        window.location.reload();
+                    }
+                })
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire(
+                    'Cancelled',
+                    'Your event is safe',
+                    'error'
+                );
+            }
+        });
     }
 
     async addToGoogleCalendarHandler() {
@@ -459,7 +505,7 @@ class CalendarPanel extends React.Component {
                                                 <Button color="link"><i className="fas fa-user-edit"></i> Edit</Button>
                                             </Col>
                                             <Col xs="6" sm="6" md="6">
-                                                <Button color="link"><i className="fas fa-trash-alt"></i> Delete</Button>
+                                                <Button color="link" onClick={this.deleteHandler}><i className="fas fa-trash-alt"></i> Delete</Button>
                                             </Col>
                                         </Row>
                                     </ModalFooter>

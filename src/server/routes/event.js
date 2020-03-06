@@ -65,5 +65,25 @@ module.exports = (aips) => {
         res.json({ event });
     }));
 
+    validator.delete = [
+        body('eventId').exists(),
+    ];
+
+    router.post('/delete', csrf, validator.delete, validateBody, asyncMiddleware(async(req, res) => {
+        const { eventId } = req.body;
+        const userId = req.session.user.id;
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+
+        const event = await Event.findByPk(eventId);
+        if (event) {
+            await event.destroy();
+        }
+
+        res.json({ event });
+    }))
+
     return router;
 };
