@@ -177,6 +177,7 @@ module.exports = (aips) => {
 
         const category = await Category.findByPk(group.categoryId);
 
+        //Needs to get group image here, so that it can be used as a prop for the group page
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
             if (err) {
@@ -435,6 +436,14 @@ module.exports = (aips) => {
         });
 
         res.json({ user });
+    }));
+
+    router.post('/setImage', csrf, asyncMiddleware(async(req, res) => {
+        const {groupId, file} = req.body;
+        const group = await Group.findByPk(groupId);
+        //add image to group
+        console.log(group.name, file.name, file.size);
+        return res.json({});
     }));
 
     return router;

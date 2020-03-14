@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+import FileUpload from '../../src/client/components/group/FileUpload.jsx'
 import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
 import PostForm from '../../src/client/components/PostForm.jsx';
 import AdminPanel from '../../src/client/components/group/AdminPanel.jsx';
@@ -22,6 +23,7 @@ class GroupDetail extends React.Component {
             calendarIsOpen: false,
             postIsOpen: false,
             showSuccessAlert: false,
+            currentImage: "/resources/img/default/default_group.png"
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
@@ -30,6 +32,7 @@ class GroupDetail extends React.Component {
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.togglePostForm = this.togglePostForm.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
+        this.uploadImageHandler = this.uploadImageHandler.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -99,10 +102,29 @@ class GroupDetail extends React.Component {
         }
     }
 
+    async uploadImageHandler(file) {
+        
+        console.log(file.name, file.type);
+
+        const {group, csrfToken} = this.props;
+        await axios.post('/group/setImage', {
+            groupId: group.id,
+            file: file,
+            _csrf: csrfToken,
+        })
+        .then((res) => {
+            console.log("Image successfully uploaded.");
+        })
+        .catch((err) => {
+            console.log("Upload failed.");
+        });
+    }
+
     render() {
         const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers, googleCalendar } = this.props;
-        const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert } = this.state;
-
+        const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert, currentImage } = this.state;
+       
+        //FileUpload currentImage needs to be updated based on image props from db request, not based on a state
         return (
             <div>
                 <Jumbotron fluid>
@@ -111,9 +133,11 @@ class GroupDetail extends React.Component {
                             <Alert color="success">You have successfully sent out a request to join this group!</Alert>
                         }
                         <Media>
-                            <Media left href="#">
-                                <Media object src="/resources/img/default/default_group.png" alt="Group placeholder image" className="border rounded border-dark"></Media>
-                            </Media>
+                            <FileUpload 
+                                uploadFile={this.uploadImageHandler} 
+                                accept="image/*"
+                                currentImage={currentImage}>
+                            </FileUpload>
                             <Media body className="text-center">
                                 <Media heading>
                                     <p className="display-4">{group.name}</p>
