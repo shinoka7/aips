@@ -8,7 +8,7 @@ import moment from 'moment';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import FileUpload from '../components/group/FileUpload.jsx';
+import FileUpload from './FileUpload.jsx';
 
 const localizer = momentLocalizer(moment);
 
@@ -255,9 +255,9 @@ class CalendarPanel extends React.Component {
         }
         this.setState({ showCustomDates: !showCustomDates });
     }    
-    
+
     async createHandler() {
-        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats } = this.state.newEvent;
+        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats, customImage } = this.state.newEvent;
         const res = await axios.post('/event', {
             groupId,
             startDate: startDate,
