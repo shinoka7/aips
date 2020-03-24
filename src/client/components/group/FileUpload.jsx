@@ -15,6 +15,7 @@ class FileUpload extends React.Component {
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.removeFile = this.removeFile.bind(this);
     }
 
     onFormSubmit(e)
@@ -34,27 +35,45 @@ class FileUpload extends React.Component {
         this.setState({modal: !this.state.modal});
     }
 
+    removeFile()
+    {
+        this.setState({file: null});
+    }
+
     render() 
     {
         const {modal, unmountOnClose, file} = this.state;
-        const {accept, currentImage} = this.props;
+        const {accept, currentImage, hasModal} = this.props;
         return (
             <div>
-                <Media left onClick={this.toggleModal}>
-                    <Media object src={currentImage} alt="Group placeholder image" className="border rounded border-dark"></Media>
-                </Media>
-                <Modal isOpen={modal} toggle={this.toggleModal} unmountOnClose={unmountOnClose}>
-                    <Form onSubmit={this.onFormSubmit}>
-                        <ModalHeader toggle={this.toggle}>Upload File</ModalHeader>
-                        <ModalBody> 
+                {hasModal &&
+                    <Media left onClick={this.toggleModal}>
+                        <Media object src={currentImage} alt="Group placeholder image" className="border rounded border-dark"></Media>
+                    </Media>
+                }
+                {hasModal &&
+                    <Modal isOpen={modal} toggle={this.toggleModal} unmountOnClose={unmountOnClose}>
+                        <Form onSubmit={this.onFormSubmit}>
+                            <ModalHeader toggle={this.toggle}>Upload File</ModalHeader>
+                            <ModalBody> 
                                 <Input type="file" accept={accept} onChange={this.onChange} />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button type="submit" color="primary" disabled={!file}> Upload </Button>
-                            <Button onClick={this.toggleModal}> Cancel </Button>
-                        </ModalFooter>
-                    </Form>  
-                </Modal>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button type="submit" color="primary" disabled={!file}> Upload </Button>
+                                <Button onClick={this.toggleModal}> Cancel </Button>
+                            </ModalFooter>
+                        </Form>  
+                    </Modal>
+                }
+                
+                {!hasModal &&
+                    <Form onSubmit={this.onFormSubmit}>
+                        <Input type="file" accept={accept} onChange={this.onChange} />
+                        <Button type="submit" color="primary" disabled={!file}> Upload </Button>
+                        <Button type="reset" onClick={this.removeFile}> Cancel </Button>
+                    </Form> 
+                }
+
             </div>
         );
     }

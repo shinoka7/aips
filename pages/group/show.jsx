@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import FileUpload from '../../src/client/components/group/FileUpload.jsx'
+import FileUpload from '../../src/client/components/group/FileUpload.jsx';
 import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
 import PostForm from '../../src/client/components/PostForm.jsx';
 import AdminPanel from '../../src/client/components/group/AdminPanel.jsx';
@@ -136,7 +136,8 @@ class GroupDetail extends React.Component {
                             <FileUpload 
                                 uploadFile={this.uploadImageHandler} 
                                 accept="image/*"
-                                currentImage={currentImage}>
+                                currentImage={currentImage}
+                                hasModal={true}>
                             </FileUpload>
                             <Media body className="text-center">
                                 <Media heading>

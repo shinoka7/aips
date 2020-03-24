@@ -8,6 +8,8 @@ import moment from 'moment';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+import FileUpload from '../components/group/FileUpload.jsx';
+
 const localizer = momentLocalizer(moment);
 
 class CalendarPanel extends React.Component {
@@ -29,10 +31,12 @@ class CalendarPanel extends React.Component {
                 description: '',
                 imageName: '',
                 repeats: 'Never',
+                customImage: null
             },
             selectedEvent: {},
             showCustomDates: false,
             repeatDropdownOpen: false,
+            currentImage: "/resources/img/default/default_group.png"
         };
 
         this.convertISOToCalendarFormat = this.convertISOToCalendarFormat.bind(this);
@@ -54,6 +58,7 @@ class CalendarPanel extends React.Component {
         this.toggleAllDay = this.toggleAllDay.bind(this);
         this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
+        this.setCustomImage = this.setCustomImage.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -226,6 +231,17 @@ class CalendarPanel extends React.Component {
         }));
     }
 
+    setCustomImage(file)
+    {
+        console.log(file.name, file.type)
+        this.setState((prevState) => ({
+            newEvent: {
+                ...prevState.newEvent,
+                customImage: file,
+            }
+        }));
+    }
+
     toggleAllDay() {
         const { showCustomDates } = this.state;
         if (showCustomDates) {
@@ -238,7 +254,7 @@ class CalendarPanel extends React.Component {
             }));
         }
         this.setState({ showCustomDates: !showCustomDates });
-    }
+    }    
     
     async createHandler() {
         const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats } = this.state.newEvent;
@@ -252,7 +268,8 @@ class CalendarPanel extends React.Component {
             description,
             image: imageName,
             repeats: repeats,
-            _csrf: this.props.csrfToken
+            _csrf: this.props.csrfToken,
+            customImage: customImage
         });
         window.location.reload();
     }
@@ -342,7 +359,7 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
-        const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen } = this.state;
+        const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen, currentImage } = this.state;
         const { modal, toggleCalendar, images, user, isUserInGroup, googleCalendar } = this.props;
 
         const groups = this.props.groups || [];
@@ -461,7 +478,12 @@ class CalendarPanel extends React.Component {
                                             <option value="">No Image</option>
                                             {generatedImages}
                                         </Input>
-                                        {/* <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" /> */}
+                                        <FileUpload 
+                                            uploadFile={this.setCustomImage} 
+                                            accept="image/*"
+                                            currentImage={currentImage}
+                                            hasModal={false}>
+                                        </FileUpload>
                                     </FormGroup>
                                     { newEvent.imageName !== '' &&
                                         <Card>
