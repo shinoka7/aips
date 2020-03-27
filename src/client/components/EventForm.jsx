@@ -94,7 +94,7 @@ class EventForm extends React.Component {
                 }
             }));
         }
-        this.props.toggleEventForm();
+        this.props.toggleEventForm(e);
     }
 
     generateGroupOptions(groups) {
