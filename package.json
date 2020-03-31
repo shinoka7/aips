@@ -39,7 +39,7 @@
     "googleapis": "^47.0.0",
     "mariadb": "^2.1.0",
     "moment": "^2.24.0",
-    "next": "^9.0.1",
+    "next": "^9.3.2",
     "node-mailjet": "^3.3.1",
     "node-sass": "^4.13.0",
     "nodemon": "^2.0.2",
