@@ -31,7 +31,7 @@ module.exports = (aips) => {
     // POST event
     router.post('/', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
         const {
-            groupId, startDate, startTime, endDate, endTime, name, description, image, repeats, customImage
+            groupId, startDate, startTime, endDate, endTime, name, description, image, repeats
         } = req.body;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);

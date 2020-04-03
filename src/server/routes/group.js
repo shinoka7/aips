@@ -10,6 +10,8 @@ const { User, Group, Notification, Event, Category, Pending } = require('../../d
 const { Op } = require('sequelize');
 const fs = require('fs');
 const mailerService = require('../../services/mailer');
+const multer = require('multer');
+const upload = multer();
 //
 const url = require('url');
 const querystring = require('querystring');
@@ -438,12 +440,14 @@ module.exports = (aips) => {
         res.json({ user });
     }));
 
-    router.post('/setImage', csrf, asyncMiddleware(async(req, res) => {
-        const {groupId, file} = req.body;
+
+    router.post('/setImage', upload.single('myFile'), csrf, asyncMiddleware(async(req, res) => {
+        const {_csrf, groupId} = req.body;
         const group = await Group.findByPk(groupId);
+        const file = req.file;
+        console.log(group.name, file);
         //add image to group
-        console.log(group.name, file.name, file.size);
-        return res.json({});
+        res.redirect('back');
     }));
 
     return router;

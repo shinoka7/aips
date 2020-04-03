@@ -32,7 +32,6 @@ class GroupDetail extends React.Component {
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.togglePostForm = this.togglePostForm.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
-        this.uploadImageHandler = this.uploadImageHandler.bind(this);
     }
 
     static async getInitialProps(context) {
@@ -102,24 +101,6 @@ class GroupDetail extends React.Component {
         }
     }
 
-    async uploadImageHandler(file) {
-        
-        console.log(file.name, file.type);
-
-        const {group, csrfToken} = this.props;
-        await axios.post('/group/setImage', {
-            groupId: group.id,
-            file: file,
-            _csrf: csrfToken,
-        })
-        .then((res) => {
-            console.log("Image successfully uploaded.");
-        })
-        .catch((err) => {
-            console.log("Upload failed.");
-        });
-    }
-
     render() {
         const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers, googleCalendar } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert, currentImage } = this.state;
@@ -134,10 +115,11 @@ class GroupDetail extends React.Component {
                         }
                         <Media>
                             <FileUpload 
-                                uploadFile={this.uploadImageHandler} 
                                 accept="image/*"
                                 currentImage={currentImage}
-                                hasModal={true}>
+                                hasModal={true}
+                                groupID={group.id}
+                                csrfToken={csrfToken}>
                             </FileUpload>
                             <Media body className="text-center">
                                 <Media heading>

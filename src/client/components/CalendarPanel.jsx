@@ -31,12 +31,12 @@ class CalendarPanel extends React.Component {
                 description: '',
                 imageName: '',
                 repeats: 'Never',
-                customImage: null
             },
             selectedEvent: {},
             showCustomDates: false,
             repeatDropdownOpen: false,
-            currentImage: "/resources/img/default/default_group.png"
+            currentImage: "/resources/img/default/default_group.png",
+            customImageSelection: false
         };
 
         this.convertISOToCalendarFormat = this.convertISOToCalendarFormat.bind(this);
@@ -58,7 +58,8 @@ class CalendarPanel extends React.Component {
         this.toggleAllDay = this.toggleAllDay.bind(this);
         this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
-        this.setCustomImage = this.setCustomImage.bind(this);
+        //this.setCustomImage = this.setCustomImage.bind(this);
+        this.toggleImageSelection = this.toggleImageSelection.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -231,7 +232,7 @@ class CalendarPanel extends React.Component {
         }));
     }
 
-    setCustomImage(file)
+    /*setCustomImage(file)
     {
         console.log(file.name, file.type)
         this.setState((prevState) => ({
@@ -240,7 +241,7 @@ class CalendarPanel extends React.Component {
                 customImage: file,
             }
         }));
-    }
+    }*/
 
     toggleAllDay() {
         const { showCustomDates } = this.state;
@@ -256,8 +257,14 @@ class CalendarPanel extends React.Component {
         this.setState({ showCustomDates: !showCustomDates });
     }    
 
+    toggleImageSelection()
+    {
+        const {customImageSelection } = this.state;
+        this.setState({customImageSelection: !customImageSelection})
+    }
+
     async createHandler() {
-        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats, customImage } = this.state.newEvent;
+        const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats} = this.state.newEvent;
         const res = await axios.post('/event', {
             groupId,
             startDate: startDate,
@@ -269,7 +276,6 @@ class CalendarPanel extends React.Component {
             image: imageName,
             repeats: repeats,
             _csrf: this.props.csrfToken,
-            customImage: customImage
         });
         window.location.reload();
     }
@@ -359,7 +365,7 @@ class CalendarPanel extends React.Component {
     }
 
     render() {
-        const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen, currentImage } = this.state;
+        const { events, newEvent, selectedEvent, showCustomDates, repeatDropdownOpen, currentImage, customImageSelection } = this.state;
         const { modal, toggleCalendar, images, user, isUserInGroup, googleCalendar } = this.props;
 
         const groups = this.props.groups || [];
@@ -474,16 +480,37 @@ class CalendarPanel extends React.Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Label for="image">Event Image :</Label>
+                                        <Row>
+                                            <Col md="1">
+                                            </Col>
+                                            <Col md="6">
+                                                <Label>{"   "}
+                                                    <Input type="radio" label="Image" checked={!customImageSelection} onChange={this.toggleImageSelection} />
+                                                    Select from preset images
+                                                </Label>
+                                            </Col>
+                                            <Col md="5">
+                                                <Label>
+                                                    <Input type="radio" label="2" checked={customImageSelection} onChange={this.toggleImageSelection} />
+                                                    Upload image
+                                                </Label>
+                                            </Col>
+                                        </Row>
+                                        {!customImageSelection &&
                                         <Input type="select" name="image" id="image" value={newEvent.imageName === '' ? "" : newEvent.imageName} onChange={this.setImage} >
                                             <option value="">No Image</option>
                                             {generatedImages}
                                         </Input>
-                                        <FileUpload 
+                                        }  
+                                        {/* <FileUpload 
                                             uploadFile={this.setCustomImage} 
                                             accept="image/*"
                                             currentImage={currentImage}
                                             hasModal={false}>
-                                        </FileUpload>
+                                        </FileUpload> --> */}
+                                        {customImageSelection &&
+                                            <Input type="file" accept={"image/*"} name="imageFile" id="imageFile"/>
+                                        }
                                     </FormGroup>
                                     { newEvent.imageName !== '' &&
                                         <Card>

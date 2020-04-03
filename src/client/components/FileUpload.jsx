@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Media, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Form, Input, Button, Media, Modal, ModalHeader, ModalBody, ModalFooter, Row, Col } from 'reactstrap';
 
 class FileUpload extends React.Component {
     constructor(props) {
@@ -9,7 +9,8 @@ class FileUpload extends React.Component {
         this.state = {
             file: null,
             modal: false,
-            unmountOnClose: false
+            unmountOnClose: false,
+            fileUploaded: false
         }
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -22,7 +23,7 @@ class FileUpload extends React.Component {
     {
         e.preventDefault();
         this.props.uploadFile(this.state.file);
-        this.setState({modal: false});
+        this.setState({modal: false, fileUploaded: true});
     }
 
     onChange(e)
@@ -37,13 +38,13 @@ class FileUpload extends React.Component {
 
     removeFile()
     {
-        this.setState({file: null});
+        this.setState({file: null, fileUploaded: false});
     }
 
     render() 
     {
-        const {modal, unmountOnClose, file} = this.state;
-        const {accept, currentImage, hasModal} = this.props;
+        const {modal, unmountOnClose, file, fileUploaded} = this.state;
+        const {accept, currentImage, hasModal, groupID, csrfToken} = this.props;
         return (
             <div>
                 {hasModal &&
@@ -53,13 +54,15 @@ class FileUpload extends React.Component {
                 }
                 {hasModal &&
                     <Modal isOpen={modal} toggle={this.toggleModal} unmountOnClose={unmountOnClose}>
-                        <Form onSubmit={this.onFormSubmit}>
+                        <Form action="/group/setImage" encType="multipart/form-data" method="POST">
                             <ModalHeader toggle={this.toggle}>Upload File</ModalHeader>
-                            <ModalBody> 
-                                <Input type="file" accept={accept} onChange={this.onChange} />
+                            <ModalBody>
+                                <Input type="hidden" name="_csrf" value={csrfToken}/>
+                                <Input type="hidden" name="groupId" value={groupID} />
+                                <Input type="file" accept={accept} onChange={this.onChange} name="myFile" id="myFile"/>
                             </ModalBody>
                             <ModalFooter>
-                                <Button type="submit" color="primary" disabled={!file}> Upload </Button>
+                                <Button type="submit" color="primary" disabled={!file} onClick={this.toggleModal}> Upload </Button>
                                 <Button onClick={this.toggleModal}> Cancel </Button>
                             </ModalFooter>
                         </Form>  
@@ -67,10 +70,21 @@ class FileUpload extends React.Component {
                 }
                 
                 {!hasModal &&
-                    <Form onSubmit={this.onFormSubmit}>
-                        <Input type="file" accept={accept} onChange={this.onChange} />
-                        <Button type="submit" color="primary" disabled={!file}> Upload </Button>
-                        <Button type="reset" onClick={this.removeFile}> Cancel </Button>
+                    <Form onSubmit={this.onFormSubmit} encType="multipart/form-data">
+                        <Row>
+                            <Col md="6">
+                                <Input type="file" accept={accept} onChange={this.onChange} name="file" id="file"/>
+                            </Col>
+                            <Col md="2">
+                                <Button type="submit" color="primary" disabled={!file}> Upload </Button>
+                            </Col>
+                            <Col md="2">
+                                <Button type="reset" onClick={this.removeFile}> Cancel </Button>
+                            </Col>
+                            {fileUploaded && 
+                                <Col md="2"> File uploaded!</Col>
+                            }
+                        </Row>
                     </Form> 
                 }
 
@@ -80,8 +94,8 @@ class FileUpload extends React.Component {
 }
 
 FileUpload.propTypes = {
-    uploadFile: PropTypes.func.isRequired,
-    accept: PropTypes.string.isRequired
+    accept: PropTypes.string.isRequired,
+    hasModal: PropTypes.bool.isRequired
 };
 
 export default FileUpload;
