@@ -24,17 +24,16 @@ class MailerService {
         });
     }
 
-    sendOne(templateName, user, subject, title, content) {
+    sendOne(templateName, emailAddress, subject, title, content) {
         const email = new Email();
 
         const locals = {
-            name: user.firstName || user.username,
             subject: subject,
             title: title,
             content: content,
         };
         const msgInfo = {
-            email: user.email,
+            email: emailAddress,
             fromEmail: this.fromEmail,
             fromName: this.fromName,
             subject: subject,

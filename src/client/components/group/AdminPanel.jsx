@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Badge, Card, CardBody, Row, Col, Form, FormGroup, Label, Input,
+import { Button, Badge, Card, CardBody, Row, Col, Form, FormGroup, FormFeedback, Label, Input,
 NavItem, NavLink, Nav, TabContent, TabPane, Table } from 'reactstrap';
 import classnames from 'classnames';
 import axios from 'axios';
@@ -24,25 +24,27 @@ class AdminPanel extends React.Component {
             meetingTime: props.group.meetingTime,
             meetingPlace: props.group.meetingPlace,
             pendingUsers: props.pendingUsers,
-            mailingList: props.group.mailingList,
+            mailingList: props.group.mailingList || '',
         };
 
         // this.addUser = this.addUser.bind(this);
         this.toggleSettingsForm = this.toggleSettingsForm.bind(this);
-        this.updateHandler = this.updateHandler.bind(this);
+        this.updateInfoHandler = this.updateInfoHandler.bind(this);
         this.disbandHandler = this.disbandHandler.bind(this);
         this.togglePendingPanel = this.togglePendingPanel.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
         this.acceptHandler = this.acceptHandler.bind(this);
         this.rejectHandler = this.rejectHandler.bind(this);
         this.generatePending = this.generatePending.bind(this);
+        this.validEmail = this.validEmail.bind(this);
+        this.updateSettingsHandler = this.updateSettingsHandler.bind(this);
     }
 
     toggleSettingsForm() {
         this.setState({ showSettingsForm: !this.state.showSettingsForm });
     }
 
-    async updateHandler() {
+    async updateInfoHandler() {
         const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace } = this.state;
 
         const res = await Swal.fire({
@@ -54,7 +56,7 @@ class AdminPanel extends React.Component {
             confirmButtonColor: 'primary',
             preConfirm: async() => {
                 try {
-                    return await axios.put('/group/update', {
+                    return await axios.put('/group/update/info', {
                         groupId: this.props.group.id,
                         groupEmail,
                         description,
@@ -75,7 +77,7 @@ class AdminPanel extends React.Component {
             if (result.value) {
                 Swal.fire({
                     title: 'Update!',
-                    text: 'The Group has been updated!',
+                    text: 'The group\'s info has been updated!',
                     type: 'success',
                     onAfterClose: () => {
                         window.location.reload();
@@ -176,6 +178,52 @@ class AdminPanel extends React.Component {
         });
     }
 
+    validEmail() {
+        const { mailingList /**, mode */ } = this.state;
+        const isValidEmail = mailingList.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        return mailingList === '' || isValidEmail;
+    }
+
+    async updateSettingsHandler() {
+        const { mailingList /**, mode */} = this.state;
+
+        await Swal.fire({
+            title: 'Update Group Settings',
+            type: 'warning',
+            text: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            confirmButtonColor: 'primary',
+            preConfirm: async() => {
+                return await axios.put('/group/update/settings', {
+                    groupId: this.props.group.id,
+                    mailingList: mailingList,
+                    _csrf: this.props.csrfToken,
+                })
+                .then((res) => {
+                    if (res.status !== 200) {
+                        throw new Error(res.statusText);
+                    }
+                    return res;
+                })
+                .catch((err) => {
+                    Swal.showValidationMessage(
+                        `Update Failed: ${err}`
+                    );
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    title: 'Update!',
+                    text: 'The group\'s settings have been updated!',
+                    type: 'success',
+                });
+            }
+        });
+    }
+
     render() {
         const { group, isVerified } = this.props;
         const { mailingList, pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
@@ -190,23 +238,31 @@ class AdminPanel extends React.Component {
                             <b>Settings</b>
                             <Card>
                                 <CardBody>
-                                <FormGroup tag="fieldset" row>
-                                    <Col sm={10}>
-                                        <b>[Work in Progress]</b>
-                                    <FormGroup check>
-                                        <Label check>
-                                        <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Public'}**/ />{' '}
-                                        Public Mode
-                                        </Label>
+                                    <Form>
+                                    <FormGroup tag="fieldset" row>
+                                        <Col sm={10}>
+                                            <b>Group Mode [Work in Progress] :</b>
+                                        <FormGroup check>
+                                            <Label check>
+                                            <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Public'}**/ />{' '}
+                                            Public Mode
+                                            </Label>
+                                        </FormGroup>
+                                        <FormGroup check>
+                                            <Label check>
+                                            <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Private'}**/ disabled={!isVerified} />{' '}
+                                            Private Mode
+                                            </Label>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <Label for="mailingList"><b>Mailing List :</b></Label>
+                                            <Input invalid={!this.validEmail()} type="email" id="mailingList" onChange={(e) => {this.setState({ mailingList: e.target.value.trim() })}} placeholder={mailingList}></Input>
+                                            <FormFeedback>Invalid email address!</FormFeedback>
+                                        </FormGroup>
+                                        </Col>
                                     </FormGroup>
-                                    <FormGroup check>
-                                        <Label check>
-                                        <Input type="radio" disabled name="radio2" /**checked={group.mode === 'Private'}**/ disabled={!isVerified} />{' '}
-                                        Private Mode
-                                        </Label>
-                                    </FormGroup>
-                                    </Col>
-                                </FormGroup>
+                                    <Button onClick={this.updateSettingsHandler} color="primary">Update</Button>
+                                    </Form>
                                 </CardBody>
                             </Card>
                         </Col>
@@ -299,7 +355,7 @@ class AdminPanel extends React.Component {
                                             <Label for="meetingPlace">Usual Meeting Place :</Label>
                                             <Input type="text" name="meetingPlace" id="meetingPlace" placeholder={meetingPlace} onChange={(e) => {this.setState({ meetingPlace: e.target.value.trim() })}} />
                                         </FormGroup>
-                                        <Button onClick={this.updateHandler} color="primary">Confirm</Button>
+                                        <Button onClick={this.updateInfoHandler} color="primary">Confirm</Button>
                                         {'\t'}
                                         <Button onClick={this.toggleSettingsForm} color="secondary">Cancel</Button>
                                     </Form>

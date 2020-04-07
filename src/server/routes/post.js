@@ -71,8 +71,13 @@ module.exports = (aips) => {
 
         notifications.forEach((notification) => {
             const subject = `${group.name} made a post!`;
-            mailerService.sendOne('post', notification.User, subject, post.title, post.content);
+            mailerService.sendOne('post', notification.User.email, subject, post.title, post.content);
         });
+
+        if (group.mailingList !== '') {
+            const subject = `${group.name} made a post!`;
+            mailerService.sendOne('post', group.mailingList, subject, post.title, post.content);
+        }
 
         res.json({ post });
     }));
