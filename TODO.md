@@ -1,6 +1,6 @@
 # Features
 
-1. [ ] Trigger Mailing list on event/post creation feature
+1. [x] Trigger Mailing list on post creation feature
 1. [ ] Private feature for events
 1. [ ] Google Calendar sync
 1. [ ] Web App admin user layer
