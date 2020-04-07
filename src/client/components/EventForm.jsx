@@ -268,7 +268,7 @@ class EventForm extends React.Component {
             <Modal isOpen={this.state.formModal} toggle={this.toggleForm} unmountOnClose={this.state.unmountOnClose}>
                 <Form action="/event" encType="multipart/form-data" method="POST">
                     <Input type="hidden" name="_csrf" value={csrfToken}/>
-                    {/* TEMPORARY *}
+                    {/* TEMPORARY */}
                     <Input type="hidden" name="groupId" value={1}/> 
 
                     <ModalHeader toggle={this.toggleForm}>New Event</ModalHeader>
