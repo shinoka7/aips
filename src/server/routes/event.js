@@ -8,6 +8,9 @@ const mailerService = require('../../services/mailer');
 
 const validator = {};
 
+const multer = require('multer');
+const upload = multer();
+
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
     const { nextApp, csrf } = aips;
@@ -29,10 +32,12 @@ module.exports = (aips) => {
     ];
 
     // POST event
-    router.post('/', csrf, validator.create, validateBody, asyncMiddleware(async(req, res) => {
+    router.post('/', csrf, upload.single('myFile'), validator.create, validateBody, asyncMiddleware(async(req, res) => {
+        console.log("Entered request!");
         const {
-            groupId, startDate, startTime, endDate, endTime, name, description, image, repeats
+            _csrf, groupId, name, startDate, startTime, endDate, endTime, description, image, repeats
         } = req.body;
+        const {uploadImage} = req.file;
         const userId = req.session.user.id;
         const user = await User.findByPk(userId);
         if (!user) {

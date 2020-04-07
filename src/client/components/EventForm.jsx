@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Col, Row, Card, CardBody, CustomInput, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Dropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import axios from 'axios';
+import FileUpload from './FileUpload.jsx';
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class EventForm extends React.Component {
             formModal: false,
             unmountOnClose: false,
             newEvent: {
-                groupId: undefined,
+                groupId: 1,
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -22,6 +23,7 @@ class EventForm extends React.Component {
                 description: '',
                 imageName: '',
                 repeats: 'Never',
+                customImageSelection: false
             },
             showCustomDates: false,
             repeatDropdownOpen: false,
@@ -43,7 +45,15 @@ class EventForm extends React.Component {
         this.setRepeats = this.setRepeats.bind(this);
         this.toggleAllDay = this.toggleAllDay.bind(this);
         this.createHandler = this.createHandler.bind(this);
+        this.toggleImageSelection = this.toggleImageSelection.bind(this);
     }
+
+    toggleImageSelection()
+    {
+        const {customImageSelection } = this.state;
+        this.setState({customImageSelection: !customImageSelection})
+    }
+    
 
     componentDidUpdate(prevProps){
         if(prevProps.formModal !== this.props.formModal){
@@ -247,8 +257,8 @@ class EventForm extends React.Component {
     }
 
     render() {
-        const { showCustomDates, newEvent, repeatDropdownOpen } = this.state;
-        const { images } = this.props;
+        const { showCustomDates, newEvent, repeatDropdownOpen, customImageSelection } = this.state;
+        const { images, csrfToken } = this.props;
 
         const groups = this.props.groups || [];
         const groupOptions = this.generateGroupOptions(groups);
@@ -256,23 +266,27 @@ class EventForm extends React.Component {
 
         return (
             <Modal isOpen={this.state.formModal} toggle={this.toggleForm} unmountOnClose={this.state.unmountOnClose}>
-                <ModalHeader toggle={this.toggleForm}>New Event</ModalHeader>
-                <ModalBody>
-                    <AvForm>
-                        <AvField
-                            type="select"
-                            name="group"
-                            helpMessage="Choose the group you will create as"
-                            onChange={this.setGroupId}
-                            value={'default'}
-                        >
-                            <option value="default" disabled>Select a Group</option>
-                            {groupOptions}
-                        </AvField>
-                    </AvForm>
-                    <Form>
+                <Form action="/event" encType="multipart/form-data" method="POST">
+                    <Input type="hidden" name="_csrf" value={csrfToken}/>
+                    {/* TEMPORARY *}
+                    <Input type="hidden" name="groupId" value={1}/> 
+
+                    <ModalHeader toggle={this.toggleForm}>New Event</ModalHeader>
+                    <ModalBody>
+                        {/*<AvForm>
+                            <AvField
+                                type="select"
+                                name="group"
+                                helpMessage="Choose the group you will create as"
+                                onChange={this.setGroupId}
+                                value={'default'}
+                            >
+                                <option value="default" disabled>Select a Group</option>
+                                {groupOptions}
+                            </AvField>
+                        </AvForm>*/}
                         <FormGroup>
-                            <Input type="text" id="name" onChange={this.setName} placeholder="Title" />
+                            <Input type="text" name="name" id="name" onChange={this.setName} placeholder="Title" />
                         </FormGroup>
                         <FormGroup>
                             <CustomInput type="checkbox" id="customCheckbox" label="All-day" checked={!showCustomDates} onChange={this.toggleAllDay} />
@@ -283,16 +297,17 @@ class EventForm extends React.Component {
                                     <Col xs="2" sm="2" md="2">Starts</Col>
                                     { !showCustomDates &&
                                         <Col xs="10" sm="10" md="10">
-                                            <Input type="date" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                            <Input type="date" id="startDate" name="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                            <Input type="hidden" name ="startTime" id="startTime" value='00:00' />
                                         </Col>
                                     }
                                     { showCustomDates &&
                                         <React.Fragment>
                                             <Col xs="5" sm="5" md="5">
-                                                <Input type="date" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
+                                                <Input type="date" name ="startDate" id="startDate" value={newEvent.startDate} onChange={this.setStartDate} />
                                             </Col>
                                             <Col xs="5" sm="5" md="5">
-                                                <Input type="time" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
+                                                <Input type="time" name ="startTime" id="startTime" value={newEvent.startTime} onChange={this.setStartTime} />
                                             </Col>
                                         </React.Fragment>
                                     }
@@ -301,16 +316,17 @@ class EventForm extends React.Component {
                                     <Col xs="2" sm="2" md="2">Ends</Col>
                                     { !showCustomDates &&
                                         <Col xs="10" sm="10" md="10">
-                                            <Input type="date" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                            <Input type="date" name ="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                            <Input type="hidden" name ="endTime" id="endTime" value='23:59' />
                                         </Col>
                                     }
                                     { showCustomDates &&
                                         <React.Fragment>
                                             <Col xs="5" sm="5" md="5">
-                                                <Input type="date" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
+                                                <Input type="date" name ="endDate" id="endDate" value={newEvent.endDate} onChange={this.setEndDate} />
                                             </Col>
                                             <Col xs="5" sm="5" md="5">
-                                                <Input type="time" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
+                                                <Input type="time" name ="endTime" id="endTime" value={newEvent.endTime} onChange={this.setEndTime} />
                                             </Col>
                                         </React.Fragment>
                                     }
@@ -320,7 +336,7 @@ class EventForm extends React.Component {
                             <Row>
                                 <Col xs="2" sm="2" md="2">Repeat</Col>
                                 <Col xs="10" sm="10" md="10">
-                                    <Dropdown group isOpen={repeatDropdownOpen} size="sm" toggle={() => {this.setState({repeatDropdownOpen: !repeatDropdownOpen})}}>
+                                    <Dropdown name="repeats" group isOpen={repeatDropdownOpen} size="sm" toggle={() => {this.setState({repeatDropdownOpen: !repeatDropdownOpen})}}>
                                         <DropdownToggle caret outline color="primary">
                                             {this.state.newEvent.repeats}
                                         </DropdownToggle>
@@ -340,11 +356,38 @@ class EventForm extends React.Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="image">Event Image :</Label>
-                            <Input type="select" name="image" id="image" value={newEvent.imageName === '' ? "" : newEvent.imageName} onChange={this.setImage} >
+                            <Row>
+                                <Col md="1">
+                                </Col>
+                                <Col md="6">
+                                    <Label>{"   "}
+                                        <Input type="radio" label="Image" checked={!customImageSelection} onChange={this.toggleImageSelection} />
+                                        Select from preset images
+                                    </Label>
+                                </Col>
+                                <Col md="5">
+                                    <Label>
+                                        <Input type="radio" label="2" checked={customImageSelection} onChange={this.toggleImageSelection} />
+                                        Upload image
+                                    </Label>
+                                </Col>
+                            </Row>
+                            {!customImageSelection &&
+                            <Input type="select" name="imageName" id="image" value={newEvent.imageName === '' ? "" : newEvent.imageName} onChange={this.setImage} >
                                 <option value="">No Image</option>
                                 {generatedImages}
                             </Input>
-                            {/* <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" /> */}
+                            }  
+                            {/* <FileUpload 
+                                uploadFile={this.setCustomImage} 
+                                accept="image/*"
+                                currentImage={currentImage}
+                                hasModal={false}>
+                            </FileUpload> --> */}
+                            {customImageSelection &&
+                                <Input type="file" accept={"image/*"} name="uploadImage" id="imageFile"/>
+                            }
+                            <Input type="hidden" name="customImageSelection" value={customImageSelection}/>
                         </FormGroup>
                         { newEvent.imageName !== '' &&
                             <Card>
@@ -353,12 +396,12 @@ class EventForm extends React.Component {
                                 </CardBody>
                             </Card>
                         }
-                    </Form>
-                </ModalBody>
-                <ModalFooter>
-                    <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Post</Button>
-                    <Button onClick={this.toggleForm} color="secondary">Cancel</Button>
-                </ModalFooter>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button type="submit" color="primary" disabled={!this.validate()}>Post</Button>
+                        <Button onClick={this.toggleForm} color="secondary">Cancel</Button>
+                    </ModalFooter>
+                </Form>
             </Modal>
         );
     }
