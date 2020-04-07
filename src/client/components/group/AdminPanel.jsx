@@ -195,25 +195,31 @@ class AdminPanel extends React.Component {
             confirmButtonText: 'Confirm',
             confirmButtonColor: 'primary',
             preConfirm: async() => {
-                try {
-                    return await axios.put('/group/update/settings', {
-                        groupId: this.props.group.id,
-                        mailingList: mailingList,
-                        _csrf: this.props.csrfToken,
-                    });
-                }
-                catch(err) {
-                    console.log(err);
-                }
-            }
-        })
-        .then((res) => {
-            if (res.value) {
+                return await axios.put('/group/update/settings', {
+                    groupId: this.props.group.id,
+                    mailingList: mailingList,
+                    _csrf: this.props.csrfToken,
+                })
+                .then((res) => {
+                    if (res.status !== 200) {
+                        throw new Error(res.statusText);
+                    }
+                    return res;
+                })
+                .catch((err) => {
+                    Swal.showValidationMessage(
+                        `Update Failed: ${err}`
+                    );
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.value) {
                 Swal.fire({
                     title: 'Update!',
                     text: 'The group\'s settings have been updated!',
                     type: 'success',
-                })
+                });
             }
         });
     }
