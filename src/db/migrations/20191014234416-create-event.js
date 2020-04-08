@@ -36,6 +36,10 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
+      goingCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),
