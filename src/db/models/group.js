@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: DataTypes.INTEGER,
     mailingList: DataTypes.STRING,
     mode: DataTypes.STRING,
+    groupImage: DataTypes.STRING,
   }, { freezeTableName: true });
   Group.associate = function(models) {
     // associations can be defined here

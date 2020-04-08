@@ -11,7 +11,17 @@ const { Op } = require('sequelize');
 const fs = require('fs');
 const mailerService = require('../../services/mailer');
 const multer = require('multer');
-const upload = multer();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "resources/img/groupimages")
+    },
+    filename: function (req, file, cb) {
+        const {groupId} = req.body;
+        cb(null, "group" + groupId + ".png")
+    }
+  });
+   
+  var upload = multer({ storage: storage });
 //
 const url = require('url');
 const querystring = require('querystring');
@@ -238,8 +248,8 @@ module.exports = (aips) => {
         if (!user) {
             return res.status(404).send({ error: 'user not found' });
         }
-
-        const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId, statement: "" });
+        
+        const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId, statement: ""});
         user = await user.update({ groupsCreated: user.groupsCreated + 1 });
         await group.addUser(user);
 
@@ -442,11 +452,11 @@ module.exports = (aips) => {
 
 
     router.post('/setImage', upload.single('myFile'), csrf, asyncMiddleware(async(req, res) => {
-        const {_csrf, groupId} = req.body;
+        const {groupId} = req.body;
         const group = await Group.findByPk(groupId);
-        const file = req.file;
-        console.log(group.name, file);
-        //add image to group
+        await group.update({
+           groupImage: '/resources/img/groupimages/group' + groupId + '.png'
+        });
         res.redirect('back');
     }));
 

@@ -23,7 +23,6 @@ class GroupDetail extends React.Component {
             calendarIsOpen: false,
             postIsOpen: false,
             showSuccessAlert: false,
-            currentImage: "/resources/img/default/default_group.png"
         };
 
         // this.toggleVerifyPanel = this.toggleVerifyPanel.bind(this);
@@ -103,9 +102,8 @@ class GroupDetail extends React.Component {
 
     render() {
         const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers, googleCalendar } = this.props;
-        const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert, currentImage } = this.state;
+        const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert} = this.state;
        
-        //FileUpload currentImage needs to be updated based on image props from db request, not based on a state
         return (
             <div>
                 <Jumbotron fluid>
@@ -116,7 +114,7 @@ class GroupDetail extends React.Component {
                         <Media>
                             <FileUpload 
                                 accept="image/*"
-                                currentImage={currentImage}
+                                currentImage={group.groupImage}
                                 hasModal={true}
                                 groupID={group.id}
                                 csrfToken={csrfToken}>

@@ -45,11 +45,15 @@ class FileUpload extends React.Component {
     {
         const {modal, unmountOnClose, file, fileUploaded} = this.state;
         const {accept, currentImage, hasModal, groupID, csrfToken} = this.props;
+        const imgStyle = {
+            maxHeight: 256,
+            maxWidth: 512
+          }
         return (
             <div>
                 {hasModal &&
                     <Media left onClick={this.toggleModal}>
-                        <Media object src={currentImage} alt="Group placeholder image" className="border rounded border-dark"></Media>
+                        <Media object rounded fluid src={currentImage} style={imgStyle} alt="Group placeholder image" className="border rounded border-dark"></Media>
                     </Media>
                 }
                 {hasModal &&
