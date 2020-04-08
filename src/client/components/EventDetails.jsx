@@ -12,19 +12,24 @@ class EventDetails extends React.Component {
         this.state = {
             detailModal: false,
             selectedEvent: {},
+            userIsGoing: false,
         };
 
         this.toggle = this.toggle.bind(this);
         this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
+        this.goingHandler = this.goingHandler.bind(this);
     }
 
-    componentDidUpdate(prevProps){
+    async componentDidUpdate(prevProps){
         if(prevProps.detailModal !== this.props.detailModal){
             const { e } = this.props;
             const selectedEvent = this.props.events.filter((event) => (
                 event.name === e.title
             ));
+            const res = await axios.get(`/user/isGoing/${selectedEvent[0].id}`);
+
+            this.setState({ userIsGoing: res.data.userIsGoing });
             this.setState({ selectedEvent: selectedEvent[0] });
             this.setState({ detailModal: this.props.detailModal });
         }
@@ -118,9 +123,31 @@ class EventDetails extends React.Component {
         });
     }
 
+    async goingHandler() {
+        const { selectedEvent } = this.state;
+
+        await axios.post('/event/going', {
+            eventId: selectedEvent.id,
+            _csrf: this.props.csrfToken,
+        })
+        .then((res) => {
+            if (res.status !== 200) {
+                throw new Error(res.statusText);
+            }
+            else {
+                this.setState({ userIsGoing: true });
+            }
+        })
+        .catch((err) => {
+            Swal.showValidationMessage(
+                `Failed: ${err}`
+            );
+        });
+    }
+
     render() {
         const { isUserInGroup } = this.props;
-        const { selectedEvent } = this.state;
+        const { selectedEvent, userIsGoing } = this.state;
 
         const googleButton = (
             <Button outline color="primary" onClick={this.addToGoogleCalendarHandler}>
@@ -140,15 +167,19 @@ class EventDetails extends React.Component {
                                     <hr />
                                 </div>
                             }
-                            <b>
                             <h5>{selectedEvent.description}</h5>
-                            <br />
-                            Starts: [{selectedEvent.startDate}] at {selectedEvent.startTime}
-                            <br />
-                            Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
-                            </b>
-                            <div className="text-right">
-                                Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                            <div className="d-flex"><b>
+                                from {selectedEvent.startTime}, {selectedEvent.startDate}
+                                <br />
+                                to {selectedEvent.endTime}, {selectedEvent.endDate}
+                            </b></div>
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                                </div>
+                                <div className="ml-auto">
+                                    <Button disabled={userIsGoing} onClick={this.goingHandler} size="sm" outline color="secondary">Going</Button>
+                                </div>
                             </div>
                         </ModalBody>
                         { isUserInGroup &&

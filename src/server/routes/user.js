@@ -115,5 +115,19 @@ module.exports = (aips) => {
         res.json({ notification });
     }));
 
+    router.get('/isGoing/:eventId(\\d+)', asyncMiddleware(async(req, res) => {
+        const userId = req.session.user ? req.session.user.id : 0;
+        const eventId = req.params.eventId;
+        const user = await User.findByPk(userId);
+        let event = await Event.findByPk(eventId);
+        if (!user || !event) {
+            return res.status(404).send({ error: 'Event or User not found' });
+        }
+
+        const userIsGoing = await user.hasEvent(event);
+
+        res.json({ userIsGoing });
+    }));
+
     return router;
 };
