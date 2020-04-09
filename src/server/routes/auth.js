@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { google } = require('googleapis');
 
 const googleService = require('../../services/google');
 const cas = require('../../services/cas');
@@ -14,10 +15,28 @@ module.exports = (aips) => {
     async: asyncMiddleware,
   } = middlewares;
 
-  router.get('/google', (req, res) => {
-    const url = googleService.urlGoogle();
-    res.redirect(url);
-  });
+  router.get('/google/showEvents', asyncMiddleware(async(req, res) => {
+    const userId = req.session.user ? req.session.user.id : 0;
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).send({ error: 'user not found' });
+    }
+
+    const { client_secret, client_id, redirect_url } = googleService.googleConfig;
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_url
+    );
+
+    if (!user.googleToken) {
+      const url = googleService.getAuthUrl(oAuth2Client);
+      return res.redirect(url);
+    }
+
+    oAuth2Client.setCredentials(user.googleToken);
+    const events = await googleService.listEvents(oAuth2Client);
+
+    res.json({ events });
+  }));
 
   // https://support.google.com/cloud/answer/7454865?authuser=0
   // DON'T CREATE USER, BUT ONLY LINK
@@ -29,15 +48,24 @@ module.exports = (aips) => {
       return res.status(404).send({ error: 'user not found' });
     }
     const { code } = req.query;
-    const { id, email, tokens, calendar }  = await googleService.getGoogleAccountFromCode(code);
+    const { client_secret, client_id, redirect_url } = googleService.googleConfig;
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_url
+    );
+
+    const events = await googleService.getAccessToken(oAuth2Client, googleService.listEvents, code, user);
+
+    // const { id, email, tokens, calendar }  = await googleService.getGoogleAccountFromCode(code);
     // const account = await Account.createOrLink('google', id, email);
     // const account = await Account.linkAccount('google', id, user.id);
     // req.session.user = account.User;
     // console.log(calendar.calendarList.list());
-    req.session.calendar = calendar;
-    req.session.save((err) => {
-      res.redirect('/user');
-    });
+    // req.session.calendar = calendar;
+    // req.session.save((err) => {
+    //   res.redirect('/user');
+    // });
+
+    res.json({ events });
   }));
 
   router.get('/cas', cas.bounce, asyncMiddleware(async(req, res) => {

@@ -69,7 +69,6 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/user/show', {
             user: user,
             notifications: notifications,
-            googleCalendar: req.session.calendar || {},
             csrfToken: req.csrfToken(),
             events: events,
             groups: groups || [],

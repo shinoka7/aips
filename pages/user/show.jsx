@@ -25,7 +25,9 @@ class UserDetail extends React.Component {
     }
 
     isGoogleCalendarAvailable() {
-        return !!this.props.googleCalendar.events
+        return true;
+        // MAKE THIS SO THAT IT SHOWS A CALENDAR INSTEAD
+        // return !!this.props.googleCalendar.events
 	}
 
     toggleCalendar() {
@@ -33,7 +35,7 @@ class UserDetail extends React.Component {
     }
 
     render() {
-        const { user, notifications, csrfToken, events, groups, images, googleCalendar } = this.props;
+        const { user, notifications, csrfToken, events, groups, images } = this.props;
         const { calendarIsOpen, calendarToolTipOpen } = this.state;
 
         return (
@@ -52,16 +54,16 @@ class UserDetail extends React.Component {
                             </Button>
                         </Col>
                         <Col xs="6" sm="6" md="6">
-                            <form action="/auth/google" method="GET">
+                            {/* <form action="/auth/google" method="GET"> */}
                                 <Button disabled={this.isGoogleCalendarAvailable()} block className="btn btn-primary"><i className="fab fa-google"></i> Connect Google Calendars</Button>
-                            </form>
+                            {/* </form> */}
                         </Col>
                     </Row>
                     <hr />
                     <Tooltip placement="auto" isOpen={calendarToolTipOpen} target="calendarToolTip" toggle={() => {this.setState({ calendarToolTipOpen: !calendarToolTipOpen })}}>
                         Individual Calendar
                     </Tooltip>
-                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={true} groups={groups} csrfToken={csrfToken} user={user} googleCalendar={googleCalendar}  modal={calendarIsOpen} images={images} />
+                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={true} groups={groups} csrfToken={csrfToken} user={user}  modal={calendarIsOpen} images={images} />
                     <GroupList notifications={notifications} csrfToken={csrfToken} />
                 </Jumbotron>
             </div>
@@ -72,7 +74,6 @@ class UserDetail extends React.Component {
 UserDetail.propTypes = {
     user: PropTypes.object.isRequired,
     notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
-    googleCalendar: PropTypes.object.isRequired,
     csrfToken: PropTypes.string.isRequired,
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     groups: PropTypes.arrayOf(PropTypes.object).isRequired,

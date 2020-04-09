@@ -6,61 +6,122 @@ class GoogleService {
 
     constructor() {
         this.googleConfig = {
-            clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
-            clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
-            redirect: process.env.OAUTH_GOOGLE_REDIRECT_URL,
+            client_id: process.env.OAUTH_GOOGLE_CLIENT_ID,
+            client_secret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
+            redirect_url: process.env.OAUTH_GOOGLE_REDIRECT_URL,
         };
 
         this.defaultScope = [
-            'https://www.googleapis.com/auth/plus.me',
-            'https://www.googleapis.com/auth/userinfo.email',
             'https://www.googleapis.com/auth/calendar',
         ];
     }
 
-    createConnection() {
-        return new google.auth.OAuth2(
-            this.googleConfig.clientId,
-            this.googleConfig.clientSecret,
-            this.googleConfig.redirect,
-        );
+    /**
+     * Get and store new token after prompting for user authorization, and then
+     * execute the given callback with the authorized OAuth2 client.
+     * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+     * @param {getEventsCallback} callback The callback for the authorized client.
+     */
+    getAuthUrl(oAuth2Client) {
+        const authUrl = oAuth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: this.defaultScope,
+        });
+        return authUrl;
     }
 
-    getConnectionUrl(auth) {
-        return auth.generateAuthUrl({
-            access_type: 'offline',
-            prompt: 'consent',
-            scope: this.defaultScope
+    /**
+     * Get and store new token after prompting for user authorization, and then
+     * execute the given callback with the authorized OAuth2 client.
+     * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+     * @param {getEventsCallback} callback The callback for the authorized client.
+     */
+    getAccessToken(oAuth2Client, callback, code, user) {
+        oAuth2Client.getToken(code, async(err, token) => {
+            if (err) return console.error('Error retrieving access token', err);
+            oAuth2Client.setCredentials(token);
+            // Store the token to disk for later program executions
+            await user.update({ googleToken: token });
+            return callback(oAuth2Client);
         });
     }
 
-    getGooglePlusApi(auth) {
-        return google.plus({ version: 'v1', auth });
+    /**
+     * Lists the next 10 events on the user's primary calendar.
+     * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+     */
+    listEvents(auth) {
+        const calendar = google.calendar({version: 'v3', auth});
+        let result = [];
+        const res = calendar.events.list({
+            calendarId: 'primary',
+            timeMin: (new Date()).toISOString(),
+            maxResults: 10,
+            singleEvents: true,
+            orderBy: 'startTime',
+            }, async (err, res) => {
+                if (err) return console.log('The API returned an error: ' + err);
+                const events = res.data.items;
+                result = events.slice();
+                if (events.length) {
+                    console.log('Upcoming 10 events:');
+                    await events.map((event, i) => {
+                        const start = event.start.dateTime || event.start.date;
+                        console.log(`${start} - ${event.summary}`);
+                    });
+                } else {
+                    console.log('No upcoming events found.');
+                }
+                return res;
+        });
+        // console.log(res); // same for this
+        // console.log(result); // this is later than the map
+        return result;
     }
 
-    urlGoogle() {
-        const auth = this.createConnection();
-        const url = this.getConnectionUrl(auth);
-        return url;
-    }
+    // createConnection() {
+    //     return new google.auth.OAuth2(
+    //         this.googleConfig.clientId,
+    //         this.googleConfig.clientSecret,
+    //         this.googleConfig.redirect,
+    //     );
+    // }
 
-    async getGoogleAccountFromCode(code) {
-        const auth = this.createConnection();
-        const data = await auth.getToken(code);
-        const tokens = data.tokens;
-        auth.setCredentials(tokens);
-        const calendar = google.calendar({ version: 'v3', auth });
-        const plus = this.getGooglePlusApi(auth);
-        const me = await plus.people.get({ userId: 'me' });
-        const userGoogleId = me.data.id;
-        const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;
-        return {
-          id: userGoogleId,
-          email: userGoogleEmail,
-          tokens: tokens,
-          calendar: calendar,
-        };
-    }
+    // getConnectionUrl(auth) {
+    //     return auth.generateAuthUrl({
+    //         access_type: 'offline',
+    //         prompt: 'consent',
+    //         scope: this.defaultScope
+    //     });
+    // }
+
+    // getGooglePlusApi(auth) {
+    //     return google.plus({ version: 'v1', auth });
+    // }
+
+    // urlGoogle() {
+    //     const auth = this.createConnection();
+    //     const url = this.getConnectionUrl(auth);
+    //     return url;
+    // }
+
+    // async getGoogleAccountFromCode(code) {
+    //     const auth = this.createConnection();
+    //     const data = await auth.getToken(code);
+    //     const tokens = data.tokens;
+    //     auth.setCredentials(tokens);
+    //     const calendar = google.calendar({ version: 'v3', auth });
+    //     const plus = this.getGooglePlusApi(auth);
+    //     const me = await plus.people.get({ userId: 'me' });
+    //     const userGoogleId = me.data.id;
+    //     const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;
+    //     return {
+    //       id: userGoogleId,
+    //       email: userGoogleEmail,
+    //       tokens: tokens,
+    //       calendar: calendar,
+    //     };
+    // }
 
 }
 
