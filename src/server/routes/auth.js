@@ -5,7 +5,7 @@ const { google } = require('googleapis');
 const googleService = require('../../services/google');
 const cas = require('../../services/cas');
 
-const { Account, User } = require('../../db/models');
+const { Account, User, Event } = require('../../db/models');
 
 module.exports = (aips) => {
   const { nextApp, csrf } = aips;
@@ -15,10 +15,23 @@ module.exports = (aips) => {
     async: asyncMiddleware,
   } = middlewares;
 
-  router.get('/google/showEvents', asyncMiddleware(async(req, res) => {
+  router.get('/google/authUrl', asyncMiddleware(async(req, res) => {
+    const { client_secret, client_id, redirect_url } = googleService.googleConfig;
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_url
+    );
+
+    const url = googleService.getAuthUrl(oAuth2Client);
+
+    res.json({ url });
+  }));
+
+  router.get('/google/addEvent/:eventId(\\d+)', asyncMiddleware(async(req, res) => {
     const userId = req.session.user ? req.session.user.id : 0;
+    const { eventId } = req.params;
+    const selectedEvent = await Event.findByPk(eventId);
     const user = await User.findByPk(userId);
-    if (!user) {
+    if (!user || !selectedEvent) {
       return res.status(404).send({ error: 'user not found' });
     }
 
@@ -27,15 +40,10 @@ module.exports = (aips) => {
         client_id, client_secret, redirect_url
     );
 
-    if (!user.googleToken) {
-      const url = googleService.getAuthUrl(oAuth2Client);
-      return res.redirect(url);
-    }
-
     oAuth2Client.setCredentials(user.googleToken);
-    const events = await googleService.listEvents(oAuth2Client);
+    const event = await googleService.addEvent(oAuth2Client, selectedEvent);
 
-    res.json({ events });
+    res.json({ event });
   }));
 
   // https://support.google.com/cloud/answer/7454865?authuser=0
@@ -53,19 +61,9 @@ module.exports = (aips) => {
         client_id, client_secret, redirect_url
     );
 
-    const events = await googleService.getAccessToken(oAuth2Client, googleService.listEvents, code, user);
+    await googleService.getAccessToken(oAuth2Client, code, user);
 
-    // const { id, email, tokens, calendar }  = await googleService.getGoogleAccountFromCode(code);
-    // const account = await Account.createOrLink('google', id, email);
-    // const account = await Account.linkAccount('google', id, user.id);
-    // req.session.user = account.User;
-    // console.log(calendar.calendarList.list());
-    // req.session.calendar = calendar;
-    // req.session.save((err) => {
-    //   res.redirect('/user');
-    // });
-
-    res.json({ events });
+    return res.redirect('/');
   }));
 
   router.get('/cas', cas.bounce, asyncMiddleware(async(req, res) => {

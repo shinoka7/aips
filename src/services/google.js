@@ -20,7 +20,6 @@ class GoogleService {
      * Get and store new token after prompting for user authorization, and then
      * execute the given callback with the authorized OAuth2 client.
      * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
-     * @param {getEventsCallback} callback The callback for the authorized client.
      */
     getAuthUrl(oAuth2Client) {
         const authUrl = oAuth2Client.generateAuthUrl({
@@ -36,47 +35,64 @@ class GoogleService {
      * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
      * @param {getEventsCallback} callback The callback for the authorized client.
      */
-    getAccessToken(oAuth2Client, callback, code, user) {
+    getAccessToken(oAuth2Client, code, user) {
         oAuth2Client.getToken(code, async(err, token) => {
             if (err) return console.error('Error retrieving access token', err);
-            oAuth2Client.setCredentials(token);
             // Store the token to disk for later program executions
             await user.update({ googleToken: token });
-            return callback(oAuth2Client);
         });
     }
 
     /**
-     * Lists the next 10 events on the user's primary calendar.
+     * Create event 
      * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+     * @param {model.event} selectedEvent The event selected to create a google event based on
      */
-    listEvents(auth) {
-        const calendar = google.calendar({version: 'v3', auth});
-        let result = [];
-        const res = calendar.events.list({
+    addEvent(auth, selectedEvent) {
+        const calendar = google.calendar({ version: 'v3', auth });
+        const event = {
+            summary: selectedEvent.name,
+            description: selectedEvent.description,
+            start: {
+                timeZone: 'America/New_York',
+                dateTime: this.createDateTime(selectedEvent.startTime, selectedEvent.startDate),
+            },
+            end: {
+                timeZone: 'America/New_York',
+                dateTime: this.createDateTime(selectedEvent.endTime, selectedEvent.endDate),
+            },
+            // attendees: [
+            //     { email: selectedEvent.Group.groupEmail },
+            // ],
+        };
+
+        calendar.events.insert({
+            auth: auth,
             calendarId: 'primary',
-            timeMin: (new Date()).toISOString(),
-            maxResults: 10,
-            singleEvents: true,
-            orderBy: 'startTime',
-            }, async (err, res) => {
-                if (err) return console.log('The API returned an error: ' + err);
-                const events = res.data.items;
-                result = events.slice();
-                if (events.length) {
-                    console.log('Upcoming 10 events:');
-                    await events.map((event, i) => {
-                        const start = event.start.dateTime || event.start.date;
-                        console.log(`${start} - ${event.summary}`);
-                    });
-                } else {
-                    console.log('No upcoming events found.');
-                }
-                return res;
+            resource: event,
+        }, (err, event) => {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created!');
         });
-        // console.log(res); // same for this
-        // console.log(result); // this is later than the map
-        return result;
+
+        // console.log(event);
+
+        return event;
+    }
+
+    /**
+     * Creates the dateTime string
+     * @param {String} time
+     * @param {String} date
+     * @returns {String} combined datetime 
+     */
+    createDateTime(time, date) {
+        const dateTime = date.concat('T').concat(time).concat(':00-04:00');
+        // console.log(dateTime);
+        return dateTime;
     }
 
     // createConnection() {

@@ -63,7 +63,7 @@ class UserDetail extends React.Component {
                     <Tooltip placement="auto" isOpen={calendarToolTipOpen} target="calendarToolTip" toggle={() => {this.setState({ calendarToolTipOpen: !calendarToolTipOpen })}}>
                         Individual Calendar
                     </Tooltip>
-                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={true} groups={groups} csrfToken={csrfToken} user={user}  modal={calendarIsOpen} images={images} />
+                    <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} groups={groups} csrfToken={csrfToken} user={user}  modal={calendarIsOpen} images={images} />
                     <GroupList notifications={notifications} csrfToken={csrfToken} />
                 </Jumbotron>
             </div>
