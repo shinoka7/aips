@@ -44,8 +44,11 @@ module.exports = (aips) => {
         //     events = await events.concat(groupEvents);
         // });
 
-        const events = await user.getEvents();
-
+        const events = await user.getEvents({
+            include: [{
+                model: Group,
+            }],
+        });
 
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
@@ -69,7 +72,6 @@ module.exports = (aips) => {
         nextApp.render(req, res, '/user/show', {
             user: user,
             notifications: notifications,
-            googleCalendar: req.session.calendar || {},
             csrfToken: req.csrfToken(),
             events: events,
             groups: groups || [],
@@ -125,12 +127,12 @@ module.exports = (aips) => {
         let user = await User.findByPk(userId);
         const event = await Event.findByPk(eventId);
         if (!user) {
-            return res.json({ userIsGoing: true });
+            return res.json({ userIsGoing: true, user: {} });
         }
 
         const userIsGoing = await user.hasEvent(event);
 
-        res.json({ userIsGoing });
+        res.json({ userIsGoing, user });
     }));
 
     return router;
