@@ -30,18 +30,22 @@ module.exports = (aips) => {
 
         const groups = await user.getGroups();
 
-        let events = [];
-        groups.forEach(async(group) => {
-            const groupEvents = await Event.findAll({
-                where: {
-                    groupId: group.id,
-                },
-                include: [{
-                    model: Group,
-                }],
-            });
-            events = await events.concat(groupEvents);
-        });
+        // let events = [];
+        // THIS IS FOR ALL EVENTS THAT ARE MADE BY ALL GROUPS YOU'RE IN
+        // groups.forEach(async(group) => {
+        //     const groupEvents = await Event.findAll({
+        //         where: {
+        //             groupId: group.id,
+        //         },
+        //         include: [{
+        //             model: Group,
+        //         }],
+        //     });
+        //     events = await events.concat(groupEvents);
+        // });
+
+        const events = await user.getEvents();
+
 
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
