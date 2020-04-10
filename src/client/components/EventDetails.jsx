@@ -167,7 +167,7 @@ class EventDetails extends React.Component {
                 </Button>
             ) : (
                 <Button disabled={!user.id} outline color="primary" onClick={this.authorizeGoogleCalendar}>
-                    Allow usage for <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
+                    Link <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
                 </Button>
             )
         );
