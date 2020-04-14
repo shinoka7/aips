@@ -113,6 +113,7 @@ class GroupDetail extends React.Component {
                         }
                         <Media>
                             <FileUpload 
+                                isUserInGroup={isUserInGroup}
                                 accept="image/*"
                                 currentImage={group.groupImage}
                                 hasModal={true}

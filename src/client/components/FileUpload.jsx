@@ -10,7 +10,8 @@ class FileUpload extends React.Component {
             file: null,
             modal: false,
             unmountOnClose: false,
-            fileUploaded: false
+            fileUploaded: false,
+            valid: true
         }
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -28,12 +29,22 @@ class FileUpload extends React.Component {
 
     onChange(e)
     {
-        this.setState({file: e.target.files[0]});
+        if (e.target.files[0].size < 10000000)
+        {
+            this.setState({file: e.target.files[0],
+                           valid: true});
+        }
+        else 
+        {
+            this.setState({valid: false});
+        }
     }
 
     toggleModal()
     {
-        this.setState({modal: !this.state.modal});
+        const {isUserInGroup} = this.props;
+        if (isUserInGroup)
+            this.setState({modal: !this.state.modal});
     }
 
     removeFile()
@@ -43,7 +54,7 @@ class FileUpload extends React.Component {
 
     render() 
     {
-        const {modal, unmountOnClose, file, fileUploaded} = this.state;
+        const {modal, unmountOnClose, file, fileUploaded, valid} = this.state;
         const {accept, currentImage, hasModal, groupID, csrfToken} = this.props;
         const imgStyle = {
             maxHeight: 256,
@@ -53,7 +64,7 @@ class FileUpload extends React.Component {
             <div>
                 {hasModal &&
                     <Media left onClick={this.toggleModal}>
-                        <Media object rounded fluid src={currentImage} style={imgStyle} alt="Group placeholder image" className="border rounded border-dark"></Media>
+                        <Media object rounded="true" fluid="true" src={currentImage} style={imgStyle} alt="Group placeholder image" className="border rounded border-dark"></Media>
                     </Media>
                 }
                 {hasModal &&
@@ -65,10 +76,28 @@ class FileUpload extends React.Component {
                                 <Input type="hidden" name="groupId" value={groupID} />
                                 <Input type="file" accept={accept} onChange={this.onChange} name="myFile" id="myFile"/>
                             </ModalBody>
-                            <ModalFooter>
-                                <Button type="submit" color="primary" disabled={!file} onClick={this.toggleModal}> Upload </Button>
-                                <Button onClick={this.toggleModal}> Cancel </Button>
-                            </ModalFooter>
+                                <Row>
+                                    <Col md="1">
+                                    </Col>
+                                    {!valid &&
+                                        <Col md="6">
+                                            <p class="text-danger">File size exceeds 10MB.</p>
+                                        </Col>
+                                    }
+                                    {valid &&
+                                        <Col md="6">
+                                        </Col>
+                                    }
+                                    <Col md="2">
+                                        <Button type="submit" color="primary" disabled={!file || !valid} onClick={this.toggleModal}> Upload </Button>
+                                    </Col>
+                                    <Col md="2">
+                                        <Button onClick={this.toggleModal}> Cancel </Button>
+                                    </Col>
+                                    <Col md="1">
+                                    </Col>
+                                </Row>
+                                
                         </Form>  
                     </Modal>
                 }
