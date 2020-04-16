@@ -147,7 +147,7 @@ class GroupsDetail extends React.Component {
                         <Row>
                             <Col className="d-flex justify-content-center" md="12" lg="3">
                                 <div className="card_image">
-                                    <CardImg src="/resources/img/default/default_group.png" />
+                                    <CardImg src={group.groupImage} />
                                 </div>
                             </Col>
                             <Col md="12" lg="9">

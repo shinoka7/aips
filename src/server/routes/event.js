@@ -43,6 +43,8 @@ module.exports = (aips) => {
         if (!group) {
             return res.status(404).send({ error: 'Group not found' });
         }
+    
+        //Upload image and add to event
 
         const event = await Event.create({ groupId, startDate: startDate, startTime: startTime, endDate: endDate, endTime: endTime, name, description, image });
         await event.setGroup(group);

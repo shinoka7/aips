@@ -71,6 +71,11 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'Public',
       },
+      groupImage: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: '/resources/img/default/default_group.png',
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

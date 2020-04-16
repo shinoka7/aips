@@ -19,6 +19,8 @@ class CalendarPanel extends React.Component {
             detailModal: false,
             unmountOnClose: false,
             events: [],
+            currentImage: "/resources/img/default/default_group.png",
+            customImageSelection: false
         };
 
         this.toggleEventDetails = this.toggleEventDetails.bind(this);
