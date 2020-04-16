@@ -57,7 +57,7 @@ class CalendarPanel extends React.Component {
 
     render() {
         const { events } = this.state;
-        const { modal, toggleCalendar, user, isUserInGroup, googleCalendar } = this.props;
+        const { modal, toggleCalendar, user, isUserInGroup } = this.props;
 
         return (
             <div>
@@ -124,7 +124,6 @@ CalendarPanel.propTypes = {
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     user: PropTypes.object.isRequired,
     isUserInGroup: PropTypes.bool,
-    googleCalendar: PropTypes.object.isRequired,
 }
 
 export default CalendarPanel;

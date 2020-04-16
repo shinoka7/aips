@@ -12,19 +12,30 @@ class EventDetails extends React.Component {
         this.state = {
             detailModal: false,
             selectedEvent: {},
+            userIsGoing: false,
+            authUrl: '',
+            user: {},
         };
 
         this.toggle = this.toggle.bind(this);
         this.addToGoogleCalendarHandler = this.addToGoogleCalendarHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
+        this.goingHandler = this.goingHandler.bind(this);
+        this.authorizeGoogleCalendar = this.authorizeGoogleCalendar.bind(this);
     }
 
-    componentDidUpdate(prevProps){
+    async componentDidUpdate(prevProps){
         if(prevProps.detailModal !== this.props.detailModal){
             const { e } = this.props;
             const selectedEvent = this.props.events.filter((event) => (
                 event.name === e.title
             ));
+            const res = await axios.get(`/user/isGoing/${selectedEvent[0].id}`);
+            const result = await axios.get('/auth/google/authUrl');
+
+            this.setState({ user: res.data.user });
+            this.setState({ authUrl: result.data.url });
+            this.setState({ userIsGoing: res.data.userIsGoing });
             this.setState({ selectedEvent: selectedEvent[0] });
             this.setState({ detailModal: this.props.detailModal });
         }
@@ -40,38 +51,39 @@ class EventDetails extends React.Component {
     }
 
     async addToGoogleCalendarHandler() {
-        // https://developers.google.com/calendar/create-events
-        // verify whether user is true && connected with google calendars
-        // const { googleCalendar } = this.props;
-        // const { selectedEvent } = this.props;
-        // if (googleCalendar.events && selectedEvent.groupId) {
-        //     const newEvent = {
-        //         summary: selectedEvent.name,
-        //         description: selectedEvent.description,
-        //         organizer: {
-        //             displayName: selectedEvent.Group.name,
-        //             email: selectedEvent.Group.groupEmail
-        //         },
-        //         start: {
-        //             date: selectedEvent.startDate
-        //         },
-        //         end: {
-        //             date: selectedEvent.endDate
-        //         },
-        //     };
-        //     await googleCalendar.Events.insert({
-        //         calendarId: 'primary',
-        //         resource: newEvent,
-        //       }, function(err, newEvent) {
-        //         if (err) {
-        //           console.log('There was an error contacting the Calendar service: ' + err);
-        //           return;
-        //         }
-        //         console.log('Event created: %s', newEvent.htmlLink);
-        //       });
-        // }
-        // THIS ===================================================
-        // https://www.npmjs.com/package/react-google-calendar-api
+        const { selectedEvent } = this.state;
+        
+        await Swal.fire({
+            title: 'Add Event to Google Calendar',
+            type: 'question',
+            text: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            confirmButtonColor: 'primary',
+            preConfirm: async() => {
+                return await axios.get(`/auth/google/addEvent/${selectedEvent.id}`)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        throw new Error(res.statusText);
+                    }
+                    return res;
+                })
+                .catch((err) => {
+                    Swal.showValidationMessage(
+                        `Action Failed: ${err}`
+                    );
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+        .then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    title: 'Added!',
+                    type: 'success'
+                });
+            }
+        });
     }
 
     async deleteHandler() {
@@ -118,14 +130,58 @@ class EventDetails extends React.Component {
         });
     }
 
-    render() {
-        const { isUserInGroup } = this.props;
+    async goingHandler() {
         const { selectedEvent } = this.state;
 
+        await axios.post('/event/going', {
+            eventId: selectedEvent.id,
+            _csrf: this.props.csrfToken,
+        })
+        .then((res) => {
+            if (res.status !== 200) {
+                throw new Error(res.statusText);
+            }
+            else {
+                this.setState({ userIsGoing: true });
+            }
+        })
+        .catch((err) => {
+            Swal.showValidationMessage(
+                `Failed: ${err}`
+            );
+        });
+    }
+
+    authorizeGoogleCalendar() {
+        window.location = this.state.authUrl;
+    }
+
+    render() {
+        const { isUserInGroup } = this.props;
+        const { selectedEvent, userIsGoing, user } = this.state;
+
         const googleButton = (
-            <Button outline color="primary" onClick={this.addToGoogleCalendarHandler}>
-                Add to <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
-            </Button>
+            user.googleToken ? (
+                <Button outline color="primary" onClick={this.addToGoogleCalendarHandler}>
+                    Add to <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
+                </Button>
+            ) : (
+                <Button disabled={!user.id} outline color="primary" onClick={this.authorizeGoogleCalendar}>
+                    Link <i className="fab fa-google"></i> <i className="fas fa-calendar-alt"></i>
+                </Button>
+            )
+        );
+
+        const peopleGoing = (
+            selectedEvent.goingCount === 1 ? (
+                <React.Fragment>
+                    {selectedEvent.goingCount} person going
+                </React.Fragment> ) : 
+                (
+                    <React.Fragment>
+                        {selectedEvent.goingCount} people going
+                    </React.Fragment>
+                )
         );
 
         return (
@@ -140,15 +196,27 @@ class EventDetails extends React.Component {
                                     <hr />
                                 </div>
                             }
-                            <b>
                             <h5>{selectedEvent.description}</h5>
-                            <br />
-                            Starts: [{selectedEvent.startDate}] at {selectedEvent.startTime}
-                            <br />
-                            Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
-                            </b>
-                            <div className="text-right">
-                                Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <b>
+                                    from {selectedEvent.startTime}, {selectedEvent.startDate}
+                                    <br />
+                                    to {selectedEvent.endTime}, {selectedEvent.endDate}
+                                    </b>
+                                </div>
+                                <div className="ml-auto">
+                                    <br />
+                                    {peopleGoing}
+                                </div>
+                            </div><hr />
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
+                                </div>
+                                <div className="ml-auto">
+                                    <Button disabled={userIsGoing} onClick={this.goingHandler} size="sm" outline color="secondary">Going</Button>
+                                </div>
                             </div>
                         </ModalBody>
                         { isUserInGroup &&

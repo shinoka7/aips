@@ -30,12 +30,12 @@ class MainPage extends React.Component {
 
     render() {
         const { groups } = this.state;
-        const { events, images, csrfToken, shownEvents, user, googleCalendar } = this.props;
+        const { events, images, csrfToken, shownEvents, user } = this.props;
 
         return (
             <div>
                 <Preview events={shownEvents} />
-                <Menu events={events} groups={groups} images={images} user={user} googleCalendar={googleCalendar} csrfToken={csrfToken} />
+                <Menu events={events} groups={groups} images={images} user={user} csrfToken={csrfToken} />
                 <br />
                 <FeaturesPanel />
                 <RecentActivity csrfToken={csrfToken} groups={groups} />
@@ -51,7 +51,6 @@ MainPage.propTypes = {
     shownEvents: PropTypes.arrayOf(PropTypes.object).isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     user: PropTypes.object.isRequired,
-    googleCalendar: PropTypes.object.isRequired,
 };
 
 export default MainPage;

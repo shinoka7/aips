@@ -98,7 +98,6 @@ module.exports = (aips) => {
             shownEvents: shownEvents,
             images: images,
             user: user || {},
-            googleCalendar: req.session.calendar || {},
         });
     });
 

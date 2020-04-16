@@ -227,7 +227,6 @@ module.exports = (aips) => {
             events: events || [],
             images: images,
             pendingUsers: pendingUsers || [],
-            googleCalendar: req.session.calendar || {},
         });
     }));
 
@@ -261,7 +260,7 @@ module.exports = (aips) => {
         res.json({ group });
     }));
 
-    validator.update = [
+    validator.updateInfo = [
         body('groupId').exists(),
         body('groupEmail').isEmail(),
         body('description').exists(),
@@ -273,9 +272,9 @@ module.exports = (aips) => {
     ];
 
     /** 
-     * PUT /group/update UPDATES GROUP
+     * PUT /group/update/info UPDATES GROUP INFO
     */
-    router.put('/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
+    router.put('/update/info', csrf, validator.updateInfo, validateBody, asyncMiddleware(async(req, res) => {
         const { groupId } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(userId);
@@ -287,6 +286,31 @@ module.exports = (aips) => {
         const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace } = req.body;
         group = await group.update({
             groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace,
+        });
+
+        res.json({ group });
+    }));
+
+
+    validator.updateSettings = [
+        body('groupId').exists(),
+        body('mailingList').isEmail(),
+    ];
+
+    /**
+     * PUT /group/update/settings UPDATES GROUP SETTINGS
+    */
+    router.put('/update/settings', csrf, validator.updateSettings, validateBody, asyncMiddleware(async(req, res) => {
+        const { groupId, mailingList } = req.body;
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
+        let group = await Group.findByPk(groupId);
+        if (!group || !user) {
+            return res.status(404).send({ error: 'user or group not found' });
+        }
+
+        group = await group.update({
+            mailingList,
         });
 
         res.json({ group });

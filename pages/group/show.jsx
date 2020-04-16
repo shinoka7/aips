@@ -157,7 +157,7 @@ class GroupDetail extends React.Component {
                             </Button>
                         </ButtonGroup>
                         <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
-                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={isUserInGroup}  groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} user={user} googleCalendar={googleCalendar} modal={calendarIsOpen} images={images} />
+                        <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={isUserInGroup}  groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} user={user} modal={calendarIsOpen} images={images} />
                         <br />
                         <Nav tabs>
                             <NavItem>
@@ -207,7 +207,6 @@ GroupDetail.propTypes = {
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     pendingUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
-    googleCalendar: PropTypes.object.isRequired,
 };
 
 export default GroupDetail;

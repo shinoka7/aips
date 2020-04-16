@@ -85,7 +85,26 @@ module.exports = (aips) => {
         }
 
         res.json({ event });
-    }))
+    }));
+
+    validator.going = [
+        body('eventId').exists(),
+    ];
+
+    router.post('/going', csrf, validator.going, validateBody, asyncMiddleware(async(req, res) => {
+        const { eventId } = req.body;
+        const userId = req.session.user ? req.session.user.id : 0;
+        const user = await User.findByPk(userId);
+        let event = await Event.findByPk(eventId);
+        if (!user || !event) {
+            return res.status(404).send({ error: 'Event or User not found' });
+        }
+
+        event = await event.update({ goingCount: event.goingCount + 1 });
+        await user.addEvent(event);
+
+        res.json({ event });
+    }));
 
     return router;
 };

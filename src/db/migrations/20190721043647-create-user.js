@@ -29,6 +29,9 @@ module.exports = {
         },
         defaultValue: 0,
       },
+      googleToken: {
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()'),
