@@ -43,7 +43,7 @@ class AIPSApp {
      * @param {object} app express app
      */
     initExpress(app) {
-        app.use('/resources', express.static('resources'));
+        app.use('/resources', express.static(__dirname  + '/resources'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
 
