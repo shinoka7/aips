@@ -4,8 +4,10 @@ node_modules
 src/db/potential-seeders
 config/env.dev.js
 config/env.prod.js
+config/env.test.js
 logs
 resources/styles/css/aips.css
 docker-compose.prod.yml
+docker-compose.test.yml
 
 /yarn-error.log
