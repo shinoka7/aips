@@ -111,7 +111,7 @@ module.exports = {
         {
             name: 'Performance: Dance',
             description: '',
-            color: '',
+            color: 'ffff00',
             createdAt: new Date(),
             updatedAt: new Date()
         },
