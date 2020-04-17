@@ -16,6 +16,7 @@
 
 # Improvements
 
+1. [ ] Make image lists loaded only use an image instance.
 1. [ ] Wrapper for user info (props)
 1. [ ] Event slider cleanup/functionality
 1. [ ] Post show redesign
