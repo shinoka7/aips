@@ -63,17 +63,18 @@ module.exports = (aips) => {
         });
 
         // will only contain events day 0 to 7 (From current day)
-        const today = new Date();
+        const yesterday = new Date();
         const nextWeek = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
         nextWeek.setDate(nextWeek.getDate() + 7);
         const shownEvents = await Event.findAll({
             where: {
                 [Op.or]: {
                     startDate: {
-                        [Op.between]: [today, nextWeek],
+                        [Op.between]: [yesterday, nextWeek],
                     },
                     endDate: {
-                        [Op.between]: [today, nextWeek],
+                        [Op.between]: [yesterday, nextWeek],
                     },
                 }
             },
