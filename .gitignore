@@ -9,5 +9,6 @@ logs
 resources/styles/css/aips.css
 docker-compose.prod.yml
 docker-compose.test.yml
+resources/img/groupimages/*
 
 /yarn-error.log
