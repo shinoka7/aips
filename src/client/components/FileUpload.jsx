@@ -29,7 +29,7 @@ class FileUpload extends React.Component {
 
     onChange(e)
     {
-        if (e.target.files[0].size < 10000000)
+        if (e.target.files[0].size < 2000000)
         {
             this.setState({file: e.target.files[0],
                            valid: true});
