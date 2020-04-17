@@ -1,5 +1,6 @@
 # Features
 
+1. [ ] Disband Group
 1. [ ] File/Image storage (docker/cloud?)
 1. [ ] Trigger Mailing list disable
 1. [ ] Private feature for events/whole group
@@ -11,6 +12,7 @@
 1. [ ] Upload image for events
 1. [ ] Upload image for groups 
 1. [ ] Event edit
+1. [ ] Members of the Group / Positions
 
 1. [ ] Markdown support
 
