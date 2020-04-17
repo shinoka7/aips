@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Tooltip, FormGroup } from 'reactstrap';
@@ -38,9 +38,14 @@ class GroupForm extends React.Component {
     }
 
     toggle() {
-        this.setState(prevState => ({
-            modal: !prevState.modal
-        }));
+        const { user } = this.props;
+        if (user.username) {
+            this.setState(prevState => ({
+                modal: !prevState.modal
+            }));
+        } else {
+            window.location = '/login';
+        }
     }
 
     validate() {
