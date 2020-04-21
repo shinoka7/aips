@@ -5,9 +5,35 @@ import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 
 class DetailPanel extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.generateMemberList = this.generateMemberList.bind(this);
+
+    }
+
+    generateMemberList(members)
+    {
+        return members.map((member) => {
+            return (
+                <tr key={member.id}>
+                    <td>
+                        {/**Add role here!*/}
+                    </td>
+                    <td>
+                        {member.username}
+                    </td>
+                    <td>
+                        {member.firstName + " " + member.lastName|| "No name specified."}
+                    </td>
+                </tr>
+            );
+        });
+    }
 
     render() {
-        const { group } = this.props;
+        const { group, members } = this.props;
+        const memberList = this.generateMemberList(members);
 
         return (
             <Card>
@@ -33,11 +59,12 @@ class DetailPanel extends React.Component {
                             <thead>
                                 <tr>
                                     <th>Role</th>
+                                    <th>Username</th>
                                     <th>Name</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {groupList} */}
+                                { memberList }
                             </tbody>
                             </Table>
                         </Col>

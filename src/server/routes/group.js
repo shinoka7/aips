@@ -201,6 +201,10 @@ module.exports = (aips) => {
         });
 
         let isUserInGroup = false;
+        let isUserOwner = false;
+        if (userId === group.adminUserId) {
+            isUserOwner = true;
+        }
         await group.getUsers().then((users) => {
             users.forEach((user) => {
                 if (user.id === userId) {
@@ -208,6 +212,9 @@ module.exports = (aips) => {
                 }
             });
         });
+
+        const members = await group.getUsers();
+    
 
         const pendingUsers = await Pending.findAll({
             where: {
@@ -223,10 +230,12 @@ module.exports = (aips) => {
             group: group,
             category: category || {},
             isUserInGroup: isUserInGroup,
+            isUserOwner: isUserOwner,
             csrfToken: req.csrfToken(),
             events: events || [],
             images: images,
             pendingUsers: pendingUsers || [],
+            members: members || [],
         });
     }));
 
@@ -301,17 +310,34 @@ module.exports = (aips) => {
      * PUT /group/update/settings UPDATES GROUP SETTINGS
     */
     router.put('/update/settings', csrf, validator.updateSettings, validateBody, asyncMiddleware(async(req, res) => {
-        const { groupId, mailingList } = req.body;
+        const { groupId, mailingList, newGroupOwner } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
-        const user = await User.findByPk(userId);
+        let user = await User.findByPk(userId);
         let group = await Group.findByPk(groupId);
         if (!group || !user) {
             return res.status(404).send({ error: 'user or group not found' });
         }
-
-        group = await group.update({
-            mailingList,
-        });
+        if (newGroupOwner)
+        {
+            let newOwner = await User.findByPk(newGroupOwner);
+            //if groupsCreated == 3 return error message (owner of too many groups)
+            newOwner = await newOwner.update({
+                groupsCreated: newOwner.groupsCreated + 1
+            });
+            user = await user.update({
+                groupsCreated: user.groupsCreated - 1
+            });
+            group = await group.update({
+                mailingList,
+                adminUserId: newGroupOwner,
+            });
+        }
+        else
+        {
+            group = await group.update({
+                mailingList,
+            });
+        }
 
         res.json({ group });
     }));
@@ -320,16 +346,24 @@ module.exports = (aips) => {
      * DELETE /group DELETES GROUP
      * BAD STYLE ***USE CSRF***
     */
-    router.delete('/', asyncMiddleware(async(req, res) => {
-        const { groupId } = req.body.data;
+    router.delete('/deleteGroup', csrf, asyncMiddleware(async(req, res) => {
+        const { groupId } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
-        const user = await User.findByPk(userId);
+        let user = await User.findByPk(userId);
         let group = await Group.findByPk(groupId);
         if (!group || !user) {
             return res.status(404).send({ error: 'user or group not found' });
         }
 
-        await user.removeGroup(group);
+        user = await user.update({
+            groupsCreated: user.groupsCreated - 1
+        });
+
+        /*await group.getUsers().then((users) => {
+            users.forEach((user) => {
+                user.removeGroup(group);
+            });
+        });*/
 
         const notifications = await Notification.findAll({
             where: {
@@ -339,9 +373,11 @@ module.exports = (aips) => {
         notifications.forEach(async(notification) => {
             await notification.destroy();
         });
+        
+        //Delete events and pending
 
         group = await group.destroy();
-         res.json({ group });
+        res.json({  });
     }));
 
     validator.addUser = [

@@ -101,7 +101,7 @@ class GroupDetail extends React.Component {
     }
 
     render() {
-        const { group, user, category, isUserInGroup, events, csrfToken, images, pendingUsers, googleCalendar } = this.props;
+        const { group, user, category, isUserInGroup, isUserOwner, events, csrfToken, images, pendingUsers, googleCalendar, members } = this.props;
         const { isVerified, activeTab, calendarIsOpen, postIsOpen, showSuccessAlert} = this.state;
        
         return (
@@ -182,10 +182,11 @@ class GroupDetail extends React.Component {
                         </Nav>
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId="1">
-                                <DetailPanel group={group} />
+                                <DetailPanel group={group} members={members}/>
                             </TabPane>
                             <TabPane tabId="2">
-                                <AdminPanel group={group} pendingUsers={pendingUsers} isVerified={isVerified} csrfToken={csrfToken} />
+                                <AdminPanel group={group} members={members} pendingUsers={pendingUsers} 
+                                    isUserOwner={isUserOwner} isVerified={isVerified} csrfToken={csrfToken} />
                             </TabPane>
                         </TabContent>
                     </Container>
