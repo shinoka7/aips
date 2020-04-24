@@ -44,7 +44,7 @@ class GroupForm extends React.Component {
     }
 
     validate() {
-        return this.valid.name && this.valid.email &&  this.props.user.groupsCreated < 3;
+        return this.valid.name && this.valid.email &&  this.props.user.groupsCreated < 3 && this.state.categoryId !== 0;
     }
 
     async createHandler() {
