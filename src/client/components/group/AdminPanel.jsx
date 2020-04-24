@@ -106,10 +106,9 @@ class AdminPanel extends React.Component {
             preConfirm: async(email) => {
                 try {
                     if (email === group.groupEmail) {
-                        await axios.delete('/group/deleteGroup', { 
-                            data: 
-                                { groupId: group.id, 
-                                _csrf: this.props.csrfToken},
+                        await axios.post('/group/deleteGroup', { 
+                            groupId: group.id, 
+                            _csrf: csrfToken
                             })
                             .then((res) =>
                             {

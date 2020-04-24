@@ -6,7 +6,7 @@ const { body } = require('express-validator');
 const validator = {};
 
 const logger = require('../../services/logger');
-const { User, Group, Notification, Event, Category, Pending } = require('../../db/models');
+const { User, Group, Notification, Event, Category, Pending, Post } = require('../../db/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 const mailerService = require('../../services/mailer');
@@ -317,10 +317,9 @@ module.exports = (aips) => {
         if (!group || !user) {
             return res.status(404).send({ error: 'user or group not found' });
         }
-        if (newGroupOwner)
+        if (newGroupOwner != group.adminUserId)
         {
             let newOwner = await User.findByPk(newGroupOwner);
-            //if groupsCreated == 3 return error message (owner of too many groups)
             newOwner = await newOwner.update({
                 groupsCreated: newOwner.groupsCreated + 1
             });
@@ -346,7 +345,7 @@ module.exports = (aips) => {
      * DELETE /group DELETES GROUP
      * BAD STYLE ***USE CSRF***
     */
-    router.delete('/deleteGroup', csrf, asyncMiddleware(async(req, res) => {
+    router.post('/deleteGroup', csrf, asyncMiddleware(async(req, res) => {
         const { groupId } = req.body;
         const userId = req.session.user ? req.session.user.id : 0;
         let user = await User.findByPk(userId);
@@ -359,12 +358,6 @@ module.exports = (aips) => {
             groupsCreated: user.groupsCreated - 1
         });
 
-        /*await group.getUsers().then((users) => {
-            users.forEach((user) => {
-                user.removeGroup(group);
-            });
-        });*/
-
         const notifications = await Notification.findAll({
             where: {
                 groupId: group.id,
@@ -373,8 +366,33 @@ module.exports = (aips) => {
         notifications.forEach(async(notification) => {
             await notification.destroy();
         });
-        
-        //Delete events and pending
+
+        const events = await Event.findAll({
+            where: {
+                groupId: group.id,
+            }
+        });
+        events.forEach(async(event) => {
+            await event.destroy();
+        });
+
+        const posts = await Post.findAll({
+            where: {
+                groupId: group.id,
+            }
+        });
+        posts.forEach(async(post) => {
+            await post.destroy();
+        });
+
+        const pendings = await Pending.findAll({
+            where: {
+                groupId: group.id,
+            }
+        });
+        pendings.forEach(async(pending) => {
+            await pending.destroy();
+        });
 
         group = await group.destroy();
         res.json({  });

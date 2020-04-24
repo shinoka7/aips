@@ -63,26 +63,39 @@ class GroupDetail extends React.Component {
             groupId: group.id,
             _csrf: csrfToken,
         };
-
-        const res = await Swal.fire({
-            title: 'Leave the Group',
-            type: 'warning',
-            text: 'Are you sure?',
-            showCancelButton: true,
-            confirmButtonText: 'Leave',
-            confirmButtonColor: '#d33',
-            preConfirm: async() => {
-                try {
-                    return await axios.post('/group/deleteUser', params);
+        if (user.id == group.adminUserId)
+        {
+            await Swal.fire({
+                title: 'You are the Group Owner',
+                type: 'warning',
+                text: 'Please transfer group ownership before leaving the group.',
+            }).then(() =>
+                {
+                    window.location = "/group/" + group.id;
+                });
+        }
+        else
+        {
+            const res = await Swal.fire({
+                title: 'Leave the Group',
+                type: 'warning',
+                text: 'Are you sure?',
+                showCancelButton: true,
+                confirmButtonText: 'Leave',
+                confirmButtonColor: '#d33',
+                preConfirm: async() => {
+                    try {
+                        return await axios.post('/group/deleteUser', params);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                 }
-                catch(err) {
-                    console.log(err);
-                }
+            });
+    
+            if (!res.dismiss) {
+                window.location.reload()
             }
-        });
-
-        if (!res.dismiss) {
-            window.location.reload()
         }
     }
 
