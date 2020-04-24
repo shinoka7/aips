@@ -12,13 +12,18 @@ class DetailPanel extends React.Component {
 
     }
 
-    generateMemberList(members)
+    generateMemberList(group, members)
     {
         return members.map((member) => {
             return (
                 <tr key={member.id}>
                     <td>
-                        {/**Add role here!*/}
+                        {group.adminUserId === member.id &&
+                            "Owner"
+                        }
+                        {group.adminUserId !== member.id &&
+                            "Member"
+                        }
                     </td>
                     <td>
                         {member.username}
@@ -33,7 +38,7 @@ class DetailPanel extends React.Component {
 
     render() {
         const { group, members } = this.props;
-        const memberList = this.generateMemberList(members);
+        const memberList = this.generateMemberList(group, members);
 
         return (
             <Card>
@@ -54,7 +59,7 @@ class DetailPanel extends React.Component {
                             <pre>{group.meetingPlace}</pre>
                         </Col>
                         <Col xs="6" sm="6" md="6">
-                            <b>Current Positions</b> [Work In Progress]
+                            <b>Current Positions</b>
                             <Table striped>
                             <thead>
                                 <tr>
