@@ -25,6 +25,7 @@ class AdminPanel extends React.Component {
             meetingPlace: props.group.meetingPlace,
             pendingUsers: props.pendingUsers,
             mailingList: props.group.mailingList || '',
+            newGroupOwner: null,
         };
 
         // this.addUser = this.addUser.bind(this);
@@ -38,6 +39,8 @@ class AdminPanel extends React.Component {
         this.generatePending = this.generatePending.bind(this);
         this.validEmail = this.validEmail.bind(this);
         this.updateSettingsHandler = this.updateSettingsHandler.bind(this);
+        this.generateGroupUsers = this.generateGroupUsers.bind(this);
+        this.validGroupOwner = this.validGroupOwner.bind(this);
     }
 
     toggleSettingsForm() {
@@ -88,7 +91,7 @@ class AdminPanel extends React.Component {
     }
 
     async disbandHandler() {
-        const { group } = this.props;
+        const { group, csrfToken } = this.props;
 
         const res = await Swal.fire({
             title: "Disband Group",
@@ -103,7 +106,16 @@ class AdminPanel extends React.Component {
             preConfirm: async(email) => {
                 try {
                     if (email === group.groupEmail) {
-                        return await axios.delete('/group', { data: { groupId: group.id } });
+                        await axios.post('/group/deleteGroup', { 
+                            groupId: group.id, 
+                            _csrf: csrfToken
+                            })
+                            .then((res) =>
+                            {
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
                     }
                     else {
                         await Swal.fire({
@@ -117,6 +129,18 @@ class AdminPanel extends React.Component {
                     console.log(err);
                 }
             },
+        })
+        .then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    title: 'Update!',
+                    text: 'The group has been disbanded!',
+                    type: 'success',
+                    onAfterClose: () => {
+                        window.location = "/group/groups";
+                    }
+                })
+            }
         });
     }
 
@@ -185,7 +209,8 @@ class AdminPanel extends React.Component {
     }
 
     async updateSettingsHandler() {
-        const { mailingList /**, mode */} = this.state;
+        const { mailingList /**, mode */, newGroupOwner} = this.state;
+        const { group } = this.props;
 
         await Swal.fire({
             title: 'Update Group Settings',
@@ -198,6 +223,7 @@ class AdminPanel extends React.Component {
                 return await axios.put('/group/update/settings', {
                     groupId: this.props.group.id,
                     mailingList: mailingList,
+                    newGroupOwner: newGroupOwner,
                     _csrf: this.props.csrfToken,
                 })
                 .then((res) => {
@@ -219,16 +245,45 @@ class AdminPanel extends React.Component {
                     title: 'Update!',
                     text: 'The group\'s settings have been updated!',
                     type: 'success',
+                }).then((result) =>
+                {
+                    window.location = "/group/" + group.id;
                 });
+ 
             }
         });
     }
 
+    generateGroupUsers(members) {
+        const { group } = this.props;
+        return members.map((member) => {
+            if (member.id != group.adminUserId)
+                return (
+                    <option key={member.id} value={member.id}>{member.username}</option>
+                );
+        });
+    }
+
+    validGroupOwner(members)
+    {
+        const {newGroupOwner} = this.state;
+        var memberArr = members.map((member) => {return {id: member.id, groupsCreated: member.groupsCreated}});
+        var valid = true;
+        memberArr.forEach((member) => {
+            if(newGroupOwner == member.id && member.groupsCreated == 3)
+            {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
     render() {
-        const { group, isVerified } = this.props;
+        const { group, isVerified, isUserOwner, members } = this.props;
         const { mailingList, pendingUsers, groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace, showSettingsForm, activeTab } = this.state;
 
         const generatedPending = this.generatePending(pendingUsers);
+        const generatedGroupMembers = this.generateGroupUsers(members);
 
         return (
             <Card>
@@ -239,6 +294,7 @@ class AdminPanel extends React.Component {
                             <Card>
                                 <CardBody>
                                     <Form>
+                                    <fieldset disabled={!isUserOwner}>
                                     <FormGroup tag="fieldset" row>
                                         <Col sm={10}>
                                             <b>Group Mode [Work in Progress] :</b>
@@ -259,9 +315,19 @@ class AdminPanel extends React.Component {
                                             <Input invalid={!this.validEmail()} type="email" id="mailingList" onChange={(e) => {this.setState({ mailingList: e.target.value.trim() })}} placeholder={mailingList}></Input>
                                             <FormFeedback>Invalid email address!</FormFeedback>
                                         </FormGroup>
+                                        {/** Transfer group ownership */}
+                                        <FormGroup>
+                                            <Label for="ownership"><b>Transfer Group Ownership :</b></Label>
+                                            <Input invalid={!this.validGroupOwner(members)}type="select" name="ownership" id="ownership" onChange={(e) => {this.setState({ newGroupOwner: e.target.value })}}>
+                                                <option value="default">Select User</option>
+                                                {generatedGroupMembers}
+                                            </Input>
+                                            <FormFeedback>User already has 3 created groups!</FormFeedback>
+                                        </FormGroup>
                                         </Col>
                                     </FormGroup>
-                                    <Button onClick={this.updateSettingsHandler} color="primary">Update</Button>
+                                    <Button disabled={!this.validGroupOwner(members)} onClick={this.updateSettingsHandler} color="primary">Update</Button>
+                                    </fieldset>
                                     </Form>
                                 </CardBody>
                             </Card>
@@ -363,7 +429,7 @@ class AdminPanel extends React.Component {
                                 <TabPane tabId="3">
                                     <Card className="text-center">
                                         <CardBody>
-                                            <Button onClick={this.disbandHandler} color="danger" disabled>Disband Group [Currently Disabled]</Button>
+                                            <Button onClick={this.disbandHandler} color="danger" disabled={!isUserOwner}>Disband Group</Button>
                                         </CardBody>
                                     </Card>
                                 </TabPane>

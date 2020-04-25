@@ -5,9 +5,54 @@ import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 
 class DetailPanel extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.generateMemberList = this.generateMemberList.bind(this);
+        this.generateName = this.generateName.bind(this);
+    }
+
+    generateName(member)
+    {
+        let str = "";
+        if (member.firstName === null && member.lastName === null)
+            return "No name specified"
+        if (member.firstName !== null)
+            str += member.firstName;
+        if (member.firstName !== null && member.lastName !== null)
+            str += " "
+        if (member.lastName !== null)
+            str += member.lastName;
+        return str;
+    }
+
+    generateMemberList(group, members)
+    {
+        return members.map((member) => {
+            return (
+                <tr key={member.id}>
+                    <td>
+                        {group.adminUserId === member.id &&
+                            "Owner"
+                        }
+                        {group.adminUserId !== member.id &&
+                            "Member"
+                        }
+                    </td>
+                    <td>
+                        {member.username}
+                    </td>
+                    <td>
+                        {this.generateName(member)}
+                    </td>
+                </tr>
+            );
+        });
+    }
 
     render() {
-        const { group } = this.props;
+        const { group, members } = this.props;
+        const memberList = this.generateMemberList(group, members);
 
         return (
             <Card>
@@ -28,16 +73,17 @@ class DetailPanel extends React.Component {
                             <pre>{group.meetingPlace}</pre>
                         </Col>
                         <Col xs="6" sm="6" md="6">
-                            <b>Current Positions</b> [Work In Progress]
+                            <b>Current Positions</b>
                             <Table striped>
                             <thead>
                                 <tr>
                                     <th>Role</th>
+                                    <th>Username</th>
                                     <th>Name</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {groupList} */}
+                                { memberList }
                             </tbody>
                             </Table>
                         </Col>
