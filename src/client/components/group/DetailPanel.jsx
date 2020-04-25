@@ -9,7 +9,21 @@ class DetailPanel extends React.Component {
         super(props);
 
         this.generateMemberList = this.generateMemberList.bind(this);
+        this.generateName = this.generateName.bind(this);
+    }
 
+    generateName(member)
+    {
+        let str = "";
+        if (member.firstName === null && member.lastName === null)
+            return "No name specified"
+        if (member.firstName !== null)
+            str += member.firstName;
+        if (member.firstName !== null && member.lastName !== null)
+            str += " "
+        if (member.lastName !== null)
+            str += member.lastName;
+        return str;
     }
 
     generateMemberList(group, members)
@@ -29,7 +43,7 @@ class DetailPanel extends React.Component {
                         {member.username}
                     </td>
                     <td>
-                        {member.firstName + " " + member.lastName|| "No name specified."}
+                        {this.generateName(member)}
                     </td>
                 </tr>
             );

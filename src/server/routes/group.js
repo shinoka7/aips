@@ -303,7 +303,9 @@ module.exports = (aips) => {
 
     validator.updateSettings = [
         body('groupId').exists(),
-        body('mailingList').isEmail(),
+        body('mailingList')
+            .if(body('mailingList').not().isEmpty())
+            .isEmail(),
     ];
 
     /**
@@ -317,7 +319,7 @@ module.exports = (aips) => {
         if (!group || !user) {
             return res.status(404).send({ error: 'user or group not found' });
         }
-        if (newGroupOwner != group.adminUserId)
+        if (newGroupOwner != group.adminUserId && newGroupOwner !== null)
         {
             let newOwner = await User.findByPk(newGroupOwner);
             newOwner = await newOwner.update({

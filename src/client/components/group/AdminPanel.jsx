@@ -255,10 +255,12 @@ class AdminPanel extends React.Component {
     }
 
     generateGroupUsers(members) {
+        const { group } = this.props;
         return members.map((member) => {
-            return (
-                <option key={member.id} value={member.id}>{member.username}</option>
-            );
+            if (member.id != group.adminUserId)
+                return (
+                    <option key={member.id} value={member.id}>{member.username}</option>
+                );
         });
     }
 
