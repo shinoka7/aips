@@ -19,7 +19,7 @@ export default class extends React.Component {
                     <br/> */}
                     <form action="/auth/cas" method="GET">
                         {/* <input type="hidden" name="returnTo" value="/auth/cas/callback" /> */}
-                        <Button block className="btn btn-primary"><img className="icon" src="/resources/img/RPI.png" /> Login with CAS</Button>
+                        <Button block className="btn btn-primary"><img className="icon" alt="RPI" src="/resources/img/RPI.png" /> Login with CAS</Button>
                     </form>
                 </div>
             </div>

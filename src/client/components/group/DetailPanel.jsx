@@ -60,9 +60,16 @@ class DetailPanel extends React.Component {
                     <Row>
                         <Col xs="6" sm="6" md="6">
                             <b>Email</b><br />
-                            <pre>{group.groupEmail}</pre>
+                            { group.groupEmail != "" &&
+                              <pre>{group.groupEmail}</pre>
+                            }
                             <b>Website</b><br />
-                            <pre><a href={group.website}>{group.website}</a></pre>
+                            { group.website != "" &&
+                                <pre><a href={group.website}>{group.website}</a></pre>
+                            }
+                            { group.website == "" &&
+                                 <pre></pre>
+                            }
                             <b>Statement of Purpose/Mission</b><br />
                             <pre>{group.statement}</pre>
                             <b>Usual Meeting Day</b><br />
