@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Alert, Form, CustomInput, Table } from 'reactstrap';
+import { Alert, Form, CustomInput, Table} from 'reactstrap';
 import Switch from "react-switch";
 import axios from 'axios';
 
@@ -52,7 +52,7 @@ class GroupList extends React.Component {
     render() {
         const { notifications } = this.props;
         const { visible } = this.state;
-
+        
         const groupList = notifications.map((notification) => {
 
             return (
@@ -64,6 +64,7 @@ class GroupList extends React.Component {
                         {/* onClick, button ui state doesn't change, but internally does */}
                         {/* https://github.com/markusenglund/react-switch/issues/47 */}
                         <Switch
+                            aria-label = "Toggle post notifications"
                             checked={notification.notifyPosts}
                             onChange={this.togglePostSwitch}
                             id={notification.id.toString()}
@@ -71,6 +72,7 @@ class GroupList extends React.Component {
                     </td>
                     <td>
                         <Switch
+                            aria-label = "Toggle event notifications"
                             checked={notification.notifyEvents}
                             onChange={this.toggleEventSwitch}
                             id={notification.id.toString()}
