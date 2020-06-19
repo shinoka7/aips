@@ -147,7 +147,7 @@ class GroupsDetail extends React.Component {
                         <Row>
                             <Col className="d-flex justify-content-center" md="12" lg="3">
                                 <div className="card_image">
-                                    <CardImg src={group.groupImage} />
+                                    <CardImg alt="Group image" src={group.groupImage} />
                                 </div>
                             </Col>
                             <Col md="12" lg="9">
@@ -199,7 +199,7 @@ class GroupsDetail extends React.Component {
         for (let page = 1; page <= totalPages; page++) {
             paginationItems.push(
                 <PaginationItem key={page}>
-                    <PaginationLink onClick={(e) => this.changePage(e, page)}>
+                    <PaginationLink className="black" onClick={(e) => this.changePage(e, page)}>
                         {page}
                     </PaginationLink>
                 </PaginationItem>

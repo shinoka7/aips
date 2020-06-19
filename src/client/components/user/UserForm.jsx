@@ -103,7 +103,7 @@ class UserForm extends React.Component {
                     Last name : {lastName}<br />
                 </CardText>
                 <CardText className="text-right">
-                    <Button onClick={this.toggle} className="btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
+                    <Button onClick={this.toggle} className="button_text btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
                     <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                         <ModalHeader toggle={this.toggle}>Edit Profile</ModalHeader>
                         <ModalBody>
@@ -113,7 +113,7 @@ class UserForm extends React.Component {
                                 <AvField name="lastname" label="Last Name" onChange={this.setLastName} required />
                             </AvForm>
                             <ModalFooter>
-                                <Button onClick={this.confirmHandler} color="primary" disabled={!this.validate()}>Confirm</Button>
+                                <Button onClick={this.confirmHandler} id="dark_blue_button" disabled={!this.validate()}>Confirm</Button>
                                 <Button onClick={this.toggle} color="secondary">Cancel</Button>
                             </ModalFooter>
                         </ModalBody>

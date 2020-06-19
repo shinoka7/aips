@@ -49,7 +49,7 @@ class UserDetail extends React.Component {
                     {/* </Button> */}
                     <Row>
                         <Col xs="6" sm="6" md="6">
-                            <Button onClick={this.toggleCalendar} className="btn btn-info" id="calendarToolTip" block>
+                            <Button onClick={this.toggleCalendar} className="dark_blue_button btn btn-info" id="calendarToolTip" block>
                                 <i className="fas fa-calendar-alt"> Events</i>
                             </Button>
                         </Col>
