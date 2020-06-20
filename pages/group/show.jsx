@@ -83,6 +83,7 @@ class GroupDetail extends React.Component {
                 showCancelButton: true,
                 confirmButtonText: 'Leave',
                 confirmButtonColor: '#d33',
+                cancelButtonColor: '#696969',
                 preConfirm: async() => {
                     try {
                         return await axios.post('/group/deleteUser', params);
@@ -159,7 +160,7 @@ class GroupDetail extends React.Component {
                         </ButtonGroup>
                         {'\t'}
                         <ButtonGroup className="text-right">
-                            <Button onClick={this.toggleCalendar} className="btn btn-info">
+                            <Button onClick={this.toggleCalendar} className="dark_blue_button btn btn-info">
                                 <i className="fas fa-calendar-alt"> Events</i>
                             </Button>
                         </ButtonGroup>
@@ -175,6 +176,7 @@ class GroupDetail extends React.Component {
                         <Nav tabs>
                             <NavItem>
                                 <NavLink
+                                    id = "dark_blue_tab"
                                     className={classnames({ active: activeTab === '1'})}
                                     onClick={() => { this.toggleTab('1'); }}
                                     href="#"
@@ -185,6 +187,7 @@ class GroupDetail extends React.Component {
                             <NavItem>
                                 <NavLink
                                     disabled={!isUserInGroup}
+                                    id = "dark_blue_tab"
                                     className={classnames({ active: activeTab === '2'})}
                                     onClick={() => { this.toggleTab('2'); }}
                                     href="#"

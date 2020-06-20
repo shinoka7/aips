@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Media, Modal, ModalHeader, ModalBody, ModalFooter, Row, Col } from 'reactstrap';
+import { Form, Input, Button, Media, Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Label } from 'reactstrap';
 
 class FileUpload extends React.Component {
     constructor(props) {
@@ -74,6 +74,7 @@ class FileUpload extends React.Component {
                             <ModalBody>
                                 <Input type="hidden" name="_csrf" value={csrfToken}/>
                                 <Input type="hidden" name="groupId" value={groupID} />
+                                <Label for="myFile" hidden> Upload File </Label>
                                 <Input type="file" accept={accept} onChange={this.onChange} name="myFile" id="myFile"/>
                             </ModalBody>
                                 <Row>

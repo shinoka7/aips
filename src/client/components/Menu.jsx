@@ -42,7 +42,7 @@ class Menu extends React.Component {
 
         return (
             <div className="d-flex flex-row-reverse pr-2 fixed-bottom pb-5">
-                <Button color="primary" className="btn btn-lg btn-danger" id="menuToolTip" onClick={this.toggleMenu}>
+                <Button color="primary" aria-label="Toggle menu" className="btn btn-lg btn-danger" id="menuToolTip" onClick={this.toggleMenu}>
                     <i className="fas fa-plus" />
                 </Button>
                 <Tooltip placement="left" isOpen={menuToolTipOpen} target="menuToolTip" toggle={() => {this.setState({ menuToolTipOpen: !menuToolTipOpen })}}>
@@ -50,10 +50,10 @@ class Menu extends React.Component {
                 </Tooltip>
                 <Collapse isOpen={isOpen}>
                     <ButtonGroup vertical className="pr-2">
-                        <Button onClick={this.togglePostForm} className="btn btn-lg" color="danger" outline>
+                        <Button onClick={this.togglePostForm} aria-label="Toggle post form" className="btn btn-lg" color="danger" outline>
                             <i className="fas fa-edit"></i>
                         </Button>
-                        <Button onClick={this.toggleCalendar} className="btn btn-lg" color="danger" outline>
+                        <Button onClick={this.toggleCalendar} aria-label="Toggle calendar" className="btn btn-lg" color="danger" outline>
                             <i className="fas fa-calendar-alt" />
                         </Button>
                     </ButtonGroup>

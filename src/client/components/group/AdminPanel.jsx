@@ -56,7 +56,8 @@ class AdminPanel extends React.Component {
             text: 'Are you sure?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
-            confirmButtonColor: 'primary',
+            confirmButtonColor: '#0066FF',
+            cancelButtonColor: '#696969',
             preConfirm: async() => {
                 try {
                     return await axios.put('/group/update/info', {
@@ -102,6 +103,8 @@ class AdminPanel extends React.Component {
             },
             showCancelButton: true,
             confirmButtonText: 'Disband',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#696969',
             showLoaderOnConfirm: true,
             preConfirm: async(email) => {
                 try {
@@ -136,6 +139,8 @@ class AdminPanel extends React.Component {
                     title: 'Update!',
                     text: 'The group has been disbanded!',
                     type: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0066FF',
                     onAfterClose: () => {
                         window.location = "/group/groups";
                     }
@@ -218,7 +223,8 @@ class AdminPanel extends React.Component {
             text: 'Are you sure?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
-            confirmButtonColor: 'primary',
+            confirmButtonColor: '#0066FF',
+            cancelButtonColor: '#696969',
             preConfirm: async() => {
                 return await axios.put('/group/update/settings', {
                     groupId: this.props.group.id,
@@ -326,7 +332,7 @@ class AdminPanel extends React.Component {
                                         </FormGroup>
                                         </Col>
                                     </FormGroup>
-                                    <Button disabled={!this.validGroupOwner(members)} onClick={this.updateSettingsHandler} color="primary">Update</Button>
+                                    <Button id="dark_blue_button" disabled={!this.validGroupOwner(members)} onClick={this.updateSettingsHandler}>Update</Button>
                                     </fieldset>
                                     </Form>
                                 </CardBody>
@@ -336,6 +342,7 @@ class AdminPanel extends React.Component {
                             <Nav tabs>
                                 <NavItem>
                                     <NavLink
+                                        id="dark_blue_tab"
                                         className={classnames({ active: activeTab === '1' })}
                                         onClick={() => { this.toggleTab('1') }}
                                         href="#"
@@ -345,6 +352,7 @@ class AdminPanel extends React.Component {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
+                                        id="dark_blue_tab"
                                         className={classnames({ active: activeTab === '2' })}
                                         onClick={() => { this.toggleTab('2') }}
                                         href="#"
@@ -354,6 +362,7 @@ class AdminPanel extends React.Component {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
+                                        id="dark_blue_tab"
                                         className={classnames({ active: activeTab === '3' })}
                                         onClick={() => { this.toggleTab('3') }}
                                         href="#"
@@ -421,7 +430,7 @@ class AdminPanel extends React.Component {
                                             <Label for="meetingPlace">Usual Meeting Place :</Label>
                                             <Input type="text" name="meetingPlace" id="meetingPlace" placeholder={meetingPlace} onChange={(e) => {this.setState({ meetingPlace: e.target.value.trim() })}} />
                                         </FormGroup>
-                                        <Button onClick={this.updateInfoHandler} color="primary">Confirm</Button>
+                                        <Button onClick={this.updateInfoHandler} id="dark_blue_button">Confirm</Button>
                                         {'\t'}
                                         <Button onClick={this.toggleSettingsForm} color="secondary">Cancel</Button>
                                     </Form>

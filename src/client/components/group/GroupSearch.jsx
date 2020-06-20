@@ -50,10 +50,11 @@ class GroupSearch extends React.Component
 
     render() {
         return (
-            <Form id = "form" >
+            <Form id="form" >
                 <InputGroup>
                     <Input
-                        id = "searchBar" 
+                        aria-label="Groups search bar" 
+                        id="searchBar" 
                         onKeyPress={e => {
                             if (e.key === 'Enter') {e.preventDefault(); this.searchHandler()} }}
                         placeholder={"Search for groups!"} 

@@ -15,7 +15,7 @@ class About extends React.Component {
             <div className="about col-sm-12 col-md-6 offset-md-3">
                 <h2>An Intuitive Platform for Societies, or AIPS for short</h2>
                 <br/>
-                <p>
+                <p> 
                     AIPS is a central location for posting, advertising, and tracking club events and updates.
                     We designed the app to solve the problem of how complicated it is for RPI societies to advertise public events.
                     With so many social media apps, it's hard for an interested student to keep on top of every different RPI event throughout the week.
