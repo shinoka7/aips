@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/* This component renders the about page, which currently
+provides a brief description of the AIPS web application
+and a link to the GitHub repository. */
 class About extends React.Component {
     constructor(props) {
         super(props);

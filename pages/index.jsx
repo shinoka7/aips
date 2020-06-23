@@ -8,6 +8,10 @@ import Menu from '../src/client/components/Menu.jsx';
 
 import axios from 'axios';
 
+/* This component renders the main page of the AIPS web application,
+which includes an event preview panel, a menu for creating posts
+and accessing the calendar, a panel describing main features,
+and a panel for recent posts. */
 class MainPage extends React.Component {
     constructor(props) {
         super(props);
@@ -42,7 +46,6 @@ class MainPage extends React.Component {
             </div>
         );
     }
-
 }
 
 MainPage.propTypes = {

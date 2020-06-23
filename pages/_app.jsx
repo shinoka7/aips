@@ -4,6 +4,8 @@ import React from 'react';
 import Header from '../src/client/components/header';
 import Footer from '../src/client/components/footer';
 
+/* Custom 'app' override for AIPS using Next.js to
+define page initialization with a header and footer. */
 export default class MyApp extends App {
     static async getInitialProps({ Component, router, ctx }) {
         let pageProps = {};

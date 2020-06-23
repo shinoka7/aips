@@ -7,6 +7,10 @@ import UserProfile from '../../src/client/components/user/UserProfile';
 import GroupList from '../../src/client/components/group/GroupList';
 import CalendarPanel from '../../src/client/components/CalendarPanel.jsx';
 
+/* This component renders the user profile page of the AIPS web application,
+which includes a profile panel containing user information such as username, 
+first name, and last name, buttons to toggle a user's calendars, and a
+panel containing a list of groups and notification settings. */
 class UserDetail extends React.Component {
     constructor(props) {
         super(props);
