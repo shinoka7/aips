@@ -13,7 +13,9 @@ import GroupSearch from '../../src/client/components/group/GroupSearch.jsx';
 
 import axios from 'axios';
 
-
+/* This component renders the groups page of the AIPS web application,
+which uses Reactstrap Pagination to render pages of group cards and has
+options to filter groups based on category and name and create new groups. */
 class GroupsDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -39,6 +41,10 @@ class GroupsDetail extends React.Component {
         return context.query || {};
     }
 
+    /* This function initializes the page by getting the groups
+    to be shown from the database based on category and name
+    search parameters. The page is updated using this function when
+    new search parameters are provided. */
     async init(categoryId, searchString) {
         const { currentPage } = this.state;
         this.setState({ searchString: searchString});
@@ -57,7 +63,7 @@ class GroupsDetail extends React.Component {
             });
         }
          /* Otherwise, the search string is included in the
-         database query */
+         database query. */
         else
         {
             await axios.get(`/group/page/${categoryId}/${currentPage}?searchString=${searchString}`).then((res) => {
@@ -72,14 +78,16 @@ class GroupsDetail extends React.Component {
         await this.state.groups.forEach((group) => {
             groupNames.push(group.name);
         });
-        this.setState({ groupNames: groupNames });
-        
+        this.setState({ groupNames: groupNames });  
     }
 
     async componentDidMount() {
         await this.init(0);
     }
 
+    /* This function generates the pagination links 
+    for the groups page based on which page is currently
+    selected and the total number of pages. */
     generatePagination(paginationItems) {
         const { currentPage, totalPages } = this.state;
         return (
@@ -139,9 +147,11 @@ class GroupsDetail extends React.Component {
 
     render() {
         const { groups, totalPages, groupNames, user } = this.state;
+        /* For each group on the page, generate a card containing the 
+        group's image, name (with link to individual group page), category, 
+        and description. */
         const groupList = groups.map((group) => {
             return (
-                // Images, description
                 <Col className="col-5 pt-4" key={group.id}>
                     <Card className="text-center" body outline color="secondary">
                         <Row>
@@ -189,12 +199,13 @@ class GroupsDetail extends React.Component {
                                 </CardBody>
                             </Col>
                         </Row>
-
                     </Card>
                 </Col>
             );
         });
 
+        /* Generate pages of groups based on the
+        current number of pages. */
         const paginationItems = [];
         for (let page = 1; page <= totalPages; page++) {
             paginationItems.push(
@@ -208,6 +219,9 @@ class GroupsDetail extends React.Component {
 
         const pagination = this.generatePagination(paginationItems);
 
+        /* Render the category search dropdown, search bar,
+        filter reset button, group creation button,
+        generated group list, and generated pagination links. */
         return(
             <div className="pt-3">
                 <Row>
