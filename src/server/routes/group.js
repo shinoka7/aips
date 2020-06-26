@@ -61,7 +61,7 @@ module.exports = (aips) => {
         }
         let groups = [];
         let groupCount = 1;
-        const limit = 8;
+        const limit = 6;
         const offset = (num - 1) * limit;
         /* If the search bar is empty and category is 'all',
         return all groups. */
@@ -73,6 +73,7 @@ module.exports = (aips) => {
                 include: [{
                     model: Category,
                 }],
+                order: [['name', 'ASC']]
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -93,6 +94,7 @@ module.exports = (aips) => {
             include: [{
                 model: Category,
             }],
+            order: [['name', 'ASC']]
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -111,6 +113,7 @@ module.exports = (aips) => {
                 include: [{
                     model: Category,
                 }],
+                order: [['name', 'ASC']]
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
@@ -133,6 +136,7 @@ module.exports = (aips) => {
             include: [{
                 model: Category,
             }],
+            order: [['name', 'ASC']]
             }).then((result) => {
                 groups = result.rows;
                 groupCount = result.count;
