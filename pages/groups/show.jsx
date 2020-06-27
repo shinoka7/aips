@@ -72,7 +72,7 @@ class GroupsDetail extends React.Component {
         await this.state.groups.forEach((group) => {
             groupNames.push(group.name);
         });
-        this.setState({ groupNames: groupNames });
+        this.setState({ groupNames: groupNames, currentPage: 1 });
         
     }
 
@@ -121,7 +121,7 @@ class GroupsDetail extends React.Component {
         e.preventDefault();
 
         await this.setState({ currentPage: page });
-        await this.init(this.state.categoryId);
+        await this.init(this.state.categoryId, this.state.searchString);
     }
 
     /* This function sets the state of the page
@@ -211,7 +211,7 @@ class GroupsDetail extends React.Component {
         return(
             <div className="pt-3">
                 <Row>
-                    <Col xs="4" sm="4" md="1">
+                    <Col xs="4" sm="4" md="2">
                         <FilterPanel
                             categories={this.props.categories} 
                             filter={this.init}
@@ -232,7 +232,7 @@ class GroupsDetail extends React.Component {
                         	reset={this.resetPage}
                     	/>
                     </Col>
-                    <Col md="3">
+                    <Col md="2">
                     </Col>
                     <Col md="1">
                         <GroupForm
