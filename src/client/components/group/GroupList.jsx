@@ -5,6 +5,9 @@ import { Alert, Form, CustomInput, Table} from 'reactstrap';
 import Switch from "react-switch";
 import axios from 'axios';
 
+/* This component manages and renders the list of groups 
+displayed on the user 'show' page as well as the options
+for toggling group event and post notifications. */
 class GroupList extends React.Component {
     constructor(props) {
         super(props);
@@ -19,6 +22,9 @@ class GroupList extends React.Component {
         this.toggleEventSwitch = this.toggleEventSwitch.bind(this);
     };
 
+    /* This function sends a request to update
+    the current user's post notification settings 
+    based on the state of the switch. */
     async togglePostSwitch(checked, _, id) {
         try {
             const res = await axios.put('/user/update/notifications', {
@@ -33,6 +39,9 @@ class GroupList extends React.Component {
         }
     }
 
+    /* This function sends a request to update
+    the current user's event notification settings 
+    based on the state of the switch. */
     async toggleEventSwitch(checked, _, id) {
         try {
             const res = await axios.put('/user/update/notifications', {
@@ -47,14 +56,14 @@ class GroupList extends React.Component {
         }
     }
 
-
-
     render() {
         const { notifications } = this.props;
         const { visible } = this.state;
         
+        /* The list of groups to be displayed is generated as a list
+        of table rows containing group information and switches
+        to toggle notification settings for posts and events. */
         const groupList = notifications.map((notification) => {
-
             return (
                 <tr key={notification.Group.id}>
                     <th scope="row">{notification.Group.id}</th>
@@ -82,6 +91,9 @@ class GroupList extends React.Component {
             );
         });
         
+        /* The table of groups generated above is rendered,
+        along with a header and success/failure messages
+        when toggling notifications. */
         return (
             <div>
                 { this.state.showSuccessAlert &&

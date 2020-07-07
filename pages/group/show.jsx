@@ -13,6 +13,11 @@ import PostForm from '../../src/client/components/PostForm.jsx';
 import AdminPanel from '../../src/client/components/group/AdminPanel.jsx';
 import DetailPanel from '../../src/client/components/group/DetailPanel.jsx';
 
+/* This component renders an individual group page of the AIPS web application,
+which displays important group information such as name, category,
+description, email, meeting time, and members. Additionally,
+there are options to join and leave a group, toggle the events calendar,
+post to the group, and edit group information as an administrator. */
 class GroupDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -41,6 +46,10 @@ class GroupDetail extends React.Component {
         
     // }
 
+    /* This function sends a request to add a user to a group. 
+    If a user is logged in, they will become a pending member of the 
+    group, and if not logged in, they will be redirected to the login
+    page. */
     async joinGroupHandler() {
         const { user, group, csrfToken } = this.props;
         await axios.post('/group/addUser', {
@@ -56,6 +65,10 @@ class GroupDetail extends React.Component {
         });
     }
 
+    /* This function sends a request to remove the currently
+    logged in user from the group. If the user is the
+    owner of the group, they will be requested to transfer
+    group ownership before leaving. */
     async leaveGroupHandler() {
         const { user, group, csrfToken } = this.props;
         const params = {
@@ -125,6 +138,8 @@ class GroupDetail extends React.Component {
                         { showSuccessAlert &&
                             <Alert color="success">You have successfully sent out a request to join this group!</Alert>
                         }
+                        {/* Render the group image upload component, name
+                        category, description, and verification status. */}
                         <Media>
                             <FileUpload 
                                 isUserInGroup={isUserInGroup}
@@ -149,7 +164,10 @@ class GroupDetail extends React.Component {
                                 {group.description}
                             </Media>
                         </Media>
-                        <hr />
+                        <hr /> 
+                        {/* Render buttons for joining and leaving a group,
+                        opening the events calender, and posting, which are
+                        activated based on user membership in the group. */}
                         <ButtonGroup>
                             <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
                                 <i className="fas fa-user-plus"> Join</i>
@@ -173,6 +191,8 @@ class GroupDetail extends React.Component {
                         <PostForm togglePostForm={this.togglePostForm} groups={[group]} csrfToken={csrfToken} modal={postIsOpen} />
                         <CalendarPanel toggleCalendar={this.toggleCalendar} events={events} isUserInGroup={isUserInGroup}  groups={isUserInGroup ? [group] : []} csrfToken={csrfToken} user={user} modal={calendarIsOpen} images={images} />
                         <br />
+                         {/* Render 'general' and 'admin' tabs, which contain
+                         a DetailPanel and AdminPanel respectively.*/}
                         <Nav tabs>
                             <NavItem>
                                 <NavLink

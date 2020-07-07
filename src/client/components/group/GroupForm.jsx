@@ -7,6 +7,9 @@ import { AvForm, AvField } from 'availity-reactstrap-validation';
 
 import axios from 'axios';
 
+/* This component manages and renders the group creation 
+form accessible from the groups 'show' page
+and its related functions. */
 class GroupForm extends React.Component {
     constructor(props) {
         super(props);
@@ -37,6 +40,9 @@ class GroupForm extends React.Component {
         this.generateCategories = this.generateCategories.bind(this);
     }
 
+    /* This function toggles the form modal
+    if the user is logged in and redirects the user to
+    the login page otherwise. */
     toggle() {
         const { user } = this.props;
         if (user.username) {
@@ -48,10 +54,16 @@ class GroupForm extends React.Component {
         }
     }
 
+    /* This function confirms that the group to be created is valid
+    and the current user has not created too many groups, allowing group
+    creation only when the creation is valid. */
     validate() {
         return this.valid.name && this.valid.email &&  this.props.user.groupsCreated < 3 && this.state.categoryId !== 0;
     }
 
+    /* This function sends a request to create a group based on the state fields
+    determined by the user's form input. If the server request is successful, the 
+    group will be created and the page reloaded. */
     async createHandler() {
         const { groupName, groupEmail, description, categoryId, error } = this.state;
         if (!error) {
@@ -72,6 +84,9 @@ class GroupForm extends React.Component {
         }
     }
 
+    /* This function sets the pending group name and
+    to the user's input when it is modified and 
+    determines the validity of the name. */
     async setGroupName(e) {
         const name = e.target.value.trim();
         this.setState({ groupName: name });
@@ -86,6 +101,8 @@ class GroupForm extends React.Component {
         this.valid.email = true;
     }
 
+    /* This function sets the validity of the form's email
+    to false if an invalid email is entered. */
     handleEmailInvalidSubmit(event, errors, values) {
         this.setState({ groupEmail: values.groupemail });
         this.valid.email = false;
@@ -99,6 +116,8 @@ class GroupForm extends React.Component {
         this.setState({ categoryId: e.target.value });
     }
 
+    /* This function maps the categories to dropdown
+    options for the category selection menu. */
     generateCategories(categories) {
         return categories.map((category) => {
             return (
@@ -113,6 +132,8 @@ class GroupForm extends React.Component {
 
         const generatedCategories = this.generateCategories(categories);
     
+        /* Renders the group creation form, and provides intuitive messages when fields are invalid. 
+        Allows group creation only when the inputs are validated. */
         return (
             <div className="text-right" >
                 <Tooltip placement="auto" isOpen={groupFormToolTipOpen} target="groupFormToolTip" toggle={() => {this.setState({ groupFormToolTipOpen: !groupFormToolTipOpen })}}>
