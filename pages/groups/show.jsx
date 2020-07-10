@@ -85,7 +85,8 @@ class GroupsDetail extends React.Component {
         return (
             <Pagination aria-label='pagenavigation'>
                 <PaginationItem>
-                    <PaginationLink
+                    <PaginationLink 
+                        className="black"
                         first
                         onClick={(e) => this.changePage(e, 1)}
                         disabled={currentPage === 1}
@@ -93,6 +94,7 @@ class GroupsDetail extends React.Component {
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLink
+                        className="black"
                         previous
                         onClick={(e) => this.changePage(e, currentPage - 1)}
                         disabled={currentPage - 1 < 1}
@@ -101,6 +103,7 @@ class GroupsDetail extends React.Component {
                 {paginationItems}
                 <PaginationItem>
                     <PaginationLink
+                        className="black"
                         next
                         onClick={(e) => this.changePage(e, currentPage + 1)}
                         disabled={currentPage + 1 > totalPages}
@@ -108,6 +111,7 @@ class GroupsDetail extends React.Component {
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLink
+                        className="black"
                         last
                         onClick={(e) => this.changePage(e, totalPages)}
                         disabled={currentPage === totalPages}

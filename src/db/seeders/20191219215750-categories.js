@@ -6,203 +6,203 @@ module.exports = {
         {
             name: 'Academic',
             description: '',
-            color: '#33cccc',
+            color: '#196161',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Arts',
             description: '',
-            color: '#00ccff',
+            color: '#005E75',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Business',
             description: '',
-            color: '#0099ff',
+            color: '#005C99',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Cultural',
             description: '',
-            color: '#0066ff',
+            color: '#0050C7',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Food/Culinary',
             description: '',
-            color: '#3366ff',
+            color: '#003DF5',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Games/Gaming',
             description: '',
-            color: '#6666ff',
+            color: '#2E2EFF',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Governance',
             description: '',
-            color: '#9966ff',
+            color: '#5F0FFF',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Greek Life',
             description: '',
-            color: '#cc33ff',
+            color: '#9100C2',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Health/Wellness',
             description: '',
-            color: '#cc33ff',
+            color: '#630085',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'International Affairs',
             description: '',
-            color: '#ff00ff',
+            color: '#9E009E',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'LGBTQ',
             description: '',
-            color: '#ff33cc',
+            color: '#A8007E',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Leadership',
             description: '',
-            color: '#ff3399',
+            color: '#AD0057',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Media/Technology',
             description: '',
-            color: '#ff0066',
+            color: '#A80043',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Other',
             description: '',
-            color: '#ff5050',
+            color: '#B30000',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Comedy',
             description: '',
-            color: '#ff6600',
+            color: '#943B00',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Dance',
             description: '',
-            color: 'ffff00',
+            color: '#5C5C00',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Instruments',
             description: '',
-            color: '#ff9933',
+            color: '#8A4500',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Other',
             description: '',
-            color: '#ffcc00',
+            color: '#6B5600',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Singing',
             description: '',
-            color: '#ffff00',
+            color: '#383800',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Performance: Theater',
             description: '',
-            color: '#ccff33',
+            color: '#496100',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Political',
             description: '',
-            color: '#99ff33',
+            color: '#306100',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Pre-Professional',
             description: '',
-            color: '#66ff33',
+            color: '#1A6600',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Publication',
             description: '',
-            color: '#33cc33',
+            color: '#196619',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Religious/Spiritual',
             description: '',
-            color: '#00ff00',
+            color: '#006600',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Science',
             description: '',
-            color: '#00ff99',
+            color: '#004228',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Service/Volunteering',
             description: '',
-            color: '#00ffcc',
+            color: '#005745',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Social',
             description: '',
-            color: '#66ccff',
+            color: '#005C8A',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Speech/Debate',
             description: '',
-            color: '#ff99cc',
+            color: '#7A003D',
             createdAt: new Date(),
             updatedAt: new Date()
         },
         {
             name: 'Sports/Outdoors',
             description: '',
-            color: '#cc9900',
+            color: '#6B5000',
             createdAt: new Date(),
             updatedAt: new Date()
         },

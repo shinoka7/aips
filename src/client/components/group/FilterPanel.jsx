@@ -54,7 +54,7 @@ class FilterPanel extends React.Component {
 
         return (
                 <Dropdown isOpen={isOpen} toggle={() => this.setState({ isOpen: !isOpen })}>
-                    <DropdownToggle caret color="primary">
+                    <DropdownToggle caret className="dark_blue_button">
                         {category}
                     </DropdownToggle>
                     <DropdownMenu

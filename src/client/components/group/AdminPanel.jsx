@@ -56,7 +56,7 @@ class AdminPanel extends React.Component {
             text: 'Are you sure?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
-            confirmButtonColor: '#0066FF',
+            confirmButtonColor: '#006699',
             cancelButtonColor: '#696969',
             preConfirm: async() => {
                 try {
@@ -83,6 +83,7 @@ class AdminPanel extends React.Component {
                     title: 'Update!',
                     text: 'The group\'s info has been updated!',
                     type: 'success',
+                    confirmButtonColor: '#006699',
                     onAfterClose: () => {
                         window.location.reload();
                     }
@@ -140,7 +141,7 @@ class AdminPanel extends React.Component {
                     text: 'The group has been disbanded!',
                     type: 'success',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#0066FF',
+                    confirmButtonColor: '#006699',
                     onAfterClose: () => {
                         window.location = "/group/groups";
                     }
@@ -200,8 +201,8 @@ class AdminPanel extends React.Component {
             return (
                 <tr key={user.User.id}>
                     <td>{user.User.username}</td>
-                    <td><Button color="success" size="sm" onClick={() => {this.acceptHandler(user.User.id, group.id)}}><i className="fas fa-check"></i></Button></td>
-                    <td><Button size="sm" onClick={() => {this.rejectHandler(user.User.id, group.id)}}><i className="fas fa-times"></i></Button></td>
+                    <td><Button color="success" aria-label="Accept" size="sm" onClick={() => {this.acceptHandler(user.User.id, group.id)}}><i className="fas fa-check"></i></Button></td>
+                    <td><Button size="sm" aria-label="Reject" onClick={() => {this.rejectHandler(user.User.id, group.id)}}><i className="fas fa-times"></i></Button></td>
                 </tr>
             );
         });
@@ -223,7 +224,7 @@ class AdminPanel extends React.Component {
             text: 'Are you sure?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
-            confirmButtonColor: '#0066FF',
+            confirmButtonColor: '#006699',
             cancelButtonColor: '#696969',
             preConfirm: async() => {
                 return await axios.put('/group/update/settings', {
@@ -251,6 +252,7 @@ class AdminPanel extends React.Component {
                     title: 'Update!',
                     text: 'The group\'s settings have been updated!',
                     type: 'success',
+                    confirmButtonColor: '#006699',
                 }).then((result) =>
                 {
                     window.location = "/group/" + group.id;
