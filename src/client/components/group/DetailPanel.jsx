@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 
+/* This component manages and renders the group detail
+panel ('General' tab) for an individual group's show page,
+containing group information and a list of group members. */
 class DetailPanel extends React.Component {
 
     constructor(props) {
@@ -12,6 +15,9 @@ class DetailPanel extends React.Component {
         this.generateName = this.generateName.bind(this);
     }
 
+    /* This function generates a display name for member of the
+    group, taking into account whether or not first name and last name fields
+    are specified by the user in their profile page. */
     generateName(member)
     {
         let str = "";
@@ -26,6 +32,8 @@ class DetailPanel extends React.Component {
         return str;
     }
 
+    /* This function generates the full list of a group's members 
+    as table rows containing a member's role, username, and name. */
     generateMemberList(group, members)
     {
         return members.map((member) => {

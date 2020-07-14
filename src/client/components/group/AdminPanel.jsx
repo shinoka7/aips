@@ -7,6 +7,11 @@ import classnames from 'classnames';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+/* This component manages and renders the group admin
+panel ('Admin' tab) for an individual group's show page,
+containing a settings update form as well as
+tabs for pending group members, info update form,
+and a disband group option. */
 class AdminPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -47,6 +52,10 @@ class AdminPanel extends React.Component {
         this.setState({ showSettingsForm: !this.state.showSettingsForm });
     }
 
+    /* This function displays a pop-up to confirm the user's choice to update group info,
+    and then sends a request to update the group's info based on the state fields
+    determined by the user's form input. If the server request is successful, the 
+    group's information will be updated and the page reloaded. */
     async updateInfoHandler() {
         const { groupEmail, description, website, statement, meetingDay, meetingTime, meetingPlace } = this.state;
 
@@ -91,6 +100,10 @@ class AdminPanel extends React.Component {
         });
     }
 
+    /* This function displays a pop-up to confirm the user's choice to disband the group,
+    and, if the user inputs the correct email, sends a request to disband the group.
+    If the server request is successful, the group will no longer exist and the groups
+    page will be loaded after a success message. */
     async disbandHandler() {
         const { group, csrfToken } = this.props;
 
@@ -159,6 +172,9 @@ class AdminPanel extends React.Component {
         }
     }
     
+    /* This function sends a request to accept a pending user
+    as a group member. If the server request is successful, this user 
+    will be a member of the group and the page will be reloaded. */
     async acceptHandler(userId, groupId) {
         await axios.post('/group/acceptUser', {
             userId, groupId,
@@ -176,6 +192,9 @@ class AdminPanel extends React.Component {
         });
     }
 
+     /* This function sends a request to reject a pending user
+    as a group member. If the server request is successful, this user 
+    will not be a member of the group and the page will be reloaded. */
     async rejectHandler(userId, groupId) {
         await axios.post('/group/rejectUser', {
             userId, groupId,
@@ -193,6 +212,9 @@ class AdminPanel extends React.Component {
         });
     }
 
+     /* This function generates the full list of pending group members 
+    as table rows containing a pending user's username and buttons to
+    accept or reject them. */
     generatePending() {
         const { group } = this.props;
         const { pendingUsers: users } = this.state;
@@ -213,6 +235,10 @@ class AdminPanel extends React.Component {
         return mailingList === '' || isValidEmail;
     }
 
+    /* This function displays a pop-up to confirm the user's choice to update group settings,
+    and then sends a request to update these settings based on the form input. 
+    If the server request is successful, the group's settings will be updated and the 
+    page will be reloaded. */
     async updateSettingsHandler() {
         const { mailingList /**, mode */, newGroupOwner} = this.state;
         const { group } = this.props;
@@ -260,6 +286,9 @@ class AdminPanel extends React.Component {
         });
     }
 
+    /* This function generates a list of non-admin group members
+    as dropdown options to populate the dropdown menu for transferring
+    group ownership. */
     generateGroupUsers(members) {
         const { group } = this.props;
         return members.map((member) => {
@@ -270,6 +299,9 @@ class AdminPanel extends React.Component {
         });
     }
 
+    /* This function checks the validity of the user selected
+    to be the new group owner (based on number of groups owned) and disables
+    the settings update button if the choice is invalid. */
     validGroupOwner(members)
     {
         const {newGroupOwner} = this.state;
@@ -294,7 +326,8 @@ class AdminPanel extends React.Component {
         return (
             <Card>
                 <CardBody>
-                    <Row>    
+                    <Row>
+                        {/* Render the settings update form */}    
                         <Col xs="6" sm="6" md="6">
                             <b>Settings</b>
                             <Card>
@@ -338,6 +371,7 @@ class AdminPanel extends React.Component {
                                 </CardBody>
                             </Card>
                         </Col>
+                        {/* Render the tabs for pending group members, group information edit form, and disband group option */}    
                         <Col xs="6" sm="6" md="6">
                             <Nav tabs>
                                 <NavItem>
@@ -371,6 +405,7 @@ class AdminPanel extends React.Component {
                                     </NavLink>
                                 </NavItem>
                             </Nav>
+                            {/* Render the pending users tab */}    
                             <TabContent activeTab={activeTab}>
                                 <TabPane tabId="1">
                                     <Card>
@@ -390,6 +425,7 @@ class AdminPanel extends React.Component {
                                         </CardBody>
                                     </Card>
                                 </TabPane>
+                                {/* Render the group information update form */}    
                                 <TabPane tabId="2">
                                     <Form>
                                         <FormGroup>
@@ -435,6 +471,7 @@ class AdminPanel extends React.Component {
                                         <Button onClick={this.toggleSettingsForm} color="secondary">Cancel</Button>
                                     </Form>
                                 </TabPane>
+                                {/* Render the disband group tab */}    
                                 <TabPane tabId="3">
                                     <Card className="text-center">
                                         <CardBody>

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
+/* This component manages and renders the category
+filter dropdown on the groups 'show' page. */
 class FilterPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -17,10 +19,14 @@ class FilterPanel extends React.Component {
         this.generateCategories = this.generateCategories.bind(this);
     };
 
+    /* If a new category is selected, the groups shown will be 
+    filtered by this category using the init function in 
+    the groups show page. */
     setCategory(id) {
         this.props.filter(id, "");
     }
 
+    /* This function generates a dropdown item for each category. */
     generateCategories(categories) {
         return categories.map((category) => {
             return (
