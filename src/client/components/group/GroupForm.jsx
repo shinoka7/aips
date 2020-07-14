@@ -145,7 +145,7 @@ class GroupForm extends React.Component {
                                 <Button href="/login" color="primary">Login</Button>
                             }
                             { user.username &&
-                                <Button onClick={this.createHandler} color="primary" disabled={!this.validate()}>Create</Button>
+                                <Button onClick={this.createHandler} className="dark_blue_button" disabled={!this.validate()}>Create</Button>
                             }
                             <Button onClick={this.toggle} color="secondary">Cancel</Button>
                         </ModalFooter>
