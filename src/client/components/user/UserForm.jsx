@@ -9,6 +9,10 @@ import axios from 'axios';
 
 import Swal from 'sweetalert2';
 
+/* This component manages and renders the user form
+panel in the user 'show' page, which displays a user's username, 
+first name, and last name, and has a form for changing user 
+details. */
 class UserForm extends React.Component {
     constructor(props) {
         super(props);
@@ -48,9 +52,10 @@ class UserForm extends React.Component {
         this.setState({ lastName: e.target.value.trim() });
     }
 
-    /**
-     * handles username change confirmation
-     */
+    /* This function displays a pop-up to confirm the user's choice to update their
+    profile, and then sends a request to update the fields based on the form input. 
+    If the server request is successful, the user's profile will be updated and the 
+    page will be reloaded. */
     async confirmHandler() {
         const { csrfToken } = this.props;
         const { username, firstName, lastName } = this.state;
@@ -67,6 +72,8 @@ class UserForm extends React.Component {
             text: 'Are you sure?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
+            confirmButtonColor: '#0066FF',
+            cancelButtonColor: '#696969',
             preConfirm: async() => {
                 try {
                     return await axios.put(`/user/update`, params);
@@ -96,6 +103,7 @@ class UserForm extends React.Component {
 
         return (
             <Card>
+                {/* Display a user's information */}
                 <CardBody>
                 <CardText>
                     Username : {username}<br />
@@ -103,6 +111,7 @@ class UserForm extends React.Component {
                     Last name : {lastName}<br />
                 </CardText>
                 <CardText className="text-right">
+                    {/* If the button has been pressed, toggle the form below */}
                     <Button onClick={this.toggle} className="button_text btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
                     <Modal isOpen={this.state.modal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
                         <ModalHeader toggle={this.toggle}>Edit Profile</ModalHeader>
