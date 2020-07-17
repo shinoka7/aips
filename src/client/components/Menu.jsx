@@ -8,6 +8,10 @@ import PostForm from './PostForm';
 // https://github.com/mdbootstrap/React-Bootstrap-with-Material-Design/issues/28
 // SSR NOT SUPPORTED
 
+/* This component manages and renders the menu
+for viewing the event calendar and creating
+a new post displayed at the bottom-right of the
+main page.  */
 class Menu extends React.Component {
     constructor(props) {
         super(props);
@@ -48,6 +52,7 @@ class Menu extends React.Component {
                 <Tooltip placement="left" isOpen={menuToolTipOpen} target="menuToolTip" toggle={() => {this.setState({ menuToolTipOpen: !menuToolTipOpen })}}>
                     Expand menu for general calendar and post form
                 </Tooltip>
+                {/* If the menu has been opened, display buttons to toggle the post form and calendar. */}
                 <Collapse isOpen={isOpen}>
                     <ButtonGroup vertical className="pr-2">
                         <Button onClick={this.togglePostForm} aria-label="Toggle post form" className="btn btn-lg" color="danger" outline>

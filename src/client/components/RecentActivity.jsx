@@ -7,6 +7,10 @@ import PostForm from '../components/PostForm';
 
 import axios from 'axios';
 
+/* This component manages and renders the recent
+activity panel on the main page of the AIPS web app,
+which generates and renders cards for the eight
+most recent posts.  */
 class RecentActivity extends React.Component {
     constructor(props) {
         super(props);
@@ -25,6 +29,9 @@ class RecentActivity extends React.Component {
             });
     }
 
+    /* This function maps the eight most recent posts to a
+    Card displaying post information, such as title, group,
+    and content. */
     generatePosts(posts) {
         const generatedPosts = posts.map((post) => {
             return (
@@ -52,6 +59,7 @@ class RecentActivity extends React.Component {
 
         const generatedPosts = this.generatePosts(posts);
 
+        //Renders a table of recent posts
         return (
             <div className="pt-4">
                 <h1 className="text-black text-center"><strong>Recent Posts</strong></h1><br/>

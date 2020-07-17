@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import Swiper from 'swiper';
 
+/* This component manages and renders the event
+preview panel on the main page of the AIPS web app,
+which contains a slider displaying upcoming events.  */
 class Preview extends React.Component {
 
     constructor(props) {
@@ -33,7 +36,7 @@ class Preview extends React.Component {
         this.toggleEventDetails = this.toggleEventDetails.bind(this);
     }
 
-    // Advance the slider to the next event
+    /* This function advances the slider to the next event. */
     advance() {
         this.setState((state) => {
             if (state.currentEvent >= this.props.events.length - 1)
@@ -48,6 +51,8 @@ class Preview extends React.Component {
         setTimeout(this.advance.bind(this), this.timer);
     }
 
+    /* This function toggles the event details modal view
+    when an event is clicked. NOTE: CURRENTLY UNUSED. */
     async toggleEventDetails(e) {
         const selectedEvent = await this.props.events.filter((event) => (
             event.name === e.title
@@ -59,6 +64,8 @@ class Preview extends React.Component {
         const { events } = this.props;
         let event = events[this.state.currentEvent];
 
+        /* If there are no upcoming events, render
+        a default slider. */
         if (event == null) {
             event = {
                 image: "defaultImage.png",
@@ -77,6 +84,8 @@ class Preview extends React.Component {
 
         const imagePath = event.image ? "/resources/img/buildings/" + event.image : "/resources/img/buildings/defaultImage.png";
 
+        /* Generate a slider for the current displayed event, containing
+        event image, name, description, date, time, and group. */
         const blog_slider = (
             <div className="blog-slider">
                 <div className="blog-slider__wrp swiper-wrapper">

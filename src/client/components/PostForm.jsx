@@ -7,6 +7,9 @@ import { AvForm, AvField } from 'availity-reactstrap-validation';
 
 import axios from 'axios';
 
+/* This component manages and renders the post
+creation form that can be toggled in an
+individual group's 'show' page.  */
 class PostForm extends React.Component {
     constructor(props) {
         super(props);
@@ -38,6 +41,8 @@ class PostForm extends React.Component {
         this.props.togglePostForm();
     }
 
+    /* This function generates a list of dropdown items 
+    for the group selection dropdown in the form. */
     generateGroupOptions(groups) {
         const groupOptions = groups.map((group) => {
             return (
@@ -65,6 +70,9 @@ class PostForm extends React.Component {
         this.setState({ groupId: e.target.value });
     }
 
+    /* This function sends a request to create a post with title, content,
+    and group specified by the user's form input. If the server request is successful, 
+    the page will be reloaded. */
     async createHandler() {
         const { groupId, title, content } = this.state;
 
