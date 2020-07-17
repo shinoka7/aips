@@ -76,31 +76,28 @@ class UserForm extends React.Component {
                 }
             }
         }).then((res) => {
-
+            window.location.reload();
         });
-
-        // if (res.value) {
-            this.setState({ username: username, firstName, lastName });
-        // }
-
-        this.toggle();
     }
 
     validate() {
         const { username, firstName, lastName } = this.state;
-        return username !== '' && firstName !== '' && lastName !== '';
+        return username !== '' && firstName !== '' && lastName !== ''
+            && !(username == this.props.user.username 
+            && firstName == this.props.user.firstName
+            && lastName == this.props.user.lastName);
     }
 
     render() {
-        const { username, firstName, lastName } = this.state;
+        const { username, firstName, lastName } = this.props.user;
 
         return (
             <Card>
                 <CardBody>
                 <CardText>
-                    Username : {username}<br />
-                    First name : {firstName}<br />
-                    Last name : {lastName}<br />
+                    Username: {username}<br />
+                    First name: {firstName}<br />
+                    Last name: {lastName}<br />
                 </CardText>
                 <CardText className="text-right">
                     <Button onClick={this.toggle} className="button_text btn btn-outline-primary"><i className="fas fa-edit"></i>Edit Profile</Button>
@@ -108,9 +105,9 @@ class UserForm extends React.Component {
                         <ModalHeader toggle={this.toggle}>Edit Profile</ModalHeader>
                         <ModalBody>
                             <AvForm>
-                                <AvField name="username" label="Username" onChange={this.setUsername} required />
-                                <AvField name="firstname" label="First Name" onChange={this.setFirstName} required />
-                                <AvField name="lastname" label="Last Name" onChange={this.setLastName} required />
+                                <AvField name="username" label="Username" value={username} onChange={this.setUsername} required />
+                                <AvField name="firstname" label="First Name" value={firstName} onChange={this.setFirstName} required />
+                                <AvField name="lastname" label="Last Name" value={lastName} onChange={this.setLastName} required />
                             </AvForm>
                             <ModalFooter>
                                 <Button onClick={this.confirmHandler} id="dark_blue_button" disabled={!this.validate()}>Confirm</Button>
