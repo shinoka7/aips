@@ -85,7 +85,7 @@ class Preview extends React.Component {
                             <img src={imagePath} alt="Event Image"></img>
                         </div>
                         <div className="blog-slider__content">
-                            <span className="blog-slider__code">{event.startDate} at {event.startTime}</span>
+                            <span className="blog-slider__code black">{event.startDate} at {event.startTime}</span>
                             <div className="blog-slider__title"><a href="/" onClick={this.toggleEventDetails}>{event.name}</a></div>
                             <div className="blog-slider__text">
                                 { event.description.length > 175 &&

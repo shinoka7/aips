@@ -69,6 +69,7 @@ class GroupDetail extends React.Component {
                 title: 'You are the Group Owner',
                 type: 'warning',
                 text: 'Please transfer group ownership before leaving the group.',
+                confirmButtonColor: '#006699',
             }).then(() =>
                 {
                     window.location = "/group/" + group.id;
@@ -138,7 +139,7 @@ class GroupDetail extends React.Component {
                                 <Media heading>
                                     <p className="display-4">{group.name}</p>
                                 </Media>
-                                <Badge color="info" pill>{category.name}</Badge>
+                                <Badge style={{backgroundColor: category.color}} pill>{category.name}</Badge>
                                 { isVerified &&
                                     <Badge /**onClick={this.toggleVerifyPanel}*/ color="success" pill>Verified</Badge>
                                 }
@@ -151,22 +152,22 @@ class GroupDetail extends React.Component {
                         </Media>
                         <hr />
                         <ButtonGroup>
-                            <Button onClick={this.joinGroupHandler} color="success" disabled={isUserInGroup}>
+                            <Button onClick={this.joinGroupHandler} aria-label="Join group" className="dark_green_button" disabled={isUserInGroup}>
                                 <i className="fas fa-user-plus"> Join</i>
                             </Button>
-                            <Button onClick={this.leaveGroupHandler} color="danger" disabled={!isUserInGroup}>
+                            <Button onClick={this.leaveGroupHandler} aria-label="Leave group" color="danger" disabled={!isUserInGroup}>
                                 <i className="fas fa-sign-out-alt"> Leave</i>
                             </Button>
                         </ButtonGroup>
                         {'\t'}
                         <ButtonGroup className="text-right">
-                            <Button onClick={this.toggleCalendar} className="dark_blue_button btn btn-info">
+                            <Button onClick={this.toggleCalendar} aria-label="View events" className="dark_blue_button btn btn-info">
                                 <i className="fas fa-calendar-alt"> Events</i>
                             </Button>
                         </ButtonGroup>
                         {'\t'}
                         <ButtonGroup>
-                            <Button onClick={this.togglePostForm} className="btn btn-secondary" disabled={!isUserInGroup}>
+                            <Button onClick={this.togglePostForm} aria-label="Create post" className="btn btn-secondary" disabled={!isUserInGroup}>
                                 <i className="fas fa-edit"> Post</i>
                             </Button>
                         </ButtonGroup>

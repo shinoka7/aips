@@ -90,7 +90,7 @@ class FileUpload extends React.Component {
                                         </Col>
                                     }
                                     <Col md="2">
-                                        <Button type="submit" color="primary" disabled={!file || !valid} onClick={this.toggleModal}> Upload </Button>
+                                        <Button type="submit" className="dark_blue_button" disabled={!file || !valid} onClick={this.toggleModal}> Upload </Button>
                                     </Col>
                                     <Col md="2">
                                         <Button onClick={this.toggleModal}> Cancel </Button>
