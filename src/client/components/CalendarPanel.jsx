@@ -9,6 +9,11 @@ import moment from 'moment';
 
 const localizer = momentLocalizer(moment);
 
+/* This component manages and renders the calendar
+panel that can be accessed from the menu of the main
+page as well as the individual groups' pages. 
+This panel includes options to show specific event 
+details as well as create a new event. */
 class CalendarPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -76,6 +81,8 @@ class CalendarPanel extends React.Component {
                                 onSelectEvent={this.toggleEventDetails}
                             />
                         </div>
+                        {/* The following components will be rendered only when a calendar slot
+                        or calendar event is selected. */}
                         <EventForm 
                             toggleEventForm={this.toggleEventForm}
                             formModal={this.state.formModal}

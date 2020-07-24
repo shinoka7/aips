@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Jumbotron, Media, Row, Col, Container } from 'reactstrap';
 
+/* This component manages and renders the features
+panel on the main page which describes current
+features of the web app.  */
 class FeaturesPanel extends React.Component {
     constructor(props) {
         super(props);

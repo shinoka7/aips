@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/* This component manages and renders the header
+of the web app, which contains links to the main
+page, about page, groups page, profile page, and
+login page. */
 class Header extends React.Component {
 
     constructor(props) {
@@ -12,6 +16,8 @@ class Header extends React.Component {
         };
     }
 
+    /* The header scrolls with the page,
+    remaining at the top of the screen. */
     componentDidMount() {
         window.onscroll = () => {
             if (window.scrollY > 50) {

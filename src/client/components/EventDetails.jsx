@@ -5,6 +5,10 @@ import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 're
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+/* This component manages and renders an
+individual event's event details popup
+which appears when an event is clicked
+in the calendar. */
 class EventDetails extends React.Component {
     constructor(props) {
         super(props);
@@ -41,6 +45,8 @@ class EventDetails extends React.Component {
         }
     }
 
+    /* This function selects the correct event to display
+    the details of and toggles the appropriate popup. */
     toggle() {
         const { e } = this.props;
         const selectedEvent = this.props.events.filter((event) => (
@@ -86,6 +92,10 @@ class EventDetails extends React.Component {
         });
     }
 
+    /* This function displays a popup confirming the user's
+    choice to delete the event, and if confirmed, sends
+    a request to delete the event. If successful or
+    cancelled, corresponding popups will denote the result. */
     async deleteHandler() {
         const { selectedEvent } = this.state;
         const params = {
@@ -130,6 +140,9 @@ class EventDetails extends React.Component {
         });
     }
 
+    /* This function calls a request to 
+    indicate that the current user is going
+    to the specified event. */
     async goingHandler() {
         const { selectedEvent } = this.state;
 
@@ -219,6 +232,8 @@ class EventDetails extends React.Component {
                                 </div>
                             </div>
                         </ModalBody>
+                        {/* The options to edit and delete an event are given only to users 
+                        that are a part of the group the event is associated with. */}
                         { isUserInGroup &&
                             <ModalFooter>
                                 <Row>

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/* This component manages and renders the footer of the web
+app, which contains links to rcos.io, the AIPS gmail, and
+the GitHub repository. */
 class Footer extends React.Component {
     constructor(props) {
         super(props);

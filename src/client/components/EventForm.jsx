@@ -5,6 +5,9 @@ import { Col, Row, Card, CardBody, CustomInput, Button, Modal, ModalHeader, Moda
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import axios from 'axios';
 
+/* This component manages and renders the event
+creation form accessible through the calendar panel
+on the main page menu and individual group pages. */
 class EventForm extends React.Component {
     constructor(props) {
         super(props);
@@ -65,7 +68,7 @@ class EventForm extends React.Component {
         }
     }
 
-    // returns ISO format to mm/dd/yyyy format
+    /* Returns ISO format to mm/dd/yyyy format */
     convertISOToCalendarFormat(ISOdate) {
         const isoArray = ISOdate.toString().split(' ');
         let day = isoArray[2];
@@ -79,6 +82,9 @@ class EventForm extends React.Component {
         return year + '-' + month + '-' + day;
     }
 
+    /* This function initializes date and time values 
+    for the event to be created and calls a function to toggle
+    the form. */
     toggleForm() {
         const { e } = this.props;
         if (e.start && e.end) {
@@ -120,6 +126,8 @@ class EventForm extends React.Component {
         });
     }
 
+    /* The following set of functions sets attributes for
+    the new event when the form is changed. */
     setGroupId(e) {
         const groupId = e.target.value;
         this.setState((prevState) => ({
@@ -224,11 +232,16 @@ class EventForm extends React.Component {
         this.setState({ showCustomDates: !showCustomDates });
     }
 
+    /* This function is used to determine when the
+    event to be created is valid and disables the submit
+    button if invalid. */
     validate() {
         const { startDate, startTime, endDate, endTime, name, groupId } = this.state.newEvent;
         return startDate && startTime && endDate && endTime && name !== '' && groupId;
     }
 
+    /* This function calls a server request to create the event specified
+    by the form fields and subsequently reloads the page. */
     async createHandler() {
         const { groupId, startDate, startTime, endDate, endTime, name, description, imageName, repeats } = this.state.newEvent;
         const res = await axios.post('/event', {
