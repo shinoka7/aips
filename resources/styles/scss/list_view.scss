@@ -1,0 +1,26 @@
+.list_card {
+  width: 100%;
+  position: left;
+  display: inline-block;
+  max-width: 15%;
+  min-width: 210px;
+  max-height: 100%;
+  min-height: 450px;
+  margin-left: 22px;
+  margin-top: 20px;
+  background: #fff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 25px;
+  z-index: -1;
+  border-radius: 5%;
+  overflow-x: hidden; }
+
+  .list_box {
+    flex-direction: row;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    max-height: 490px; }
+
+.list_card_title {
+  font-size: 20px;
+  color: black; }
