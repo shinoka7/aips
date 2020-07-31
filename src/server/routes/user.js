@@ -8,6 +8,12 @@ const fs = require('fs');
 
 const { User, Notification, Group, Event } = require('../../db/models');
 
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: User profile management requests
+ */
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
     const { nextApp, csrf } = aips;
@@ -19,6 +25,18 @@ module.exports = (aips) => {
 
     // gets the user's page
     // GET /user
+
+    /**
+     * @swagger
+     * path:
+     *  /user:
+     *    get:
+     *      summary: Gets the current user's profile page
+     *      tags: [User]
+     *      responses:
+     *        "200":
+     *          description: OK --- renders /user/show.jsx
+     */
     router.get('/', csrf, asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
 
@@ -87,6 +105,35 @@ module.exports = (aips) => {
 
     // updates the user's info 
     // PUT /user/${id}/update
+    /**
+     * @swagger
+     * path:
+     *  /user/update:
+     *    put:
+     *      summary: Updates the current user's profile
+     *      tags: [User]
+     *      requestBody:
+     *          required: true
+     *          application/json:
+     *              schema:
+     *                  type: object
+     *                  properties:
+     *                      username:
+     *                          type: string
+     *                      firstName:
+     *                           type: string
+     *                      lastName:
+     *                          type: string
+     *              example:
+     *                  username: username@rpi.edu
+     *                  firstName: Jane
+     *                  lastName: Doe
+     *      responses:
+     *        "200":
+     *          description: OK --- successful user profile update
+     *        "404":
+     *          description: User not found
+     */
     router.put('/update', csrf, validator.update, validateBody, asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
         let user = await User.findByPk(id);

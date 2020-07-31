@@ -15,6 +15,36 @@ const { Event, Group, User } = require('../../db/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const options = {
+    swaggerDefinition: {
+        openapi: "3.0.0",
+        info: {
+        title: "AIPS API",
+        version: "1.0.0",
+        description:
+            "API for the AIPS web app, An Intuitive Platform for Societies",
+        license: {
+            name: "MIT",
+            url: "https://choosealicense.com/licenses/mit/"
+        },
+        contact: {
+            name: "AIPS Development Team",
+            url: "https://github.com/shinoka7/aips",
+            email: "rpiaips@gmail.com"
+        }
+        },
+        servers: [
+        {
+            url: "https://aips.cs.rpi.edu/"
+        }
+        ]
+    },
+    apis: ["./src/server/routes/user.js"]
+    };
+  const specs = swaggerJsdoc(options);
+
 const logger = require('../../services/logger');
 
 module.exports = (aips) => {
@@ -23,6 +53,14 @@ module.exports = (aips) => {
     
     // middleware
     app.use(cabin.middleware);
+
+    app.use("/docs", swaggerUi.serve);
+    app.get(
+        "/docs",
+        swaggerUi.setup(specs, {
+        explorer: true
+        })
+    );
 
     // XSS, path traversal, SQL injection  prevention
     app.use(blacklist.blockRequests('blacklist.txt'));
