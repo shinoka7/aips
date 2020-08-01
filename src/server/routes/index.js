@@ -24,7 +24,7 @@ const options = {
         title: "AIPS API",
         version: "1.0.0",
         description:
-            "API for the AIPS web app, An Intuitive Platform for Societies",
+            "API for the AIPS (An Intuitive Platform for Societies) web application",
         license: {
             name: "MIT",
             url: "https://choosealicense.com/licenses/mit/"

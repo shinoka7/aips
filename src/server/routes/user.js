@@ -148,6 +148,31 @@ module.exports = (aips) => {
         res.json({ user });
     }));
 
+    /**
+     * @swagger
+     * path:
+     *  /user/update/notifications:
+     *    put:
+     *      summary: Updates the current user's notification settings
+     *      tags: [User]
+     *      requestBody:
+     *          required: true
+     *          application/json:
+     *              schema:
+     *                  type: object
+     *                  properties:
+     *                      notifyPosts:
+     *                          type: boolean
+     *                      notifyEvents:
+     *                           type: boolean
+     *                      notificationId:
+     *                          type: string
+     *      responses:
+     *        "200":
+     *          description: OK --- successful user profile update
+     *        "404":
+     *          description: User not found
+     */
     router.put('/update/notifications', csrf, asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
         const user = await User.findByPk(id);
@@ -168,6 +193,24 @@ module.exports = (aips) => {
         res.json({ notification });
     }));
 
+    /**
+     * @swagger
+     * path:
+     *  /user/isGoing/{eventId}:
+     *    get:
+     *      summary: Returns whether or not the current user is going to the specified event
+     *      tags: [User]
+     *      parameters:
+     *      - in: path
+     *        name: eventId
+     *        schema:
+     *          type: integer
+     *        required: true
+     *        description: Numeric ID of the event to get user going information from
+     *      responses:
+     *        "200":
+     *          description: OK --- successful user profile update
+     */
     router.get('/isGoing/:eventId(\\d+)', asyncMiddleware(async(req, res) => {
         const userId = req.session.user ? req.session.user.id : 0;
         const eventId = req.params.eventId;
