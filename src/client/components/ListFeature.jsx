@@ -49,7 +49,13 @@ class ListFeature extends React.Component {
                  <div className="list_card_title">{tmp.name}</div>
                  <hr />
                  <span className="d-flex justify-content-between">
-                   <img src={ "/resources/img/buildings/" + tmp.image } width = "100%"/>
+                  {tmp.image &&
+                    <img src={ "/resources/img/buildings/" + tmp.image } width = "100%" alt={"graphic is the image " +tmp.image+" and is of a RPI building"}/>
+                  }
+                  {!tmp.image &&
+                    <img src={ "/resources/img/buildings/defaultImage.png"} width = "100%" alt={"image not available"}/>
+                  }
+
                  </span>
                  <br />
                  <div className="d-flex justify-content-between">
@@ -63,7 +69,7 @@ class ListFeature extends React.Component {
                  <span className="d-flex justify-content-between"> from {tmp.startTime}, {tmp.startDate}</span>
                  <span className="d-flex justify-content-between"> to {tmp.endTime}, {tmp.endDate}</span>
                  < hr/>
-                 Hosted by <a href={`/group/${tmp.Group.id}`}> {tmp.Group.name}</a>
+                 Hosted by <a href={`/group/${tmp.Group.id}`} style = {{color : '#0056B3'}}> {tmp.Group.name}</a>
 
                </div>
              </div>
