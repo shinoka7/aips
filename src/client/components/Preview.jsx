@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListFeature from './ListFeature.jsx';
 import Swiper from 'swiper';
+import Switch from "react-switch";
 import { Collapse, Button, ButtonGroup, Tooltip } from 'reactstrap';
 class Preview extends React.Component {
 
@@ -13,8 +14,6 @@ class Preview extends React.Component {
             calendarIsOpen: false,
             detailModal: false,
             listView: false,
-            listToolTipOpen: false,
-            sliderToolTipOpen: false,
         };
 
         this.swiper = new Swiper('.blog-slider', {
@@ -67,8 +66,6 @@ class Preview extends React.Component {
 
     render() {
         const { events } = this.props;
-        let listToolTipOpen = this.state.listToolTipOpen;
-        const sliderToolTipOpen = this.state.sliderToolTipOpen;
         const listView = this.state.listView;
 
         let event = events[this.state.currentEvent];
@@ -124,21 +121,39 @@ class Preview extends React.Component {
         );
 
         return (
-            <React.Fragment>
-              { listView == false && (
+            //<React.Fragment>
+              //{ listView == false && (
                 <div>
-                <div className= "d-flex flex-row-reverse pr-2 fixed-center pt-3">
-                    <Button onClick={() =>{this.toggleTheme(); this.setState({ listToolTipOpen: !listToolTipOpen }); }} aria-label="Toggle list view" disabled = {nullEvent} className="btn btn-lg" id="listToolTip" color="danger" outline alt="Toggle list view">
-                        <i className="fa fa-list-ul" />
-                    </Button>
-                    <Tooltip placement="right" isOpen={listToolTipOpen} target="listToolTip" toggle={() => {this.setState({ listToolTipOpen: !listToolTipOpen })}}>
-                        Show next 6 upcoming events
-                    </Tooltip>
+                  <div className = "d-flex flex-row-reverse pr-2 fixed-center pt-3">
+                    <Switch
+                      aria-label = "Toggle theme change"
+                      checked={listView}
+                      uncheckedIcon = {false}
+                      checkedIcon = {false}
+                      onColor = {'#F32013'}
+                      onChange={this.toggleTheme}
+                      id= "list toggle"
+                    />
+
+                  </div>
+                    <div>
+                    { !listView &&
+                      <div>
+                      {blog_slider}
+                      </div>
+                    }
+                    { listView &&
+                      <div>
+                      <ListFeature events = {this.props.events} />
+                      </div>
+                    }
                     </div>
-                    {blog_slider}
+
 
                 </div>
-              )
+
+              /*  </React.Fragment>
+              //)
 
                 /* { selectedEvent && selectedEvent.Group &&
                     <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
@@ -164,7 +179,7 @@ class Preview extends React.Component {
                         </ModalBody>
                     </Modal>
                 } */
-              }
+            /*  }
               { listView == true && (
 
                 <div>
@@ -181,8 +196,8 @@ class Preview extends React.Component {
                 </div>
 
               )
-              }
-            </React.Fragment>
+            }*/
+
 
         );
     }
