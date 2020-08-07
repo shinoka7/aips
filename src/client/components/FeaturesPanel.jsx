@@ -6,20 +6,40 @@ import { Jumbotron, Media, Row, Col, Container } from 'reactstrap';
 class FeaturesPanel extends React.Component {
     constructor(props) {
         super(props);
+    
+        this.state = {
+            gifIsOn: true
+        };
 
+        this.timer = 3700;
+    }
 
+    componentDidMount() 
+    {
+        setTimeout(this.toggleGif.bind(this), this.timer);
+    }
+
+    toggleGif()
+    {
+        this.setState({gifIsOn: !this.state.gifIsOn});
     }
 
     render() {
+        let gifIsOn = this.state.gifIsOn;
         return (
             <Jumbotron>
                 <div className="text-black text-center py-5 px-4">
                         <h1><strong>Main Features</strong></h1>
                         <Jumbotron>
                             <Row>
-                                <Col md="12" lg="6">
+                                {gifIsOn === true &&
+                                <Col md="12" lg="6">                                  
                                     <img src={`/resources/img/examples/calendar.gif`} className="features_preview" alt="Calendar GIF"></img>
-                                </Col>
+                                </Col>}
+                                {gifIsOn === false &&
+                                    <Col md="12" lg="6">                                  
+                                    <img src={`/resources/img/examples/calendar.png`} className="features_preview" alt="Calendar Image"></img>
+                                </Col>}
                                 <Col md="12" lg="6">
                                     <br />
                                     <Container className="features_preview_container">

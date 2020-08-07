@@ -11,7 +11,7 @@ class FileUpload extends React.Component {
             modal: false,
             unmountOnClose: false,
             fileUploaded: false,
-            valid: true
+            valid: 0
         }
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -29,14 +29,18 @@ class FileUpload extends React.Component {
 
     onChange(e)
     {
-        if (e.target.files[0].size < 2000000)
+        if (e.target.files[0] == undefined)
         {
-            this.setState({file: e.target.files[0],
-                           valid: true});
+            this.setState({valid: 1});
+        }
+        else if (e.target.files[0].size >= 2000000)
+        {
+            this.setState({valid: 2});
         }
         else 
         {
-            this.setState({valid: false});
+            this.setState({file: e.target.files[0],
+                valid: 0});
         }
     }
 
@@ -63,7 +67,8 @@ class FileUpload extends React.Component {
         return (
             <div>
                 {hasModal &&
-                    <Media left onClick={this.toggleModal}>
+                    <Media left tabindex="0" onClick={this.toggleModal} onKeyPress={e => {
+                        if (e.key === 'Enter') {e.preventDefault(); this.toggleModal()} }}>
                         <Media object rounded="true" fluid="true" src={currentImage} style={imgStyle} alt="Group placeholder image" className="border rounded border-dark"></Media>
                     </Media>
                 }
@@ -80,17 +85,22 @@ class FileUpload extends React.Component {
                                 <Row>
                                     <Col md="1">
                                     </Col>
-                                    {!valid &&
+                                    {valid == 2 &&
                                         <Col md="6">
                                             <p class="text-danger">File size exceeds 10MB.</p>
                                         </Col>
                                     }
-                                    {valid &&
+                                    {valid == 1 &&
+                                        <Col md="6">
+                                            <p class="text-danger">No file selected.</p>
+                                        </Col>
+                                    }
+                                    {valid == 0 &&
                                         <Col md="6">
                                         </Col>
                                     }
                                     <Col md="2">
-                                        <Button type="submit" className="dark_blue_button" disabled={!file || !valid} onClick={this.toggleModal}> Upload </Button>
+                                        <Button type="submit" className="dark_blue_button" disabled={!file || valid != 0} onClick={this.toggleModal}> Upload </Button>
                                     </Col>
                                     <Col md="2">
                                         <Button onClick={this.toggleModal}> Cancel </Button>
