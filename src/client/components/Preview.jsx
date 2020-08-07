@@ -127,11 +127,10 @@ class Preview extends React.Component {
             <React.Fragment>
               { listView == false && (
                 <div>
-                <div className= "d-flex flex-row pl-2 fixed-center pt-3">
-                    <Button onClick={() =>{this.toggleTheme(); this.setState({ listToolTipOpen: !listToolTipOpen }); }} disabled = {nullEvent} className="btn btn-lg" id="listToolTip" color="danger" outline>
+                <div className= "d-flex flex-row-reverse pr-2 fixed-center pt-3">
+                    <Button onClick={() =>{this.toggleTheme(); this.setState({ listToolTipOpen: !listToolTipOpen }); }} aria-label="Toggle list view" disabled = {nullEvent} className="btn btn-lg" id="listToolTip" color="danger" outline alt="Toggle list view">
                         <i className="fa fa-list-ul" />
                     </Button>
-
                     <Tooltip placement="right" isOpen={listToolTipOpen} target="listToolTip" toggle={() => {this.setState({ listToolTipOpen: !listToolTipOpen })}}>
                         Show next 6 upcoming events
                     </Tooltip>
@@ -169,8 +168,8 @@ class Preview extends React.Component {
               { listView == true && (
 
                 <div>
-                <div className= "d-flex flex-row pl-2 fixed-center pt-3">
-                    <Button onClick={() =>{this.toggleTheme(); this.setState({ sliderToolTipOpen: !sliderToolTipOpen }); }} className="btn btn-lg" id="sliderToolTip" color="danger" outline>
+                <div className= "d-flex flex-row-reverse pr-2 fixed-center pt-3">
+                    <Button onClick={() =>{this.toggleTheme(); this.setState({ sliderToolTipOpen: !sliderToolTipOpen }); }} aria-label="Toggle slider view" className="btn btn-lg" id="sliderToolTip" color="danger" outline>
                         <i className="fas fa-window-maximize" />
                     </Button>
                     <Tooltip placement="right" isOpen={sliderToolTipOpen} target="sliderToolTip" toggle={() => {this.setState({ sliderToolTipOpen: !sliderToolTipOpen })}}>
