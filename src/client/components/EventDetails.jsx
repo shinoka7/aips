@@ -188,7 +188,16 @@ class EventDetails extends React.Component {
             <React.Fragment>
                 { selectedEvent && selectedEvent.Group &&
                     <Modal isOpen={this.state.detailModal} toggle={this.toggle} unmountOnClose={this.state.unmountOnClose}>
-                        <ModalHeader close={googleButton}>{selectedEvent.name}</ModalHeader>
+                        <ModalHeader close={googleButton}>
+                        <div>{selectedEvent.name}</div>
+                        { !selectedEvent.privateEvent &&
+                          <sup><i>Public Event</i></sup>
+                        }
+                        { selectedEvent.privateEvent &&
+                          <sup><i>Private Event</i></sup>
+                        }
+                        </ModalHeader>
+
                         <ModalBody>
                             { selectedEvent.image !== '' &&
                                 <div>

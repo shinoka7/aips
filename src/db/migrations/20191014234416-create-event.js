@@ -36,6 +36,9 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
+      privateEvent: {
+        type: Sequelize.BOOLEAN,
+      },
       goingCount: {
         type: Sequelize.INTEGER,
         defaultValue: 0,

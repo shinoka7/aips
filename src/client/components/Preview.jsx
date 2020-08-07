@@ -83,6 +83,7 @@ class Preview extends React.Component {
                 description: "Add your event here",
                 endDate: "10-28-2015",
                 endTime: "11:59",
+                private: false,
                 Group: {
                     id: "#",
                     name: "Display Calendar"
@@ -132,7 +133,7 @@ class Preview extends React.Component {
                     </Button>
 
                     <Tooltip placement="right" isOpen={listToolTipOpen} target="listToolTip" toggle={() => {this.setState({ listToolTipOpen: !listToolTipOpen })}}>
-                        Show some upcoming events
+                        Show next 6 upcoming events
                     </Tooltip>
                     </div>
                     {blog_slider}

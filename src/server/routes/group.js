@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
         cb(null, "group" + groupId + ".png")
     }
   });
-   
+
   var upload = multer({ storage: storage });
 //
 const url = require('url');
@@ -123,7 +123,7 @@ module.exports = (aips) => {
         return groups within the specified category,
         containing the substring searched for. */
         else
-        { 
+        {
             await Group.findAndCountAll({
             offset,
             limit,
@@ -141,7 +141,7 @@ module.exports = (aips) => {
                 groups = result.rows;
                 groupCount = result.count;
             });
-           
+
         }
         res.json({ groups, totalPages: Math.ceil(groupCount/limit), user: user || {} });
     }));
@@ -151,14 +151,14 @@ module.exports = (aips) => {
      */
     router.get('/', asyncMiddleware(async(req, res) => {
         const id = req.session.user ? req.session.user.id : 0;
-        
+
         if (id === 0) {
             return res.json({ groups: [] });
         }
 
         const user = await User.findByPk(id);
         const groups = await user.getGroups();
-        
+
         return res.json({ groups });
     }));
 
@@ -176,20 +176,48 @@ module.exports = (aips) => {
             return res.status(404).send({ error: 'group not found' });
         }
 
+        let isUserInGroup = false;
+        let isUserOwner = false;
+        if (userId === group.adminUserId) {
+            isUserOwner = true;
+        }
+        await group.getUsers().then((users) => {
+            users.forEach((user) => {
+                if (user.id === userId) {
+                    isUserInGroup = true;
+                }
+            });
+        });
+
         // CONSIDERING WHETHER TO USE DATE TYPE FOR DB
         // const date = new Date();
         // date.setMonth(date.getMonth() - 2);
-        const events = await Event.findAll({
-            where: {
-                // endDate: {
-                    // [Op.gte]: date,
-                // },
-                groupId: group.id,
-            },
-            include: [{
-                model: Group,
-            }],
-        });
+
+        // Show private events IFF user belongs to group
+        const events = isUserInGroup ? await Event.findAll({
+              where: {
+                  // endDate: {
+                      // [Op.gte]: date,
+                      // },
+                      groupId: group.id,
+                    },
+                    include: [{
+                      model: Group,
+                    }],
+                  })
+                  : await Event.findAll({
+             where: {
+                 // endDate: {
+                     // [Op.gte]: date,
+                     // },
+                     privateEvent: false,
+                     groupId: group.id,
+                   },
+                   include: [{
+                     model: Group,
+                   }],
+                 });
+
 
         const category = await Category.findByPk(group.categoryId);
 
@@ -204,21 +232,10 @@ module.exports = (aips) => {
             })
         });
 
-        let isUserInGroup = false;
-        let isUserOwner = false;
-        if (userId === group.adminUserId) {
-            isUserOwner = true;
-        }
-        await group.getUsers().then((users) => {
-            users.forEach((user) => {
-                if (user.id === userId) {
-                    isUserInGroup = true;
-                }
-            });
-        });
+
 
         const members = await group.getUsers();
-    
+
 
         const pendingUsers = await Pending.findAll({
             where: {
@@ -260,7 +277,7 @@ module.exports = (aips) => {
         if (!user) {
             return res.status(404).send({ error: 'user not found' });
         }
-        
+
         const group = await Group.create({ name, adminUserId: userId, groupEmail, description, categoryId, statement: ""});
         user = await user.update({ groupsCreated: user.groupsCreated + 1 });
         await group.addUser(user);
@@ -269,7 +286,7 @@ module.exports = (aips) => {
         await group.setCategory(category);
 
         await Notification.create({ userId: userId, groupId: group.id, notifyPosts: false, notifyEvents: false });
-        
+
         res.json({ group });
     }));
 
@@ -284,7 +301,7 @@ module.exports = (aips) => {
         body('meetingPlace').exists(),
     ];
 
-    /** 
+    /**
      * PUT /group/update/info UPDATES GROUP INFO
     */
     router.put('/update/info', csrf, validator.updateInfo, validateBody, asyncMiddleware(async(req, res) => {
@@ -347,7 +364,7 @@ module.exports = (aips) => {
         res.json({ group });
     }));
 
-    /** 
+    /**
      * DELETE /group DELETES GROUP
      * BAD STYLE ***USE CSRF***
     */
@@ -411,13 +428,13 @@ module.exports = (aips) => {
 
     /**
      * add user to group (user will be added to pending list)
-     * 
+     *
      * [BUG]
      *  What is supposed to happen:
      *      - A user can leave a group and then (send a request to) join back in
      *      - A user can join a group on a different account, after logging out of 1 and logging in on another
      *          (This technically shouldn't be allowed ***no multiple accounts***)
-     *  What currently happens: 
+     *  What currently happens:
      *      - When a user leaves a group and joins it, the request returns 500
      *      - When a user logs out of an account and logs into another, joining a group shows the same
      *        error as above
@@ -452,7 +469,7 @@ module.exports = (aips) => {
         body('groupId').exists(),
     ];
 
-    /** 
+    /**
      * delete user from group
      */
     router.post('/deleteUser', csrf, validator.deleteUser, validateBody, asyncMiddleware(async(req, res) => {
@@ -462,7 +479,7 @@ module.exports = (aips) => {
         if (!user || !group) {
             return res.status(404).send({ error: 'user or group not found' });
         }
-        
+
         // https://sequelize.org/master/class/lib/associations/belongs-to-many.js~BelongsToMany.html
 
         await group.removeUser(user);
@@ -481,7 +498,7 @@ module.exports = (aips) => {
         body('groupId').exists(),
     ];
 
-    /** 
+    /**
      * approve user to group
     */
     router.post('/acceptUser', csrf, validator.acceptUser, validateBody, asyncMiddleware(async(req, res) => {
@@ -513,7 +530,7 @@ module.exports = (aips) => {
         body('groupId').exists(),
     ];
 
-    /** 
+    /**
      * reject user from group
     */
     router.post('/rejectUser', csrf, validator.rejectUser, validateBody, asyncMiddleware(async(req, res) => {

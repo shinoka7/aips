@@ -38,10 +38,11 @@ class CalendarPanel extends React.Component {
                     start: start,
                     end: end,
                     title: event.name,
+                    isPrivate: event.privateEvent,
                 }
             );
         });
-        
+
         return { events: events };
     }
 
@@ -64,19 +65,23 @@ class CalendarPanel extends React.Component {
                 <Modal size="lg" isOpen={modal} toggle={toggleCalendar} unmountOnClose={this.state.unmountOnClose}>
                     <ModalBody>
                         <div className="pb-2">
-                            <Calendar 
+                            <Calendar
+                            eventPropGetter={ event=>({style: {backgroundColor: !event.isPrivate  ? "#dc6130" : "#4a90e2",}})}
+                            events={events}
+
                                 localizer={localizer}
                                 defaultDate={new Date()}
                                 defaultView="month"
-                                events={events}
+
                                 style={{ height: "80vh" }}
                                 views={[ 'month', 'day' ]}
                                 selectable={true}
                                 onSelectSlot={this.toggleEventForm}
                                 onSelectEvent={this.toggleEventDetails}
+
                             />
                         </div>
-                        <EventForm 
+                        <EventForm
                             toggleEventForm={this.toggleEventForm}
                             formModal={this.state.formModal}
                             e={this.state.e || {}}
@@ -123,7 +128,6 @@ CalendarPanel.propTypes = {
     modal: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     user: PropTypes.object.isRequired,
-    isUserInGroup: PropTypes.bool,
 }
 
 export default CalendarPanel;

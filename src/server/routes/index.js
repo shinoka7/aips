@@ -53,6 +53,7 @@ module.exports = (aips) => {
         date.setMonth(date.getMonth() - 3);
         const events = await Event.findAll({
             where: {
+                privateEvent: false,
                 startDate: {
                     [Op.gte]: date,
                 }
@@ -69,6 +70,7 @@ module.exports = (aips) => {
         nextWeek.setDate(nextWeek.getDate() + 7);
         const shownEvents = await Event.findAll({
             where: {
+                privateEvent: false,
                 [Op.or]: {
                     startDate: {
                         [Op.between]: [yesterday, nextWeek],
