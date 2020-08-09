@@ -16,6 +16,7 @@ export default class MyDocument extends Document {
             {/* <!-- Iconset: Font Awesome 5.0.13 via CDN --> */}
             <link href="//use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+            <link rel="stylesheet" href="https://use.typekit.net/xxn8jkq.css"></link>
 
             {/* Bootstrap */}
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossOrigin="anonymous" />

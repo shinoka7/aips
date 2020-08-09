@@ -31,7 +31,7 @@ class Header extends React.Component {
 
         return (
             <div className="container" style={{opacity}}>
-                <nav className={`navbar navbar-expand-lg navbar-light bg-light ${options}`}>
+                <nav className={`navbar navbar-expand-lg navbar-dark header ${options}`}>
                     <a className="navbar-brand" href="/">AIPS</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -61,6 +61,9 @@ class Header extends React.Component {
                         }
                         </ul>
                     </div>
+                    <ul class="nav navbar-nav navbar-right">
+                    <img src={`/resources/img/RPILogo.png`} alt="Calendar Image"></img>
+                    </ul>
                 </nav>
             </div>
         );
