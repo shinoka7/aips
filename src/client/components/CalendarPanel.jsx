@@ -66,8 +66,8 @@ class CalendarPanel extends React.Component {
                     <ModalBody>
                         <div className="pb-2">
                             <Calendar
-                            eventPropGetter={ event=>({style: {backgroundColor: !event.isPrivate  ? "#dc6130" : "#4a90e2",}})}
-                            events={events}
+                                eventPropGetter={ event=>({style: {backgroundColor: event.isPrivate  ? "#485973" : "#3174ad",}})}
+                                events={events}
 
                                 localizer={localizer}
                                 defaultDate={new Date()}
