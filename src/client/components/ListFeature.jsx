@@ -1,14 +1,11 @@
 /*  ListFeature.jsx
-** displays events in a list format
+** Displays next 6 upcoming public events in a list format. Is inaccessible when there are no events.
+** Event card display is similar to eventDetails modal.
 */
 
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardHeader, CardBody,
-    CardText, CardImg, Col, Row, Nav,
-    Pagination, PaginationItem, PaginationLink,
-    Badge } from 'reactstrap';
 
 
 class ListFeature extends React.Component {
@@ -19,26 +16,12 @@ class ListFeature extends React.Component {
     /* Return display of every event in a list format */
     render() {
       const { events } = this.props;
-      // Display an empty event if there are no events to display
-      if (events === undefined || events.length == 0) {
-        let event = {
-            image: "defaultImage.png",
-            startDate: "10-28-2015",
-            startTime: "0:00",
-            name: "Hmm... Nothing going on this week",
-            description: "Add your event here",
-            endDate: "10-28-2015",
-            endTime: "11:59",
-            Group: {
-                id: "#",
-                name: "Display Calendar"
-            }
-        };
-        events.push(event);
-      }
-    // Only the next 6 upcoming events are shown, can't get scrollbar to work + showing all events at once
-    // may cause website to crash if there are a lot of events. Cards will be hidden when the window gets too small
-    // This should probably be changed to a carousel or a scrollbar.
+
+    /*
+    ** Only the next 6 upcoming events are shown, can't get scrollbar to work + showing all events at once
+    ** may cause website to crash if there are a lot of events. Cards will be hidden when the window gets too small
+    ** This should probably be changed to a carousel or a scrollbar.
+    */
      let eventRange = events.length < 6 ? events.length : 6;
      let newEvents = events.slice(0, eventRange);
          return (

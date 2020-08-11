@@ -32,7 +32,6 @@ class Preview extends React.Component {
 
         // Swap events every 10 seconds
         this.timer = 10000;
-        this.toggleEventDetails = this.toggleEventDetails.bind(this);
         //list mode feature
         this.toggleTheme = this.toggleTheme.bind(this);
     }
@@ -50,13 +49,6 @@ class Preview extends React.Component {
 
     componentDidMount() {
         setTimeout(this.advance.bind(this), this.timer);
-    }
-
-    async toggleEventDetails(e) {
-        const selectedEvent = await this.props.events.filter((event) => (
-            event.name === e.title
-        ));
-        await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
     }
 
     //function switches theme from list to !list
@@ -121,10 +113,9 @@ class Preview extends React.Component {
         );
 
         return (
-            //<React.Fragment>
-              //{ listView == false && (
                 <div>
                   <div className = "d-flex flex-row-reverse pr-2 fixed-center pt-3">
+                  {/* Toggle button that activates list view, disabled with no events */}
                     <Switch
                       aria-label = "Toggle theme change"
                       checked={listView}
@@ -132,7 +123,8 @@ class Preview extends React.Component {
                       checkedIcon = {false}
                       onColor = {'#F32013'}
                       onChange={this.toggleTheme}
-                      id= "list toggle"
+                      id= "list_toggle"
+                      disabled={nullEvent}
                     />
 
                   </div>
@@ -151,53 +143,6 @@ class Preview extends React.Component {
 
 
                 </div>
-
-              /*  </React.Fragment>
-              //)
-
-                /* { selectedEvent && selectedEvent.Group &&
-                    <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                        <ModalHeader>{selectedEvent.name}</ModalHeader>
-                        <ModalBody>
-                            { selectedEvent.image !== '' &&
-                                <div>
-                                    <img src={`/resources/img/buildings/${selectedEvent.image}`} className="image_preview" alt="Event Image"></img>
-                                    <hr />
-                                </div>
-                            }
-                            <b>
-                            <h5>{selectedEvent.description}</h5>
-                            <br />
-                            Starts: [{selectedEvent.startDate}] at {selectedEvent.startTime}
-                            <br />
-                            Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
-                            </b>
-                            <br />
-                            <div className="text-right">
-                                Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
-                            </div>
-                        </ModalBody>
-                    </Modal>
-                } */
-            /*  }
-              { listView == true && (
-
-                <div>
-                <div className= "d-flex flex-row-reverse pr-2 fixed-center pt-3">
-                    <Button onClick={() =>{this.toggleTheme(); this.setState({ sliderToolTipOpen: !sliderToolTipOpen }); }} aria-label="Toggle slider view" className="btn btn-lg" id="sliderToolTip" color="danger" outline>
-                        <i className="fas fa-window-maximize" />
-                    </Button>
-                    <Tooltip placement="right" isOpen={sliderToolTipOpen} target="sliderToolTip" toggle={() => {this.setState({ sliderToolTipOpen: !sliderToolTipOpen })}}>
-                        Return to slider view
-                    </Tooltip>
-
-                </div>
-                <ListFeature events = {this.props.events} />
-                </div>
-
-              )
-            }*/
-
 
         );
     }
