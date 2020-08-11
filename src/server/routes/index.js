@@ -4,7 +4,7 @@ const blacklist = require('express-blacklist');
 // https://github.com/cabinjs/cabin/issues/130#issuecomment-569029006
 // https://github.com/ladjs/lad.sh/blob/066427cffe9f6538ff4c97b90e762840b299008e/assets/js/logger.js#L8
 const Cabin = require('cabin');
-const cabin = new Cabin({ 
+const cabin = new Cabin({
     axe: {
         capture: false,
         silent: process.env.NODE_ENV === 'production'
@@ -20,7 +20,7 @@ const logger = require('../../services/logger');
 module.exports = (aips) => {
     const middlewares = require('../middlewares')(aips);
     const { nextApp, expressApp: app, csrf } = aips;
-    
+
     // middleware
     app.use(cabin.middleware);
 
@@ -78,6 +78,7 @@ module.exports = (aips) => {
                     },
                 }
             },
+            order: [['startDate', 'ASC']],
             include: [{
                 model: Group,
             }],

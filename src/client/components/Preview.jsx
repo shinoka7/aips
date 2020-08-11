@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import ListFeature from './ListFeature.jsx';
 import Swiper from 'swiper';
-
+import Switch from "react-switch";
+import { Collapse, Button, ButtonGroup, Tooltip } from 'reactstrap';
 class Preview extends React.Component {
 
     constructor(props) {
@@ -12,6 +13,7 @@ class Preview extends React.Component {
             currentEvent: 0,
             calendarIsOpen: false,
             detailModal: false,
+            listView: false,
         };
 
         this.swiper = new Swiper('.blog-slider', {
@@ -30,7 +32,8 @@ class Preview extends React.Component {
 
         // Swap events every 10 seconds
         this.timer = 10000;
-        this.toggleEventDetails = this.toggleEventDetails.bind(this);
+        //list mode feature
+        this.toggleTheme = this.toggleTheme.bind(this);
     }
 
     // Advance the slider to the next event
@@ -48,16 +51,17 @@ class Preview extends React.Component {
         setTimeout(this.advance.bind(this), this.timer);
     }
 
-    async toggleEventDetails(e) {
-        const selectedEvent = await this.props.events.filter((event) => (
-            event.name === e.title
-        ));
-        await this.setState({ selectedEvent: selectedEvent[0], detailModal: !this.state.detailModal });
+    //function switches theme from list to !list
+    toggleTheme() {
+        this.setState({ listView: !this.state.listView });
     }
 
     render() {
         const { events } = this.props;
+        const listView = this.state.listView;
+
         let event = events[this.state.currentEvent];
+        let nullEvent = false;
 
         if (event == null) {
             event = {
@@ -68,11 +72,14 @@ class Preview extends React.Component {
                 description: "Add your event here",
                 endDate: "10-28-2015",
                 endTime: "11:59",
+                private: false,
                 Group: {
                     id: "#",
                     name: "Display Calendar"
                 }
             }
+            nullEvent = true;
+
         }
 
         const imagePath = event.image ? "/resources/img/buildings/" + event.image : "/resources/img/buildings/defaultImage.png";
@@ -85,7 +92,7 @@ class Preview extends React.Component {
                             <img src={imagePath} alt="Event Image"></img>
                         </div>
                         <div className="blog-slider__content">
-                            <span className="blog-slider__code black">{event.startDate} at {event.startTime}</span>
+                            <span className="blog-slider__code">{event.startDate} at {event.startTime}</span>
                             <div className="blog-slider__title"><a href="/" onClick={this.toggleEventDetails}>{event.name}</a></div>
                             <div className="blog-slider__text">
                                 { event.description.length > 175 &&
@@ -106,33 +113,37 @@ class Preview extends React.Component {
         );
 
         return (
-            <React.Fragment>
-                {blog_slider}
-                {/* { selectedEvent && selectedEvent.Group &&
-                    <Modal isOpen={this.state.detailModal} toggle={this.toggleEventDetails} unmountOnClose={this.state.unmountOnClose}>
-                        <ModalHeader>{selectedEvent.name}</ModalHeader>
-                        <ModalBody>
-                            { selectedEvent.image !== '' &&
-                                <div>
-                                    <img src={`/resources/img/buildings/${selectedEvent.image}`} className="image_preview" alt="Event Image"></img>
-                                    <hr />
-                                </div>
-                            }
-                            <b>
-                            <h5>{selectedEvent.description}</h5>
-                            <br />
-                            Starts: [{selectedEvent.startDate}] at {selectedEvent.startTime}
-                            <br />
-                            Ends: [{selectedEvent.endDate}] at {selectedEvent.endTime}
-                            </b>
-                            <br />
-                            <div className="text-right">
-                                Hosted by <a href={`/group/${selectedEvent.Group.id}`}>{selectedEvent.Group.name}</a>
-                            </div>
-                        </ModalBody>
-                    </Modal>
-                } */}
-            </React.Fragment>
+                <div>
+                  <div className = "d-flex flex-row-reverse pr-2 fixed-center pt-3">
+                  {/* Toggle button that activates list view, disabled with no events */}
+                    <Switch
+                      aria-label = "Toggle theme change"
+                      checked={listView}
+                      uncheckedIcon = {false}
+                      checkedIcon = {false}
+                      onColor = {'#F32013'}
+                      onChange={this.toggleTheme}
+                      id= "list_toggle"
+                      disabled={nullEvent}
+                    />
+
+                  </div>
+                    <div>
+                    { !listView &&
+                      <div>
+                      {blog_slider}
+                      </div>
+                    }
+                    { listView &&
+                      <div>
+                      <ListFeature events = {this.props.events} />
+                      </div>
+                    }
+                    </div>
+
+
+                </div>
+
         );
     }
 }
