@@ -32,9 +32,9 @@ module.exports = (aips) => {
 
         //const tmpEvents = await Event.findAll();
         // THIS IS FOR ALL EVENTS THAT ARE MADE BY ALL GROUPS YOU'RE IN
-        let events = [];
+        //let events = [];
 
-        groups.forEach(async(group) => {
+        /*groups.forEach(async(group) => {
              const groupEvents = await Event.findAll({
                  where: {
                      groupId: group.id,
@@ -44,7 +44,19 @@ module.exports = (aips) => {
                  }],
              });
             events = await events.concat(groupEvents);
+         });*/
+         const events = [];
+         const tmpEvents = await Event.findAll();
+         groups.forEach(async(group) => {
+           tmpEvents.forEach(async(ev) => {
+             if(ev.groupId === group.id){
+               events.push(ev);
+             }
+
+           });
+
          });
+
 
         const images = [];
         fs.readdir('./resources/img/buildings', (err, files) => {
@@ -64,13 +76,13 @@ module.exports = (aips) => {
                 model: Group,
             }],
         });
-        const isUserInGroup = true;
+        //const isUserInGroup = true;
 
         nextApp.render(req, res, '/user/show', {
             user: user,
             notifications: notifications,
             csrfToken: req.csrfToken(),
-            isUserInGroup: true,
+            //isUserInGroup: true,
             events: events || [],
             groups: groups || [],
             images: images,
