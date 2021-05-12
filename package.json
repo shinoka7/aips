@@ -62,7 +62,7 @@
     "sequelize-paginate": "^1.1.6",
     "styled-jsx": "^3.2.2",
     "sweetalert2": "^8.14.0",
-    "swiper": "^5.3.1",
+    "swiper": "^6.5.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
