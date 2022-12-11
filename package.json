@@ -32,7 +32,7 @@
     "csurf": "^1.10.0",
     "email-templates": "^6.0.3",
     "env-cmd": "^9.0.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-blacklist": "^1.0.3",
     "express-cas-authentication": "^0.1.0",
     "express-defend": "^1.0.9",
